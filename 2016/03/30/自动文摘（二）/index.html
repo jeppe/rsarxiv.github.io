@@ -6,8 +6,7 @@
   <title>自动文摘（二） | RSarXiv</title>
   
   
-  <meta name="description" content="引自动文摘的方法主要分为两大类，extractive和abstractive。前者是目前最主流、应用最多、最容易的方法，后者相对来说更有一种真正人工智能的味道。还有另外一种分类方法是，单文档摘要和多文档摘要，前者是后者的基础，但后者不只是前者结果简单叠加那么简单。
-Extractive Summar">
+  <meta name="description" content="引自动文摘的方法主要分为两大类，extractive和abstractive。前者是目前最主流、应用最多、最容易的方法，后者相对来说更有一种真正人工智能的味道。还有另外一种分类方法是，单文档摘要和多文档摘要，前者是后者的基础，但后者不只是前者结果简单叠加那么简单。本文只介绍单文档的extractiv">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -62,7 +61,7 @@ Extractive Summar">
     </header>
     <div class="entry">
       
-        <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><p>自动文摘的方法主要分为两大类，extractive和abstractive。前者是目前最主流、应用最多、最容易的方法，后者相对来说更有一种真正人工智能的味道。还有另外一种分类方法是，单文档摘要和多文档摘要，前者是后者的基础，但后者不只是前者结果简单叠加那么简单。</p>
+        <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><p>自动文摘的方法主要分为两大类，extractive和abstractive。前者是目前最主流、应用最多、最容易的方法，后者相对来说更有一种真正人工智能的味道。还有另外一种分类方法是，单文档摘要和多文档摘要，前者是后者的基础，但后者不只是前者结果简单叠加那么简单。本文只介绍单文档的extractive方法。</p>
 <h1 id="Extractive-Summarization"><a href="#Extractive-Summarization" class="headerlink" title="Extractive Summarization"></a>Extractive Summarization</h1><p>抽取式的方法基于一个假设，一篇文档的核心思想可以用文档中的某一句或几句话来概括。那么摘要的任务就变成了找到文档中最重要的几句话，也就是一个排序的问题。</p>
 <p>排序是一个非常经典的问题，也是一个非常多解决方案的问题。比如：Google根据用户的query生成的网页列表，就是一个排序之后的结果；再比如Amazon的推荐系统推荐给用户的N个可能感兴趣的产品，也都是通过算法做了排序输出的。</p>
 <p>排序针对不同的问题，需要提出不同的指标，比如有的应用关心的是相关性，有的关心的是时效性，有的关心的是新颖性等等，在这个层面上来讨论排序，会有不同的模型。</p>
