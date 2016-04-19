@@ -78,11 +78,13 @@
 <p>1、选择一个big corpus作为训练、测试集。自动文摘的技术没有太成熟的一个重要原因在于没有一个成熟的大规模语料。一般来说都选择Gigawords作为训练、测试集，然后用DUC的数据集进行验证和对比。</p>
 <p>2、选择一个合适的encoder，这里可以选simple rnn，lstm rnn，gru rnn，simple birnn，lstm birnn，gru birnn，deep rnn，cnn，以及各种各样的cnn。不同model之间的组合都是一种创新，只不过创新意义不太大。用encoder将输入文本表示成一个向量。</p>
 <p>3、选择一个合适的decoder，decoder的作用是一个language model，用来生成summary words。</p>
-<p>4、设计一个合适的attention model。只要是语言模型都会存在相同的问题，比如out-of-vocabulary词的处理，尤其是做新闻类摘要的生成时，很多词都是人名、机构名等专有名词，所以这里需要用attention model将OOV词直接用输入中“注意”的词进行替换。在生成中文摘要问题上，将words降维到characters可以避免oov的问题，并且取得不错的结果。</p>
+<p>4、设计一个合适的attention model。不仅仅基于encoder last hidden state vector和上文来预测输出文本序列，更要基于输入中“注意力”更高的词来预测相应的词。</p>
+<p>5、设计一个copy net。只要是语言模型都会存在相同的问题，比如out-of-vocabulary词的处理，尤其是做新闻类摘要的生成时，很多词都是人名、机构名等专有名词，所以这里需要用copy net 将输入中的词copy过来生成输出。在生成中文摘要问题上，将words降维到characters可以避免oov的问题，并且取得不错的结果。</p>
 <p>接下来想做的事情是将neural summarization相关的paper精读之后写成blog。</p>
 <h1 id="Links"><a href="#Links" class="headerlink" title="Links"></a>Links</h1><p>[1] <a href="http://cn.arxiv.org/pdf/1409.3215" target="_blank" rel="external">Sequence to Sequence Learning with Neural Networks</a></p>
 <p>[2] <a href="http://cn.arxiv.org/pdf/1509.00685" target="_blank" rel="external">A Neural Attention Model for Abstractive Sentence Summarization</a></p>
 <p>[3] <a href="http://cn.arxiv.org/pdf/1506.05865" target="_blank" rel="external">LCSTS: A Large Scale Chinese Short Text Summarization Dataset</a></p>
+<p>[4] <a href="http://cn.arxiv.org/pdf/1603.06393" target="_blank" rel="external">Incorporating Copying Mechanism in Sequence-to-Sequence Learning</a></p>
 
       
     </div>
