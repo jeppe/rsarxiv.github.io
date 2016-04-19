@@ -63,9 +63,17 @@
       
         <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><p>这篇博客是自动文摘系列的第四篇，重点介绍近期abstractive summarization的一些研究情况。abstractive是学术界研究的热点，尤其是Machine Translation中的encoder-decoder框架和attention mechanism十分火热，大家都试着将abstractive问题转换为sequence-2-sequence问题，套用上面两种技术，得到state-of-the-art结果，2015年来已经有许多篇paper都是这种套路，于是就有了下面的吐槽：</p>
 <img src="http://ww4.sinaimg.cn/mw690/62caff97jw1f2qam97d3tj20sg0nd775.jpg" width="400" height="650">
-<h1 id="Encoder-Decoder"><a href="#Encoder-Decoder" class="headerlink" title="Encoder-Decoder"></a>Encoder-Decoder</h1><p>Encoder-Decoder不是一种模型，而是一种框架，一种处理问题的思路，最早应用于机器翻译领域，</p>
+<h1 id="Encoder-Decoder"><a href="#Encoder-Decoder" class="headerlink" title="Encoder-Decoder"></a>Encoder-Decoder</h1><p>Encoder-Decoder不是一种模型，而是一种框架，一种处理问题的思路，最早应用于机器翻译领域，输入一个序列，输出另外一个序列。机器翻译问题就是将一种语言序列转换成另外一种语言序列，将该技术扩展到其他领域，比如输入序列可以是文字，语音，图像，视频，输出序列可以是文字，图像，可以解决很多别的类型的问题。这一大类问题就是上图中的sequence-to-sequence问题。这里以输入为文本，输出也为文本作为例子进行介绍：</p>
 <img src="/2016/04/17/自动文摘（四）/seq2seq.png" width="400" height="650">
-<h1 id="Attention-Mechanism"><a href="#Attention-Mechanism" class="headerlink" title="Attention Mechanism"></a>Attention Mechanism</h1><h1 id="Neural-Summarization"><a href="#Neural-Summarization" class="headerlink" title="Neural Summarization"></a>Neural Summarization</h1><h1 id="Links"><a href="#Links" class="headerlink" title="Links"></a>Links</h1>
+<p>encoder部分是将输入序列表示成一个带有语义的向量，使用最广泛的表示技术是Recurrent Neural Network，RNN是一个基本模型，在训练的时候会遇到gradient explode或者gradient vanishing的问题，导致无法训练，所以在实际中经常使用的是经过改良的LSTM RNN或者GRU RNN对输入序列进行表示，更加复杂一点可以用BiRNN、BiRNN with LSTM、BiRNN with GRU、多层RNN等模型来表示，输入序列最终表示为最后一个word的hidden state vector。</p>
+<p>decoder部分是以encoder生成的hidden state vector作为输入“解码”出目标文本序列，本质上是一个语言模型，最常见的是用Recurrent Neural Network Language Model(RNNLM)，只要涉及到RNN就会有训练的问题，也就需要用LSTM、GRU和一些高级的model来代替。目标序列的生成和LM做句子生成的过程类似，只是说计算条件概率时需要考虑encoder向量。</p>
+<p>这里，每一种模型几乎都可以出一篇paper，尤其是在这个技术刚刚开始应用在各个领域中的时候，大家通过尝试不同的模型组合，得到state-of-the-art结果。</p>
+<p>该框架最早被应用在Google Translation中，paper详情可以见[1]，2014年12月发在arxiv上。</p>
+<h1 id="Attention-Mechanism"><a href="#Attention-Mechanism" class="headerlink" title="Attention Mechanism"></a>Attention Mechanism</h1><p>注意力机制在NLP中的使用也就是2015年的事情，也是从机器翻译领域开始。我们仔细看decoder中生成目标文本序列这部分，第一个word的生成完全依赖于encoder的last hidden state vector，而这个vector更多的是表示输入序列的最后一个word的意思，也就是说rnn一般来说都是一个有偏的模型。</p>
+<p>打个比方，rnn可以理解为一个人看完了一段话，他可能只记得最后几个词说明的意思，但是如果你问他前面的信息，他就不能准确地回答，attention可以理解为，提问的信息只与之前看完的那段话中一部分关系密切，而其他部分关系不大，这个人就会将自己的注意力锁定在这部分信息中。这个就是所谓attention mechanism的原理，每个hidden state vector对于decoder生成每个单词都有影响，但影响分布并不相同，请看下图：</p>
+<img src="/2016/04/17/自动文摘（四）/attention.png" width="400" height="650">
+<p>该矩阵</p>
+<h1 id="Neural-Summarization"><a href="#Neural-Summarization" class="headerlink" title="Neural Summarization"></a>Neural Summarization</h1><h1 id="Links"><a href="#Links" class="headerlink" title="Links"></a>Links</h1>
       
     </div>
     <footer>
