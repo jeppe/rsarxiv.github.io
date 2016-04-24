@@ -69,7 +69,8 @@
 </blockquote>
 <p>最近读了几篇关于deep learning在summarization领域应用的paper，主要的方法是借鉴机器翻译中seq2seq的技术，然后加上attention model提升效果。今天来分享其中一篇paper，<b>Generating News Headlines with Recurrent Neural Networks</b></p>
 <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>本文的思路是用LSTM RNN作为encoder-decoder框架的模型，并且使用了attention模型来生成新闻文章的标题，效果很好。并且提出了一种简化版的attention mechanism，相比于复杂版的注意力机制在解决headline generation问题上有更好的效果。</p>
-<p><code>本文定义的文本摘要问题是给新闻文章命题，为了套用seq2seq那一套东西，一般都会将source定义为新闻的第一句话，target定义为标题</code></p>
+<p><code>本文定义的文本摘要问题是给新闻文章命题，为了套用seq2seq技术，一般都会将source定义为新闻的第一句话，target定义为标题。本文的亮点在于提出了一种简化版的注意力机制，并且得到了不错的结果。</code></p>
+<h1 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h1><img src="/2016/04/24/自动文摘（五）/model.png" width="400" height="650">
 
       
     </div>
