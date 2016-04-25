@@ -90,7 +90,7 @@
 <h1 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h1><p>模型的优劣用两种方法进行评价。第一种，将训练集和保留集<code>损失值</code>作为评价指标；第二种，将<code>BLEU</code>作为评价指标，为了保证效率，保留集仅仅用了384个样本进行计算。</p>
 <p><code>评价指标也是常规的两种，两种数据集上的loss值直观地反应了训练和测试效果，BLEU是机器翻译领域中常用的评价标准。</code></p>
 <h1 id="Analysis"><a href="#Analysis" class="headerlink" title="Analysis"></a>Analysis</h1><p>计算硬件是GTX 980 Ti GPU，每种模型的计算都会花费4.5天时间。效果直接看下图：</p>
-<img src="/2016/04/24/自动文摘（五）/evaluation.png" width="400" height="650">
+<img src="/2016/04/24/自动文摘（五）/evaluation.png" width="600" height="800">
 <p>在应用模型结果做保留集的预测时，不同新闻来源的文章预测效果不一样。比如：在BBC、华尔街日报、卫报的效果就非常好，但是在赫芬顿邮报和福布斯的效果就很差。</p>
 <p><code>结果也是看上图也是一目了然，本文的simple attention mechanism更胜一筹。</code></p>
 <h2 id="Understanding-information-stored-in-last-layer-of-the-neural-network"><a href="#Understanding-information-stored-in-last-layer-of-the-neural-network" class="headerlink" title="Understanding information stored in last layer of the neural network"></a>Understanding information stored in last layer of the neural network</h2>
