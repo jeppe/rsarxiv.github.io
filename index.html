@@ -64,8 +64,26 @@
 <p><strong>万事开头难，其实之后的事情可能会更难，但开好了头，就会有充足的信心来面对后面的困难。</strong></p>
 </blockquote>
 <p>记得Andrew Ng在一个采访中曾经说过：“当我和研究人员，或是想创业的人交谈时，我告诉他们如果你不断地阅读论文，每周认真研究六篇论文，坚持两年。然后，你会学到很多东西。这是对你长期发展一个极好的投资。”，这个投资将会是一个回报非常高的投资。其实，不仅仅是坚持读论文，当你将任何一件不起眼但却有一些意义的事情坚持做很长的时间都会得到不错的回报，比如健身，比如跑步，比如写博客，比如摄影，每一个这样的习惯看起来都不会立刻产生很明显的效果，但坚持久了对我们的生活和工作都会带来一个质的飞跃。</p>
-<p>上周写了篇paper的读书笔记，也是对自己读了那篇paper的一些思考的提炼，本周将会带来对两篇paper的思考。其中一篇是<b>A Neural Attention Model for Abstractive Sentence Summarization</b>，另一篇是<b>Abstractive Sentence Summarization with Attentive Recurrent Neural Networks</b>，两篇文章都出自于<a href="http://harvardnlp.github.io/" target="_blank" rel="external">Harvard NLP</a>组，</p>
-
+<p>上周写了篇paper的读书笔记，也是对自己读了那篇paper的一些思考的提炼，本周将会带来对两篇paper的思考。其中一篇是<b>A Neural Attention Model for Abstractive Sentence Summarization</b>，另一篇是<b>Abstractive Sentence Summarization with Attentive Recurrent Neural Networks</b>，两篇文章都出自于<a href="http://harvardnlp.github.io/" target="_blank" rel="external">Harvard NLP</a>组，两篇是姊妹篇，第二篇是第一篇的升级版，所以要结合着读，对比着分析。</p>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><h2 id="Paper-1"><a href="#Paper-1" class="headerlink" title="Paper 1"></a>Paper 1</h2><p>本文提出了一种<code>data-driven</code>的方法来做句子摘要，使用了一种基于局部注意力模型（<code>local attention-based model</code>），在给定输入句子的情况下，生成摘要的每个词。模型结构非常简单，可以套用流行的<code>end2end</code>框架来训练，并且很容易扩展到大型训练数据集上。模型在DUC-2004任务中效果优于几个不错的baselines。</p>
+<h2 id="Paper-2"><a href="#Paper-2" class="headerlink" title="Paper 2"></a>Paper 2</h2><p>本文使用一种conditional RNN来生成摘要，条件是卷积注意力模型（<code>convolutional attention-based encoder</code>），用来确保每一步生成词的时候都可以聚焦到合适的输入上。模型仅仅依赖于学习到的features，并且很容易在大规模数据上进行end2end式地训练，并且在Gigaword语料上和DUC-2004任务中取得了更好的效果。</p>
+<p><code>两篇paper的模型框架都是seq2seq+attention，最大的区别在于选择encoder和decoder的模型，第一篇的模型偏容易一些，第二篇用了rnn来做。seq2seq或者说end2end现在火的不得了，最初在机器翻译开始使用，后面推广到多模态学习，对话生成，自动问答，文本摘要等等诸多领域。</code></p>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>文本摘要有几种类型的任务，本文属于<code>headlines generation</code>，输入的是一段话，输出的是一句话或者一个标题。</p>
+<h2 id="Paper-1-1"><a href="#Paper-1-1" class="headerlink" title="Paper 1"></a>Paper 1</h2><p>受最近机器翻译中seq2seq技术的启发，本文将<code>Neural Language Model</code>和带有上下文的encoder结合起来，其中encoder与Bahdanau（<b>Neural machine translation by jointly learning to align and translate</b>）的attention-based encoder一样。encoder和decoder在句子摘要任务中共同训练。另外，decoder中也使用了beam search进行摘要生成。本文的方法简称ABS（<code>Attention-Based Summarization</code>），可以轻易扩展到大规模数据集进行训练，而且可以在任何document-summary对中进行使用。本文采用Gigaword语料集进行训练，包括大约400万篇新闻文章。为了检验模型的效果，与多种类型的文摘系统进行了对比，并且在DUC-2004任务上获得了最高分。</p>
+<h2 id="Paper-2-1"><a href="#Paper-2-1" class="headerlink" title="Paper 2"></a>Paper 2</h2><p>本文的decoder是一个<code>RNN LM</code>，生成摘要依赖的条件是encoder的输出，encoder会计算输入中每个词的分数，这个分数可以理解为对输入作软对齐（<code>soft alignment</code>），也就是说decoder在生成下一个单词时需要注意输入中的哪些单词。encoder和decoder要在一个sentence-summary数据集中进行共同训练。本文的模型可以看作第一篇ABS模型的扩展，ABS模型中decoder是用FNN LM，而本文使用RNN，encoder部分本文更加复杂，将输入单词的位置信息考虑在内，并且使用了卷积网络来编码输入单词。本文模型效果优于第一篇paper。</p>
+<p><code>两篇paper都是seq2seq在sentence-level abstractive summarization任务中早期的尝试，给文本摘要方法带来了新鲜血液，第一篇paper中encoder和decoder都用了比较简单的模型，但已经得到了优于传统方法的结果，再一次地证明了deep learning在解决问题上的优势，第二篇paper升级了encoder和decoder，考虑了更复杂的细节，得到了更好的效果，相信后面会有大量的paper套用seq2seq+attention，再配合一些其他的技术来提升模型的效果，但整体的思路基本已固定下来，如果想要更大的突破，可能还需要提出另外一种框架来解决问题。</code></p>
+<h1 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h1><p>这部分内容是初入门径的研究者最喜欢的工作，尤其是这个领域中最新研究的paper还没有出survey的情况下，大家想最快地了解这个领域中新技术的应用情况，读高水平paper中的相关工作是最有效的。</p>
+<h2 id="Paper-1-2"><a href="#Paper-1-2" class="headerlink" title="Paper 1"></a>Paper 1</h2><p>文本摘要任务在sentence这个level可以等同于headlines generation，某种程度上与paraphrase相近。seq2seq于2014年在机器翻译领域中提出并流行开来，之前的研究大多都是基于extractive的思路，借助一些人工features来提升效果。seq2seq的意义在于完全基于数据本身，从数据中学习feature出来，并且得到了更好的效果。本文的方法比较简单，decoder也只用了NNLM（2003年由Bengio提出），而seq2seq在机器翻译中应用时都采用的是RNNLM，所以在Future Work中作者会用RNNLM，于是就有了第二篇paper。</p>
+<h2 id="Paper-2-2"><a href="#Paper-2-2" class="headerlink" title="Paper 2"></a>Paper 2</h2><p>由于都是一个组出的paper，还有共同的作者，这个部分写的差不多，只是多提了第一篇paper做的工作。</p>
+<p><code>都说 读书破万卷，下笔如有神。在做一个领域的研究之前，免不了读大量相关的paper来做一些积累，related work这个部分就是大家写的小型survey，经常会提到一些该领域最经典的paper。感觉Rush他们组应该是比较新的NLP研究力量，将一个新的技术用在了自动文摘领域中，攒了两篇paper，也是数量上的一种积累。不过他们share了paper相关的code，用Torch来写模型部分，用python作数据处理。组里也包括那位将CNN用在sentence classification中的Yoon Kim，相信他们日后会有更多更好的成果。</code></p>
+<h1 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h1><p>本节是用数学语言定义句子摘要问题，两篇文章解决的问题相同。给定一个输入句子，目标是生成一个压缩版的摘要。句子级别的摘要问题可以定义如下：</p>
+<img src="/2016/04/30/自动文摘（六）/formula1.png" width="600" height="800">
+<p>x表示输入句子，y表示生成的摘要句子集合，定义一个系统是abstractive的，就是从生成句子集合中找到score最大的那一个。而extractive摘要系统可以定义如下：</p>
+<img src="/2016/04/30/自动文摘（六）/formula2.png" width="600" height="800">
+<p>sentence compression系统可以定义如下：</p>
+<img src="/2016/04/30/自动文摘（六）/formula3.png" width="600" height="800">
+<p>然而abstractive summarization存在一个更加困难的生成过程。</p>
+<h1 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h1><h2 id="Paper-1-3"><a href="#Paper-1-3" class="headerlink" title="Paper 1"></a>Paper 1</h2><h2 id="Paper-2-3"><a href="#Paper-2-3" class="headerlink" title="Paper 2"></a>Paper 2</h2>
       
     </div>
     <footer>
