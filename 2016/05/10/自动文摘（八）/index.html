@@ -62,7 +62,7 @@
     <div class="entry">
       
         <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><p>最近读的几篇paper都是用seq2seq的思路来解决问题，有点读厌烦了，今天换个口味。分享一篇extractive式的paper，<b>AttSum: Joint Learning of Focusing and Summarization with Neural Attention</b>，AttSum是本文所阐述的摘要系统的名称。</p>
-<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>I<br>基于查询的抽取式文本摘要系统通常需要解决好相关性和显著性两个方面的任务，但一般的系统通常将两者分开考虑。而本文将两个任务合并考虑。本文的算法可以自动学习sentence和document cluster的embedding，并且当查询给定之后，可以应用注意力机制来模拟人类阅读行为。算法的有效性在DUC基于查询的文本摘要任务中进行了验证，得到了有竞争力的结果。</p>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>基于查询的抽取式文本摘要系统通常需要解决好相关性和显著性两个方面的任务，但一般的系统通常将两者分开考虑。而本文将两个任务合并考虑。本文的算法可以自动学习sentence和document cluster的embedding，并且当查询给定之后，可以应用注意力机制来模拟人类阅读行为。算法的有效性在DUC基于查询的文本摘要任务中进行了验证，得到了有竞争力的结果。</p>
 <p><code>本文是将最近比较火的注意力模型应用到了extractive文摘系统中，同时也用了sentence embedding来解决语义层面的相关性问题，并没有像之前的文章在改动seq2seq+attention的细节上做文章，而是切换到了另外一种思路上。</code></p>
 <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>基于查询的文本摘要系统一般应用于多文档摘要任务，既需要考虑摘要中句子的相关性，又要考虑句子的显著性，相关性反应了文档的主题思想，显著性避免了重复和冗余。很长一段时间，逻辑斯特回归是解决这类问题的热门方法，但是类似的大多数的监督学习方法都是将两个问题分开考虑，通过一些feature对相关性和显著性分开打分排序。但是人在写摘要的时候，往往会将相关性和显著性合并起来考虑。</p>
 <p>另外，相关性打分的方法也存在弊端，用类似TF-IDF的指标来打分有时并不能得到非常相似的结果，尽管可能匹配到了核心词，但检索出的结果并不一定可以满足用户的要求。</p>
