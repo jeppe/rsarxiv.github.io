@@ -97,7 +97,17 @@
 <p>3、迭代地将排名靠前的且不冗余的句子添加到队列中。这里的冗余定义为该句子相比进入队列的句子有更新的内容。</p>
 <p>具体算法流程如下：</p>
 <img src="/2016/05/10/自动文摘（八）/select.png" width="600" height="600">
-<p>``</p>
+<p><code>句子的选择算法几乎就是MMR，也是一种贪心的思路。不同的地方在于对冗余的定义不如MMR，MMR是用当前句子与已经在队列中的句子的相似度作为冗余判断，其实这样更加科学。</code></p>
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Dataset"><a href="#Dataset" class="headerlink" title="Dataset"></a>Dataset</h2><p>数据集用DUC2005-2007三年的数据，用两年的数据作为训练集，一年的数据作为测试集。</p>
+<h2 id="Model-Setting"><a href="#Model-Setting" class="headerlink" title="Model Setting"></a>Model Setting</h2><p>CNN层：50维词向量，用gensim实现，训练过程中不更新词向量，窗口尺寸选择2，即2-gram，和ROUGE-2保持一致，句子向量维度用5-100进行试验，最终用50作为句子向量维度。</p>
+<h2 id="Evaluation-Metric"><a href="#Evaluation-Metric" class="headerlink" title="Evaluation Metric"></a>Evaluation Metric</h2><p>评价指标用ROUGE-2。</p>
+<h2 id="Baselines"><a href="#Baselines" class="headerlink" title="Baselines"></a>Baselines</h2><p>使用了之前成绩不错的MultiMR和SVR系统作为baselines，同时为了验证本文模型的有效性，构造了一个ISOLATION系统，单独考虑相关性和显著性。</p>
+<h2 id="Summarization-Performance"><a href="#Summarization-Performance" class="headerlink" title="Summarization Performance"></a>Summarization Performance</h2><p>对比结果看下图：</p>
+<img src="/2016/05/10/自动文摘（八）/result.png" width="600" height="600">
+<p><code>整体来看本文的算法结果具有竞争性，但没有绝对竞争性。训练数据用ROUGE-2指标做了预处理分析，目标函数也是朝着ROUGE-2最大的方向，最后的评价指标也是ROUGE-2，在DUC2005和2006上很容易出现过拟合的情况，比其他结果表现好也是正常情况。整体感觉模型的效果很一般。</code></p>
+<h1 id="Review"><a href="#Review" class="headerlink" title="Review"></a>Review</h1><p><code>本文用了CNN+word embedding来表示sentence，然后将sentence vector加权求和作为document vector，通过将sentence和document映射到同一空间中，更容易在语义层上计算相似度。CNN之前多用于CV领域，后来在NLP中也应用了起来，尤其是各种各样的sentence classification任务中。在这个层面上将deep learning应用到了extractive summarization中，与之前seq2seq的paper有着本质的区别。整体来看，本文并没有太出众的创新点和突出的结果，反倒是提到了Attention机制，但并没有从模型体现地很充分，所以有炒概念的嫌疑。将文本中表示文本的方法应用在seq2seq的encoder部分，是本文的一种扩展和未来要做的工作。</code></p>
+<h1 id="Links"><a href="#Links" class="headerlink" title="Links"></a>Links</h1><p>[1] <a href="http://cn.arxiv.org/pdf/1604.00125v1.pdf" target="_blank" rel="external">AttSum: Joint Learning of Focusing and Summarization with Neural Attention</a></p>
+<h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
 
       
     </div>
