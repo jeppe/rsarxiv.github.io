@@ -78,7 +78,7 @@
 <h2 id="CNN-Layer"><a href="#CNN-Layer" class="headerlink" title="CNN Layer"></a>CNN Layer</h2><p>这一层的输入是用word embeddings构造的sentence matrix，然后在该矩阵上用一个卷积filter，之后再应用一个max pooliing获取到features，得到输出。</p>
 <p><code>这个方法非常简单，是一个典型的CNN的应用，需要注意的是filter的宽度和词向量的宽度一致，看起来和n-gram类似，但是用了卷积神经网络来捕捉sentence matrix中的最大特征。将变长的句子都统一映射到同一个空间中，为后续计算相似度提供了极大的方便。</code></p>
 <h2 id="Pooling-Layer"><a href="#Pooling-Layer" class="headerlink" title="Pooling Layer"></a>Pooling Layer</h2><p>这一层用sentence embedding加权求和来得到document cluster embedding。首先计算句子和query的相关性：</p>
-<img src="/2016/05/10/自动文摘（八）/formula.png" width="300" height="300">
+<img src="/2016/05/10/自动文摘（八）/formula1.png" width="300" height="300">
 <h2 id="Ranking-Layer"><a href="#Ranking-Layer" class="headerlink" title="Ranking Layer"></a>Ranking Layer</h2>
       
     </div>
