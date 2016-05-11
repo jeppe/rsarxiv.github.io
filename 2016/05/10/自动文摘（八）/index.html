@@ -1,0 +1,211 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>自动文摘（八） | RSarXiv</title>
+  
+  
+  <meta name="description" content="引最近读的几篇paper都是用seq2seq的思路来解决问题，有点读厌烦了，今天换个口味。分享一篇extractive式的paper，AttSum: Joint Learning of Focusing and Summarization with Neural Attention，AttSum是本">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="自动文摘（八）"/>
+  <meta property="og:site_name" content="RSarXiv"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="RSarXiv" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">RSarXiv</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-05-10T23:50:08.000Z"><a href="/2016/05/10/自动文摘（八）/">2016-05-10</a></time>
+      
+      
+  
+    <h1 class="title">自动文摘（八）</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><p>最近读的几篇paper都是用seq2seq的思路来解决问题，有点读厌烦了，今天换个口味。分享一篇extractive式的paper，<b>AttSum: Joint Learning of Focusing and Summarization with Neural Attention</b>，AttSum是本文所阐述的摘要系统的名称。</p>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>基于查询的抽取式文本摘要系统通常需要解决好相关性和新颖性两个方面的任务，但一般的系统通常将两者分开考虑。而本文将两个任务合并考虑。本文的算法可以自动学习sentence和document cluster的embedding，并且当查询给定之后，可以应用注意力机制来模拟人类阅读行为。算法的有效性在DUC基于查询的文本摘要任务中进行了验证，得到了有竞争力的结果。</p>
+<p><code>本文是将最近比较火的注意力模型应用到了extractive文摘系统中，同时也用了sentence embedding来解决语义层面的相关性问题，并没有像之前的文章在改动seq2seq+attention的细节上做文章，而是切换到了另外一种思路上。</code></p>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>基于查询的文本摘要系统一般应用于多文档摘要任务，既需要考虑摘要中句子的相关性，又要考虑句子的新颖性，相关性反应了文档的主题思想，新颖性避免了重复和冗余。很长一段时间，逻辑斯特回归是解决这类问题的热门方法，但是类似的大多数的监督学习方法都是将两个问题分开考虑，通过一些feature对相关性和新颖性分开打分排序。但是人在写摘要的时候，往往会将相关性和新颖性合并起来考虑。</p>
+<p>另外，相关性打分的方法也存在弊端，用类似TF-IDF的指标来打分有时并不能得到非常相似的结果，尽管可能匹配到了核心词，但检索出的结果并不一定可以满足用户的要求。</p>
+<p>用深度学习的技术来表示feature，会比用简单的feature去打分排序更加科学，将两个指标融合在一个模型中解决文本摘要问题将会是一个不错的方案。本文提出了一个名叫AttSum的文摘系统，联合了相关性和新颖性两个指标。</p>
+<p>注意力模型已经成功应用在学习多模态对齐问题中，也可以借鉴到本问题当中。人类总是会将注意力放在他们query的东西上面。</p>
+<p>本文在DUC2005-2007基于查询的文摘任务中进行了验证测试，在没有使用任何人为feature的情况下，获得了有竞争力的结果。本文的贡献有两点：</p>
+<p>1、应用了注意力机制在基于查询的文摘任务中。</p>
+<p>2、提出了一种联合查询相关性和句子新颖性的神经网络模型。</p>
+<p><code>相关性的打分问题是搜索引擎的基本问题，传统的方案是用一些简单的feature，比如TF-IDF来打分排序，但经常会得不到满意的结果，原因在于feature太过肤浅，并没有考虑语义层面的东西，换句话说并没有真正理解用户需要查什么。当然，有一段时间推荐系统扮演着搜索引擎助手的角色，当一个用户通过留下一些蛛丝马迹给网站，网站就会给他做一些个性化的推荐来辅助搜索引擎，但并不能从根本上解决这个问题。于是本文用了sentence embedding，document embedding来解决这个问题，就像当初的word embedding 一样，将语义映射到一个空间中，然后计算距离来测量相关性。</code></p>
+<h1 id="Query-Focused-Sentence-Ranking"><a href="#Query-Focused-Sentence-Ranking" class="headerlink" title="Query-Focused Sentence Ranking"></a>Query-Focused Sentence Ranking</h1><p>AttSum系统一共分为三层：</p>
+<p>1、CNN Layer，用卷积神经网络将句子和query映射到embedding上。</p>
+<p>2、Pooling Layer，用注意力机制配合sentence embeddings构造document cluster embeddings。</p>
+<p>3、Ranking Layer，计算sentence和document cluster之间的相似度，然后排序。</p>
+<h2 id="CNN-Layer"><a href="#CNN-Layer" class="headerlink" title="CNN Layer"></a>CNN Layer</h2><p>这一层的输入是用word embeddings构造的sentence matrix，然后在该矩阵上用一个卷积filter，之后再应用一个max pooliing获取到features，得到输出。</p>
+<p><code>这个方法非常简单，是一个典型的CNN的应用，需要注意的是filter的宽度和词向量的宽度一致，看起来和n-gram类似，但是用了卷积神经网络来捕捉sentence matrix中的最大特征。将变长的句子都统一映射到同一个空间中，为后续计算相似度提供了极大的方便。</code></p>
+<h2 id="Pooling-Layer"><a href="#Pooling-Layer" class="headerlink" title="Pooling Layer"></a>Pooling Layer</h2><p>这一层用sentence embedding加权求和来得到document cluster embedding。首先计算句子和query的相关性：</p>
+<img src="/2016/05/10/自动文摘（八）/formula.png" width="300" height="300">
+<h2 id="Ranking-Layer"><a href="#Ranking-Layer" class="headerlink" title="Ranking Layer"></a>Ranking Layer</h2>
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/nlp/">nlp</a>, <a href="/tags/paper/">paper</a>, <a href="/tags/自动文摘/">自动文摘</a>
+  </div>
+
+        
+  <div class="addthis addthis_toolbox addthis_default_style">
+    
+      <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+    
+    
+      <a class="addthis_button_tweet"></a>
+    
+    
+      <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    
+    
+      <a class="addthis_button_pinterest_pinit" pi:pinit:layout="horizontal"></a>
+    
+    <a class="addthis_counter addthis_pill_style"></a>
+  </div>
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js"></script>
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+      <div id="fb-root"></div>
+<script>
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=123456789012345";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<div class="fb-comments" data-href="http://rsarxiv.github.io/2016/05/10/自动文摘（八）/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
+      
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:rsarxiv.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/RSarXiv/">RSarXiv</a><small>1</small></li>
+  
+    <li><a href="/tags/arxiv/">arxiv</a><small>2</small></li>
+  
+    <li><a href="/tags/nlp/">nlp</a><small>10</small></li>
+  
+    <li><a href="/tags/paper/">paper</a><small>4</small></li>
+  
+    <li><a href="/tags/seq2seq/">seq2seq</a><small>3</small></li>
+  
+    <li><a href="/tags/推荐系统/">推荐系统</a><small>2</small></li>
+  
+    <li><a href="/tags/自动文摘/">自动文摘</a><small>8</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 RSarXiv
+  
+</div>
+<div class="clearfix"></div>
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_xiaoyou"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END --></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>
