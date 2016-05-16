@@ -85,6 +85,8 @@
 <h2 id="Pointing-Copy"><a href="#Pointing-Copy" class="headerlink" title="Pointing/Copy"></a>Pointing/Copy</h2><p>观察人工参考摘要时会发现，摘要中有很多词都是来自于输入部分，比如机构名、地名、人名。这些词出现很少有的甚至只出现一次，如果靠语言模型来生成是不可能的。基于这个现象，有几篇paper提出用Pointing/Copy机制来生成摘要，两种模型意思上茶太不多，在decoder中存在两种模型来生成单词，一种是常规的生成方式，另一种就是拷贝方式。拷贝模型在很大程度上解决了UNK的问题，rare words都直接用原文中的词放在摘要的相应位置上。</p>
 <p>本方法从正面解决了UNK问题，而且计算效率上可能比char-based的方法更好一些，因为并没有引入太大规模的input数据，output部分规模也不大。</p>
 <h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
 
       
     </div>

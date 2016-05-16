@@ -127,6 +127,8 @@
 <h1 id="Link"><a href="#Link" class="headerlink" title="Link"></a>Link</h1><p>[1] <a href="http://research.microsoft.com/en-us/people/cyl/naacl2003.pdf" target="_blank" rel="external">Automatic Evaluation of Summaries Using N-gram Co-Occurrence Statistics</a></p>
 <p>[2] <a href="http://www.berouge.com/Pages/default.aspx" target="_blank" rel="external">ROUGE开源工具包</a></p>
 <h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
 
       
     </div>
@@ -180,6 +182,8 @@
 <h2 id="Pointing-Copy"><a href="#Pointing-Copy" class="headerlink" title="Pointing/Copy"></a>Pointing/Copy</h2><p>观察人工参考摘要时会发现，摘要中有很多词都是来自于输入部分，比如机构名、地名、人名。这些词出现很少有的甚至只出现一次，如果靠语言模型来生成是不可能的。基于这个现象，有几篇paper提出用Pointing/Copy机制来生成摘要，两种模型意思上茶太不多，在decoder中存在两种模型来生成单词，一种是常规的生成方式，另一种就是拷贝方式。拷贝模型在很大程度上解决了UNK的问题，rare words都直接用原文中的词放在摘要的相应位置上。</p>
 <p>本方法从正面解决了UNK问题，而且计算效率上可能比char-based的方法更好一些，因为并没有引入太大规模的input数据，output部分规模也不大。</p>
 <h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
 
       
     </div>
@@ -260,6 +264,8 @@
 <h1 id="Review"><a href="#Review" class="headerlink" title="Review"></a>Review</h1><p><code>本文最大的贡献在于构建了一个大规模、高质量中文短文本摘要数据集，弥补了这个空缺。并且在数据集的基础上用了最简单seq2seq给出了一个baseline，为后人的研究提供了基础。从本文的模型中可以看出，unk问题在文本摘要任务中的重要性，如何解决unk问题是提升摘要系统性能的一个重要方向。本文给出了一个思路，用character-based model来绕过这个问题，看过的paper中还有其他的解决思路，后面的博客将会专门介绍unk这个问题。</code></p>
 <h1 id="Link"><a href="#Link" class="headerlink" title="Link"></a>Link</h1><p>[1] <a href="http://cn.arxiv.org/pdf/1506.05865" target="_blank" rel="external">LCSTS: A Large Scale Chinese Short Text Summarization Dataset</a></p>
 <h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
 
       
     </div>
@@ -339,6 +345,8 @@
 <h1 id="Review"><a href="#Review" class="headerlink" title="Review"></a>Review</h1><p><code>本文用了CNN+word embedding来表示sentence，然后将sentence vector加权求和作为document vector，通过将sentence和document映射到同一空间中，更容易在语义层上计算相似度。CNN之前多用于CV领域，后来在NLP中也应用了起来，尤其是各种各样的sentence classification任务中。在这个层面上将deep learning应用到了extractive summarization中，与之前seq2seq的paper有着本质的区别。整体来看，本文并没有太出众的创新点和突出的结果，反倒是提到了Attention机制，但并没有从模型体现地很充分，所以有炒概念的嫌疑。将文本中表示文本的方法应用在seq2seq的encoder部分，是本文的一种扩展和未来要做的工作。</code></p>
 <h1 id="Links"><a href="#Links" class="headerlink" title="Links"></a>Links</h1><p>[1] <a href="http://cn.arxiv.org/pdf/1604.00125v1.pdf" target="_blank" rel="external">AttSum: Joint Learning of Focusing and Summarization with Neural Attention</a></p>
 <h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
 
       
     </div>
@@ -444,6 +452,8 @@
 <h1 id="Link"><a href="#Link" class="headerlink" title="Link"></a>Link</h1><p>[1] <a href="http://cn.arxiv.org/pdf/1602.06023" target="_blank" rel="external">Abstractive Text Summarization using Sequence-to-sequence RNNs and
 Beyond</a></p>
 <h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
 
       
     </div>
@@ -589,6 +599,8 @@ Beyond</a></p>
 <p>[3] <a href="https://github.com/harvardnlp/NAMAS" target="_blank" rel="external">ABS Torch Code</a></p>
 <p>[4] <a href="https://github.com/harvardnlp/seq2seq-attn" target="_blank" rel="external">Seq2Seq Torch Code</a></p>
 <h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
 
       
     </div>
@@ -672,6 +684,8 @@ Beyond</a></p>
 <p>machine translation是最活跃的一个研究领域，seq2seq框架就是从该领域中提炼出来的，attention model也是借鉴于soft alignment，对于文本摘要这个问题来说，套用seq2seq只能解决headlines generation的问题，面对传统的single document summarization和multi document summarization任务便束手无策了，因为输入部分的规模远大于输出部分的话，seq2seq的效果不会很好，因此说abstractive summarization的研究还长路漫漫。不过这里可以将extractive和abstractive结合在一起来做，用extractive将一篇文档中最重要的一句话提取出来作为输入，套用seq2seq来做abstractive，本质上是一个paraphrase的任务，在工程中可以试一下这种思路。<code>在后续的研究中也可以尝试将extractive和abstractive的思路结合在一起做文本摘要。</code></p>
 <h1 id="Link"><a href="#Link" class="headerlink" title="Link"></a>Link</h1><p>[1] <a href="http://cn.arxiv.org/pdf/1512.01712" target="_blank" rel="external">Generating News Headlines with Recurrent Neural Networks</a></p>
 <h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
 
       
     </div>
@@ -729,6 +743,8 @@ Beyond</a></p>
 <p>[3] <a href="http://cn.arxiv.org/pdf/1506.05865" target="_blank" rel="external">LCSTS: A Large Scale Chinese Short Text Summarization Dataset</a></p>
 <p>[4] <a href="http://cn.arxiv.org/pdf/1603.06393" target="_blank" rel="external">Incorporating Copying Mechanism in Sequence-to-Sequence Learning</a></p>
 <h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
 
       
     </div>
@@ -781,6 +797,8 @@ Beyond</a></p>
 <p>现有的评价标准存在的一个重要问题在于没有考虑语义层面上的相似，评价extractive还好，但评价abstractive就会效果不好了。Deep Learning其实就是一个representation learning，将世界万物表示成数字，然后作分析。在词、句子甚至段落这个层面上的表示学习研究的非常多，也有很多的state-of-the-art的结果，所以做语义层面上的评价并不难。</p>
 <h2 id="重要性"><a href="#重要性" class="headerlink" title="重要性"></a>重要性</h2><p>评价对于一个研究领域非常重要，是牵引这个领域前进的首要因素，评价需要制定标准，标准的好坏关系到这个领域的研究质量，尤其是研究者们的paper质量，因为大家相互比较算法的优劣就十分依赖这样的标准。标准数据集的建立以及baseline的提出，是最首要的任务。</p>
 <h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
 
       
     </div>
