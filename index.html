@@ -538,12 +538,12 @@ with Minimum Risk Training</a></p>
         <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><blockquote>
 <p><strong>再坚持一下，就会等到黎明破晓，重见光明。</strong></p>
 </blockquote>
-<p>`今天继续分享一篇sentence level abstractive summarization相关的paper，出自于IBM Watson，<b>Abstractive Text Summarization using Sequence-to-sequence RNNs and Beyond</b></p>
-<p>本文是一篇非常优秀的paper，在seq2seq+attention的基础上融合了很多的features、trick进来，提出了多组对比的模型，并且在多种不同类型的数据集上做了评测，都证明了本文模型更加出色。从本文中得到了很多的启发。</p>
-<p>（1）单纯地data-driven模型并不能很好地解决文本摘要的问题，针对文本摘要问题的特点，融合一些feature到模型之中，对模型的效果有很大的帮助。</p>
-<p>（2）他山之石可以攻玉。其他领域的研究成果，小的trick都可以尝试借鉴于文本摘要问题之中，比如seq2seq+attention的技术从机器翻译中借鉴过来应用于此，比如LVT技术等等。</p>
-<p>（3）文本摘要问题的解决需要解决好方方面面的问题，不仅仅是模型方面，还有数据集，还有评价指标，每个方面的进步都会是一大进步。</p>
-<p>（4）deep learning技术训练出的模型泛化能力和扩展能力还有很长的路要走，对训练数据的严重依赖，导致了泛化能力和扩展能力的不足。针对特定的问题，构建特定的训练数据集，这对corpus的建设提出了更高的要求。`</p>
+<p>今天继续分享一篇sentence level abstractive summarization相关的paper，出自于IBM Watson，<b>Abstractive Text Summarization using Sequence-to-sequence RNNs and Beyond</b></p>
+<p><code>本文是一篇非常优秀的paper，在seq2seq+attention的基础上融合了很多的features、trick进来，提出了多组对比的模型，并且在多种不同类型的数据集上做了评测，都证明了本文模型更加出色。从本文中得到了很多的启发。</code></p>
+<p><code>（1）单纯地data-driven模型并不能很好地解决文本摘要的问题，针对文本摘要问题的特点，融合一些feature到模型之中，对模型的效果有很大的帮助。</code></p>
+<p><code>（2）他山之石可以攻玉。其他领域的研究成果，小的trick都可以尝试借鉴于文本摘要问题之中，比如seq2seq+attention的技术从机器翻译中借鉴过来应用于此，比如LVT技术等等。</code></p>
+<p><code>（3）文本摘要问题的解决需要解决好方方面面的问题，不仅仅是模型方面，还有数据集，还有评价指标，每个方面的进步都会是一大进步。</code></p>
+<p><code>（4）deep learning技术训练出的模型泛化能力和扩展能力还有很长的路要走，对训练数据的严重依赖，导致了泛化能力和扩展能力的不足。针对特定的问题，构建特定的训练数据集，这对corpus的建设提出了更高的要求。</code></p>
 <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p> 本文将自动文摘问题当作一个<code>Seq2Seq</code>的问题，并且应用<code>Attentional Encoder-Decoder Recurrent Neural Networks</code>框架来解决这个问题，并且在两个不同的数据集上取得了超越ABS（Rush,2015）模型的结果。同时，本文还提出多种模型来研究自动文摘中的重要问题，比如对关键词进行建模，并且得出词对于文档研究起关键作用的结论。研究结果表明本文的解决方案在性能上有很大的提升，另外，还贡献了一个包括多句子文摘的数据集和基准。</p>
 <p><code>本文的贡献点有三个：（1）在两个新的数据集上应用seq2seq+attention模型，并且取得了state-of-the-art的结果；（2）研究了关键词对于自动文摘所起到的关键作用，并且提出了一种新的模型；（3）提出了一个新的数据集，供研究者使用。</code></p>
 <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文研究的文本摘要问题是根据一篇长文来生成一篇短摘要或者标题，可以等同于将输入文本序列映射为一个目标文本序列，也就是seq2seq的问题。目前，解决seq2seq的问题，都是借鉴machine translation的方法。</p>
@@ -647,9 +647,9 @@ Beyond</a></p>
 </blockquote>
 <p>记得Andrew Ng在一个采访中曾经说过：“当我和研究人员，或是想创业的人交谈时，我告诉他们如果你不断地阅读论文，每周认真研究六篇论文，坚持两年。然后，你会学到很多东西。这是对你长期发展一个极好的投资。”，这个投资将会是一个回报非常高的投资。其实，不仅仅是坚持读论文，当你将任何一件不起眼但却有一些意义的事情坚持做很长的时间都会得到不错的回报，比如健身，比如跑步，比如写博客，比如摄影，每一个这样的习惯看起来都不会立刻产生很明显的效果，但坚持久了对我们的生活和工作都会带来一个质的飞跃。</p>
 <p>上周写了篇paper的读书笔记，也是对自己读了那篇paper的一些思考的提炼，本周将会带来对两篇paper的思考。其中一篇是<b>A Neural Attention Model for Abstractive Sentence Summarization</b>，另一篇是<b>Abstractive Sentence Summarization with Attentive Recurrent Neural Networks</b>，两篇文章都出自于<a href="http://harvardnlp.github.io/" target="_blank" rel="external">Harvard NLP</a>组，两篇是姊妹篇，第二篇是第一篇的升级版，所以要结合着读，对比着分析。</p>
-<p>`世上没有什么所谓的银弹，每种方法存在都有其存在的意义。第一篇paper尝试将seq2seq+attention应用在summarization任务上，但并未取得比较令人满意的结果，反而增加了一些人工特征之后，才得到了很大的提升，虽然第二篇模型依旧是一个data-driven的模型，但我想如果给其添加上人工特征也会得到更好的效果。综合多种方法的优点来解决一个问题才是王道，而不是一味地、粗暴地套用某个范式，某个框架。</p>
-<p>两篇文章从同一个角度入手，采用了不同难度的模型，非常好地解决了这个问题。联想到上周看的paper，他所采用的是多层lstm作为encoder和decoder，但数据集使用的并不相同，所以并不知道与本周的两篇paper哪个效果更好。但这也给出了一种发paper的思路，多去尝试一些encoder和decoder模型，不断地组合和对比，一定会有不错的发现。但这样的解决方案对于提升层次上没有太多溢出，因为大家都是照着模板去做，并没有真正地更深地理解到这个问题的本质。</p>
-<p>一个系统的构建需要处理好方方面面的细节，比如数据的预处理，比如评测的实现，比如模型的参数调优，每个方面想要做好做精都是一门学问。`</p>
+<p><code>世上没有什么所谓的银弹，每种方法存在都有其存在的意义。第一篇paper尝试将seq2seq+attention应用在summarization任务上，但并未取得比较令人满意的结果，反而增加了一些人工特征之后，才得到了很大的提升，虽然第二篇模型依旧是一个data-driven的模型，但我想如果给其添加上人工特征也会得到更好的效果。综合多种方法的优点来解决一个问题才是王道，而不是一味地、粗暴地套用某个范式，某个框架。</code></p>
+<p><code>两篇文章从同一个角度入手，采用了不同难度的模型，非常好地解决了这个问题。联想到上周看的paper，他所采用的是多层lstm作为encoder和decoder，但数据集使用的并不相同，所以并不知道与本周的两篇paper哪个效果更好。但这也给出了一种发paper的思路，多去尝试一些encoder和decoder模型，不断地组合和对比，一定会有不错的发现。但这样的解决方案对于提升层次上没有太多溢出，因为大家都是照着模板去做，并没有真正地更深地理解到这个问题的本质。</code></p>
+<p><code>一个系统的构建需要处理好方方面面的细节，比如数据的预处理，比如评测的实现，比如模型的参数调优，每个方面想要做好做精都是一门学问。</code></p>
 <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><h2 id="Paper-1"><a href="#Paper-1" class="headerlink" title="Paper 1"></a>Paper 1</h2><p>本文提出了一种<code>data-driven</code>的方法来做句子摘要，使用了一种基于局部注意力模型（<code>local attention-based model</code>），在给定输入句子的情况下，生成摘要的每个词。模型结构非常简单，可以套用流行的<code>end2end</code>框架来训练，并且很容易扩展到大型训练数据集上。模型在DUC-2004任务中效果优于几个不错的baselines。</p>
 <h2 id="Paper-2"><a href="#Paper-2" class="headerlink" title="Paper 2"></a>Paper 2</h2><p>本文使用一种conditional RNN来生成摘要，条件是卷积注意力模型（<code>convolutional attention-based encoder</code>），用来确保每一步生成词的时候都可以聚焦到合适的输入上。模型仅仅依赖于学习到的features，并且很容易在大规模数据上进行end2end式地训练，并且在Gigaword语料上和DUC-2004任务中取得了更好的效果。</p>
 <p><code>两篇paper的模型框架都是seq2seq+attention，最大的区别在于选择encoder和decoder的模型，第一篇的模型偏容易一些，第二篇用了rnn来做。seq2seq或者说end2end现在火的不得了，最初在机器翻译开始使用，后面推广到多模态学习，对话生成，自动问答，文本摘要等等诸多领域。</code></p>
