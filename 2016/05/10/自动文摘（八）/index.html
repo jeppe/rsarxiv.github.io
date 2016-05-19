@@ -62,6 +62,7 @@
     <div class="entry">
       
         <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><p>最近读的几篇paper都是用seq2seq的思路来解决问题，有点读厌烦了，今天换个口味。分享一篇extractive式的paper，<b>AttSum: Joint Learning of Focusing and Summarization with Neural Attention</b>，AttSum是本文所阐述的摘要系统的名称。</p>
+<p><code>本文用了CNN+word embedding来表示sentence，然后将sentence vector加权求和作为document vector，通过将sentence和document映射到同一空间中，更容易在语义层上计算相似度。CNN之前多用于CV领域，后来在NLP中也应用了起来，尤其是各种各样的sentence classification任务中。在这个层面上将deep learning应用到了extractive summarization中，与之前seq2seq的paper有着本质的区别。整体来看，本文并没有太出众的创新点和突出的结果，反倒是提到了Attention机制，但并没有从模型体现地很充分，所以有炒概念的嫌疑。将文本中表示文本的方法应用在seq2seq的encoder部分，是本文的一种扩展和未来要做的工作。</code></p>
 <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>基于查询的抽取式文本摘要系统通常需要解决好相关性和显著性两个方面的任务，但一般的系统通常将两者分开考虑。而本文将两个任务合并考虑。本文的算法可以自动学习sentence和document cluster的embedding，并且当查询给定之后，可以应用注意力机制来模拟人类阅读行为。算法的有效性在DUC基于查询的文本摘要任务中进行了验证，得到了有竞争力的结果。</p>
 <p><code>本文是将最近比较火的注意力模型应用到了extractive文摘系统中，同时也用了sentence embedding来解决语义层面的相关性问题，并没有像之前的文章在改动seq2seq+attention的细节上做文章，而是切换到了另外一种思路上。</code></p>
 <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>基于查询的文本摘要系统一般应用于多文档摘要任务，既需要考虑摘要中句子的相关性，又要考虑句子的显著性，相关性反应了文档的主题思想，显著性避免了重复和冗余。很长一段时间，逻辑斯特回归是解决这类问题的热门方法，但是类似的大多数的监督学习方法都是将两个问题分开考虑，通过一些feature对相关性和显著性分开打分排序。但是人在写摘要的时候，往往会将相关性和显著性合并起来考虑。</p>
@@ -105,7 +106,6 @@
 <h2 id="Summarization-Performance"><a href="#Summarization-Performance" class="headerlink" title="Summarization Performance"></a>Summarization Performance</h2><p>对比结果看下图：</p>
 <img src="/2016/05/10/自动文摘（八）/result.png" width="600" height="600">
 <p><code>整体来看本文的算法结果具有竞争性，但没有绝对竞争性。训练数据用ROUGE-2指标做了预处理分析，目标函数也是朝着ROUGE-2最大的方向，最后的评价指标也是ROUGE-2，在DUC2005和2006上很容易出现过拟合的情况，比其他结果表现好也是正常情况。整体感觉模型的效果很一般。</code></p>
-<h1 id="Review"><a href="#Review" class="headerlink" title="Review"></a>Review</h1><p><code>本文用了CNN+word embedding来表示sentence，然后将sentence vector加权求和作为document vector，通过将sentence和document映射到同一空间中，更容易在语义层上计算相似度。CNN之前多用于CV领域，后来在NLP中也应用了起来，尤其是各种各样的sentence classification任务中。在这个层面上将deep learning应用到了extractive summarization中，与之前seq2seq的paper有着本质的区别。整体来看，本文并没有太出众的创新点和突出的结果，反倒是提到了Attention机制，但并没有从模型体现地很充分，所以有炒概念的嫌疑。将文本中表示文本的方法应用在seq2seq的encoder部分，是本文的一种扩展和未来要做的工作。</code></p>
 <h1 id="Links"><a href="#Links" class="headerlink" title="Links"></a>Links</h1><p>[1] <a href="http://cn.arxiv.org/pdf/1604.00125v1.pdf" target="_blank" rel="external">AttSum: Joint Learning of Focusing and Summarization with Neural Attention</a></p>
 <h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
 <p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>

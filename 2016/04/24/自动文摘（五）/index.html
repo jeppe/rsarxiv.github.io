@@ -68,6 +68,10 @@
 <p><strong>读万卷书 行万里路</strong></p>
 </blockquote>
 <p>最近读了几篇关于deep learning在summarization领域应用的paper，主要的方法是借鉴机器翻译中seq2seq的技术，然后加上attention model提升效果。今天来分享其中一篇paper，<b>Generating News Headlines with Recurrent Neural Networks</b></p>
+<p>`本篇文章是近期所读文章中最简单的一篇，没有太精彩的理论和创新，是一个工程性很强的paper，将实现过程中的思路和一些参数交代的很清楚，对于复现此paper提供了很大的帮助。</p>
+<p>深度学习是一门研究表示学习的技术，用一张巨大的网来表征给入的数据，使得模型不依赖于领域的特征，是一种full data driven的模型，听起来像是一种银弹，尤其是近几年的在各大领域的都收获了state-of-the-art的结果，但模型的参数调优不没有太多的理论依据，之前的神经网络规模小调参数时间代价会小一些，但deep learning动不动就需要几天甚至几周的训练时间，调参数代价太大；中间层的表示如何解释，也是一个十分头疼的事情，对于cv领域来说还好，总可以将matrix显示成一幅图片来看效果，比较直观，但对于nlp领域，hidden state到底是什么，表示哪个词？表示哪种关系？词向量的每一个维度代表什么？具体真说不清楚，只有在输出的那一层才能看到真正的意义。</p>
+<p>一个领域的发展需要很多种不同思路的试错，应该是一种百家争鸣的态势，而不是大家一股脑地都用一种技术，一种思路来解决问题，理论模型都趋于大同，这样对这个领域的发展不会有太积极的意义。`</p>
+<p>machine translation是最活跃的一个研究领域，seq2seq框架就是从该领域中提炼出来的，attention model也是借鉴于soft alignment，对于文本摘要这个问题来说，套用seq2seq只能解决headlines generation的问题，面对传统的single document summarization和multi document summarization任务便束手无策了，因为输入部分的规模远大于输出部分的话，seq2seq的效果不会很好，因此说abstractive summarization的研究还长路漫漫。不过这里可以将extractive和abstractive结合在一起来做，用extractive将一篇文档中最重要的一句话提取出来作为输入，套用seq2seq来做abstractive，本质上是一个paraphrase的任务，在工程中可以试一下这种思路。在后续的研究中也可以尝试将extractive和abstractive的思路结合在一起做文本摘要。`</p>
 <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>本文的思路是用LSTM RNN作为encoder-decoder框架的模型，并且使用了attention模型来生成新闻文章的标题，效果很好。并且提出了一种简化版的attention mechanism，相比于复杂版的注意力机制在解决headline generation问题上有更好的效果。</p>
 <p><code>本文定义的文本摘要问题是给新闻文章命题，为了套用seq2seq技术，一般都会将source定义为新闻的第一句话，target定义为标题。本文的亮点在于提出了一种简化版的注意力机制，并且得到了不错的结果。</code></p>
 <h1 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h1><h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><img src="/2016/04/24/自动文摘（五）/model.png" width="600" height="800">
@@ -109,10 +113,6 @@
 <h1 id="Future-Work"><a href="#Future-Work" class="headerlink" title="Future Work"></a>Future Work</h1><p>使用BiRNN来代替RNN配合attention model效果可能会更好一些。</p>
 <p><code>将模型更换为Bi-RNN会得到一个新的结果，不知道会不会有人拿这个来刷paper，个人觉得好无趣。</code></p>
 <h1 id="Conclusions"><a href="#Conclusions" class="headerlink" title="Conclusions"></a>Conclusions</h1><p>本文提出的simple attention mechanism效果很不错。</p>
-<h1 id="Review"><a href="#Review" class="headerlink" title="Review"></a>Review</h1><p>本篇文章是近期所读文章中最简单的一篇，没有太精彩的理论和创新，是一个工程性很强的paper，将实现过程中的思路和一些参数交代的很清楚，对于复现此paper提供了很大的帮助。</p>
-<p>深度学习是一门研究表示学习的技术，用一张巨大的网来表征给入的数据，使得模型不依赖于领域的特征，是一种full data driven的模型，听起来像是一种银弹，尤其是近几年的在各大领域的都收获了state-of-the-art的结果，但模型的参数调优不没有太多的理论依据，之前的神经网络规模小调参数时间代价会小一些，但deep learning动不动就需要几天甚至几周的训练时间，调参数代价太大；中间层的表示如何解释，也是一个十分头疼的事情，对于cv领域来说还好，总可以将matrix显示成一幅图片来看效果，比较直观，但对于nlp领域，hidden state到底是什么，表示哪个词？表示哪种关系？词向量的每一个维度代表什么？具体真说不清楚，只有在输出的那一层才能看到真正的意义。</p>
-<p>一个领域的发展需要很多种不同思路的试错，应该是一种百家争鸣的态势，而不是大家一股脑地都用一种技术，一种思路来解决问题，理论模型都趋于大同，这样对这个领域的发展不会有太积极的意义。</p>
-<p>machine translation是最活跃的一个研究领域，seq2seq框架就是从该领域中提炼出来的，attention model也是借鉴于soft alignment，对于文本摘要这个问题来说，套用seq2seq只能解决headlines generation的问题，面对传统的single document summarization和multi document summarization任务便束手无策了，因为输入部分的规模远大于输出部分的话，seq2seq的效果不会很好，因此说abstractive summarization的研究还长路漫漫。不过这里可以将extractive和abstractive结合在一起来做，用extractive将一篇文档中最重要的一句话提取出来作为输入，套用seq2seq来做abstractive，本质上是一个paraphrase的任务，在工程中可以试一下这种思路。<code>在后续的研究中也可以尝试将extractive和abstractive的思路结合在一起做文本摘要。</code></p>
 <h1 id="Link"><a href="#Link" class="headerlink" title="Link"></a>Link</h1><p>[1] <a href="http://cn.arxiv.org/pdf/1512.01712" target="_blank" rel="external">Generating News Headlines with Recurrent Neural Networks</a></p>
 <h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
 <p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>

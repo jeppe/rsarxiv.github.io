@@ -9,7 +9,7 @@
   <meta name="description" content="引
 再坚持一下，就会等到黎明破晓，重见光明。
 
-今天继续分享一篇sentence level abstractive summarization相关的paper，出自于IBM Watson，Abstractive Text Summarization using Sequence-to-sequen">
+`今天继续分享一篇sentence level abstractive summarization相关的paper，出自于IBM Watson，Abstractive Text Summarization using Sequence-to-seque">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -67,7 +67,12 @@
         <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><blockquote>
 <p><strong>再坚持一下，就会等到黎明破晓，重见光明。</strong></p>
 </blockquote>
-<p>今天继续分享一篇sentence level abstractive summarization相关的paper，出自于IBM Watson，<b>Abstractive Text Summarization using Sequence-to-sequence RNNs and Beyond</b></p>
+<p>`今天继续分享一篇sentence level abstractive summarization相关的paper，出自于IBM Watson，<b>Abstractive Text Summarization using Sequence-to-sequence RNNs and Beyond</b></p>
+<p>本文是一篇非常优秀的paper，在seq2seq+attention的基础上融合了很多的features、trick进来，提出了多组对比的模型，并且在多种不同类型的数据集上做了评测，都证明了本文模型更加出色。从本文中得到了很多的启发。</p>
+<p>（1）单纯地data-driven模型并不能很好地解决文本摘要的问题，针对文本摘要问题的特点，融合一些feature到模型之中，对模型的效果有很大的帮助。</p>
+<p>（2）他山之石可以攻玉。其他领域的研究成果，小的trick都可以尝试借鉴于文本摘要问题之中，比如seq2seq+attention的技术从机器翻译中借鉴过来应用于此，比如LVT技术等等。</p>
+<p>（3）文本摘要问题的解决需要解决好方方面面的问题，不仅仅是模型方面，还有数据集，还有评价指标，每个方面的进步都会是一大进步。</p>
+<p>（4）deep learning技术训练出的模型泛化能力和扩展能力还有很长的路要走，对训练数据的严重依赖，导致了泛化能力和扩展能力的不足。针对特定的问题，构建特定的训练数据集，这对corpus的建设提出了更高的要求。`</p>
 <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p> 本文将自动文摘问题当作一个<code>Seq2Seq</code>的问题，并且应用<code>Attentional Encoder-Decoder Recurrent Neural Networks</code>框架来解决这个问题，并且在两个不同的数据集上取得了超越ABS（Rush,2015）模型的结果。同时，本文还提出多种模型来研究自动文摘中的重要问题，比如对关键词进行建模，并且得出词对于文档研究起关键作用的结论。研究结果表明本文的解决方案在性能上有很大的提升，另外，还贡献了一个包括多句子文摘的数据集和基准。</p>
 <p><code>本文的贡献点有三个：（1）在两个新的数据集上应用seq2seq+attention模型，并且取得了state-of-the-art的结果；（2）研究了关键词对于自动文摘所起到的关键作用，并且提出了一种新的模型；（3）提出了一个新的数据集，供研究者使用。</code></p>
 <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文研究的文本摘要问题是根据一篇长文来生成一篇短摘要或者标题，可以等同于将输入文本序列映射为一个目标文本序列，也就是seq2seq的问题。目前，解决seq2seq的问题，都是借鉴machine translation的方法。</p>
@@ -129,11 +134,6 @@
 <img src="/2016/05/07/自动文摘（七）/result4.png" width="600" height="800">
 <p><code>本文模型相对于Rush的模型有了更进一步的效果，但对于文本摘要问题来说，并没有本质上的提升，也会经常出现这样或者那样的错误。指标上的领先是一种进步，但与评价指标太过死板也有关系，现有的评价指标很难从语义这个层次上来评价结果。所以，文本摘要问题的解决需要解决方方面面的问题，比如数据集，比如评价指标，比如模型，任何一个方面的突破都会带来文本摘要问题的突破。</code></p>
 <h1 id="Conclusions"><a href="#Conclusions" class="headerlink" title="Conclusions"></a>Conclusions</h1><p>本文提出的模型相比于前人的模型有更好的效果，并且构建了一个新的摘要数据集，可以满足多句摘要的任务。</p>
-<h1 id="Review"><a href="#Review" class="headerlink" title="Review"></a>Review</h1><p>本文是一篇非常优秀的paper，在seq2seq+attention的基础上融合了很多的features、trick进来，提出了多组对比的模型，并且在多种不同类型的数据集上做了评测，都证明了本文模型更加出色。从本文中得到了很多的启发。</p>
-<p>（1）单纯地data-driven模型并不能很好地解决文本摘要的问题，针对文本摘要问题的特点，融合一些feature到模型之中，对模型的效果有很大的帮助。</p>
-<p>（2）他山之石可以攻玉。其他领域的研究成果，小的trick都可以尝试借鉴于文本摘要问题之中，比如seq2seq+attention的技术从机器翻译中借鉴过来应用于此，比如LVT技术等等。</p>
-<p>（3）文本摘要问题的解决需要解决好方方面面的问题，不仅仅是模型方面，还有数据集，还有评价指标，每个方面的进步都会是一大进步。</p>
-<p>（4）deep learning技术训练出的模型泛化能力和扩展能力还有很长的路要走，对训练数据的严重依赖，导致了泛化能力和扩展能力的不足。针对特定的问题，构建特定的训练数据集，这对corpus的建设提出了更高的要求。</p>
 <h1 id="Link"><a href="#Link" class="headerlink" title="Link"></a>Link</h1><p>[1] <a href="http://cn.arxiv.org/pdf/1602.06023" target="_blank" rel="external">Abstractive Text Summarization using Sequence-to-sequence RNNs and
 Beyond</a></p>
 <h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
