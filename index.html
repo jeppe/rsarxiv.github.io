@@ -85,8 +85,7 @@
 <li>RNNLM的模型复杂度：</li>
 </ul>
 <img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f3.png" width="200" height="200">
-<p>两个模型的输出层都可以用<code>hierarchical softmax</code>来替换，复杂度可以降为</p>
-<img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f2.png" width="200" height="200">
+<p>两个模型的输出层都可以用<code>hierarchical softmax</code>来替换，V的复杂度可以降为log2(V)</p>
 <p>NNLM模型的计算瓶颈在于N <em> D </em> H，而RNNLM的计算瓶颈在与H * H。</p>
 <p>本文提出的两种模型架构图如下：</p>
 <img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/arch.png" width="600" height="600">
@@ -102,7 +101,7 @@
 <p>Small - Smaller + Large = Larger</p>
 <p>可以将word映射到vector space中，那么是否可以将phrase，sentence，paragraph，document都映射到vector space中呢？进一步是否可以将topic也映射到vector space呢？是否任何东西都可以映射到vector space呢？</p>
 <p>丰富的想象力给了人类更大的动力去探索未知的世界，将word2vec的想法拓展到各个level的问题上。在后续的很多nlp研究中，词向量都起到了关键的作用。不仅如此，word2vec在其他领域中也有了广泛的应用，比如：app推荐，将每个user下载过的app作为word，就可以得到给user推荐类似的app（相似的word）；我在做rsarxiv时，构建了一个简单的paper graph，将authors，subjects，keywords都映射到了同一个空间中，给定一个author，很容易找到与之相关的authors，subjects，keywords。比如喜欢了这个作者，</p>
-<img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f7.png" width="200" height="200">
+<img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f7.png" width="300" height="300">
 <p>之后就会得到推荐：</p>
 <img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f8.png" width="600" height="600">
 <p>Word2Vec一个很重要的意义在于，用了无监督的方法，不需要花额外的功夫去构建数据集来teach模型，只需要给入一个非常大的文本数据集，就可以得到非常好的效果。</p>
