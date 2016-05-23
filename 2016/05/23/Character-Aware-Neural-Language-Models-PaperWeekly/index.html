@@ -78,7 +78,7 @@
 <img src="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/arch.png" width="600" height="600">
 <p>可以分为三层，一层是charCNN，通过构建一个char embedding矩阵，将word表示成matrix，和图像类似，输入到CNN模型中提取经过filter层和max pooling层得到一个输出表示，然后将该输出放到Highway Network中，得到一个处理后的效果更好的word embedding作为输出，在第三层中是一个典型的RNN模型，后面的处理与传统方法一样了。</p>
 <p>这里需要学习的参数中char embedding规模非常小，相对比之前的模型有非常明显的优势。这里需要说明的一点是HighWay Network，在Rupesh Kumar Srivastava的paper <a href="http://cn.arxiv.org/pdf/1507.06228.pdf" target="_blank" rel="external">Training Very Deep Networks</a>被提出，受lstm解决rnn梯度衰减问题的思路启发，用来解决训练very deep networks，因为模型越深效果越好，但越难训练。本文的HighWay层如下：</p>
-<img src="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/fig.png" width="200" height="200">
+<img src="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/fig1.png" width="200" height="200">
 <p>其中</p>
 <img src="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/fig2.png" width="200" height="200">
 <p>t被称为transform gate，1-t被称为carry gate。</p>
