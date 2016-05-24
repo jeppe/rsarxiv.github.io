@@ -3,15 +3,16 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Character-Aware Neural Language Models #PaperWeekly# | RSarXiv</title>
+  <title>Distributed Representations of Sentences and Documents #PaperWeekly# | RSarXiv</title>
   
   
-  <meta name="description" content="本篇分享的文章是Character-Aware Neural Language Models，作者是Yoon Kim、Alexander M. Rush。两位是HarvardNLP组的学生和老师，前者贡献了一些有意义的torch代码，比如seq2seq+attn，后者第一次将seq2seq的模型应用">
+  <meta name="description" content="既分享了一系列词向量相关的paper之后，今天分享一篇句子向量的文章，Distributed Representations of Sentences and Documents，作者是来自Google的Quoc Le和Tomas Mikolov，后者也是Word2Vec的作者。
+用低维向量表示了w">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="Character-Aware Neural Language Models #PaperWeekly#"/>
+  <meta property="og:title" content="Distributed Representations of Sentences and Documents #PaperWeekly#"/>
   <meta property="og:site_name" content="RSarXiv"/>
 
   
@@ -62,29 +63,30 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-05-23T14:10:32.000Z"><a href="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/">2016-05-23</a></time>
+        <time datetime="2016-05-24T19:34:00.000Z"><a href="/2016/05/24/Distributed-Representations-of-Sentences-and-Documents-PaperWeekly/">2016-05-24</a></time>
       
       
   
-    <h1 class="title">Character-Aware Neural Language Models #PaperWeekly#</h1>
+    <h1 class="title">Distributed Representations of Sentences and Documents #PaperWeekly#</h1>
   
 
     </header>
     <div class="entry">
       
-        <p>本篇分享的文章是<a href="http://cn.arxiv.org/pdf/1508.06615.pdf" target="_blank" rel="external">Character-Aware Neural Language Models</a>，作者是Yoon Kim、Alexander M. Rush。两位是HarvardNLP组的学生和老师，前者贡献了一些有意义的torch代码，比如<a href="https://github.com/harvardnlp/seq2seq-attn" target="_blank" rel="external">seq2seq+attn</a>，后者第一次将seq2seq的模型应用到了文本摘要。</p>
-<p>卷积神经网络之前常常用在计算机视觉领域，用来在图像中寻找features，前几年被研究者应用到了nlp任务中，在文本分类等任务中取得了不错的效果。传统的word embedding对低频词并没有太好的效果，而本文将char embedding作为CNN的输入，用CNN的输出经过一层highway层处理表示word embedding，然后作为RNNLM的输入，避免了这个问题。而且之前的神经网络语言模型中绝大多数需要优化的参数是word embedding，而本文的模型则会将优化参数减少非常多。</p>
-<p>本文模型的架构图如下：</p>
-<img src="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/arch.png" width="600" height="600">
-<p>可以分为三层，一层是charCNN，通过构建一个char embedding矩阵，将word表示成matrix，和图像类似，输入到CNN模型中提取经过filter层和max pooling层得到一个输出表示，然后将该输出放到Highway Network中，得到一个处理后的效果更好的word embedding作为输出，在第三层中是一个典型的RNN模型，后面的处理与传统方法一样了。</p>
-<p>这里需要学习的参数中char embedding规模非常小，相对比之前的模型有非常明显的优势。这里需要说明的一点是HighWay Network，在Rupesh Kumar Srivastava的paper <a href="http://cn.arxiv.org/pdf/1507.06228.pdf" target="_blank" rel="external">Training Very Deep Networks</a>被提出，受lstm解决rnn梯度衰减问题的思路启发，用来解决训练very deep networks，因为模型越深效果越好，但越难训练。本文的HighWay层如下：</p>
-<img src="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/fig1.png" width="400" height="400">
-<p>其中</p>
-<img src="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/fig2.png" width="200" height="200">
-<p>t被称为transform gate，1-t被称为carry gate。</p>
-<p>最终的实验证明，使用HighWay层效果比使用普通的MLP或者不使用该层效果更好。</p>
-<img src="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/result.png" width="500" height="500">
-<p>本文通过将传统的word embedding降级到char level，避免了大规模的embedding计算和低频词的问题，通过Highway network技术构建更深的网络，得到了不错的结果。</p>
+        <p>既分享了一系列词向量相关的paper之后，今天分享一篇句子向量的文章，<a href="http://cn.arxiv.org/pdf/1405.4053.pdf" target="_blank" rel="external">Distributed Representations of Sentences and Documents</a>，作者是来自Google的Quoc Le和Tomas Mikolov，后者也是Word2Vec的作者。</p>
+<p>用低维向量表示了word之后，接下来要挑战地就是表示句子和段落了。传统的表示句子的方式是用词袋模型，每个句子都可以写成一个特别大维度的向量，绝大多数是0，不仅没有考虑词序的影响，而且还无法表达语义信息。本文沿用了Word2Vec的思想，提出了一种无监督模型，将变长的句子或段落表示成固定长度的向量。不仅在一定上下文范围内考虑了词序，而且非常好地表征了语义信息。</p>
+<p>首先简单回顾下word2vec的cbow模型架构图：</p>
+<img src="/2016/05/24/Distributed-Representations-of-Sentences-and-Documents-PaperWeekly/fig1.png" width="600" height="600">
+<p>给定上下文the cat sat三个词来预测单词on。</p>
+<p>与cbow模型类似，本文提出了PV-DM（Distributed Memory Model of Paragraph Vectors），如下图：</p>
+<img src="/2016/05/24/Distributed-Representations-of-Sentences-and-Documents-PaperWeekly/fig2.png" width="600" height="600">
+<p>不同的地方在于，输入中多了一个paragraph vector，可以看做是一个word vector，作用是用来记忆当前上下文所缺失的信息，或者说表征了该段落的主题。这里，所有的词向量在所有段落中都是共用的，而paragraph vector只在当前paragraph中做训练时才相同。后面的过程与word2vec无异。</p>
+<p>topic也好，memory也罢，感觉更像是一种刻意的说辞，本质上就是一个word，只是这个word唯一代表了这个paragraph，丰富了context vector。</p>
+<p>另外一种模型，叫做PV-DBOW（Distributed Bag of Words version of Paragraph Vector），如下图：</p>
+<img src="/2016/05/24/Distributed-Representations-of-Sentences-and-Documents-PaperWeekly/fig3.png" width="600" height="600">
+<p>看起来和word2vec的skip-gram模型很像。</p>
+<p>用PV-DM训练出的向量有不错的效果，但在实验中采用了两种模型分别计算出的向量组合作为最终的paragraph vector，效果会更佳。在一些情感分类的问题上进行了测试，得到了不错的效果。</p>
+<p>本文的意义在于提出了一个无监督的paragraph向量表示模型，无监督的意义非常重大。有了paragraph级别的高效表示模型之后，解决类似于句子分类，检索，问答系统，文本摘要等各种问题都会带来极大地帮助。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
 <p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
@@ -98,7 +100,7 @@
         
   
   <div class="tags">
-    <a href="/tags/PaperWeekly/">PaperWeekly</a>, <a href="/tags/language-model/">language model</a>, <a href="/tags/nlp/">nlp</a>
+    <a href="/tags/PaperWeekly/">PaperWeekly</a>, <a href="/tags/nlp/">nlp</a>
   </div>
 
         
@@ -141,7 +143,7 @@
   }(document, 'script', 'facebook-jssdk'));
 </script>
 
-<div class="fb-comments" data-href="http://rsarxiv.github.io/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
+<div class="fb-comments" data-href="http://rsarxiv.github.io/2016/05/24/Distributed-Representations-of-Sentences-and-Documents-PaperWeekly/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
       
   
 </section>

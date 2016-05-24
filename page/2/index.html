@@ -61,6 +61,88 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-05-11T14:14:52.000Z"><a href="/2016/05/11/自动文摘（九）/">2016-05-11</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/05/11/自动文摘（九）/">自动文摘（九）</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><blockquote>
+<p><strong>坚持下去就是胜利。</strong></p>
+</blockquote>
+<p>今天分享一篇关于构造自动文摘数据集的paper，数据集的质量、内容和规模都是直接影响deep learning效果的最直接因素，作用非常重要。题目是<b>LCSTS: A Large Scale Chinese Short Text Summarization Dataset</b>。</p>
+<p><code>本文最大的贡献在于构建了一个大规模、高质量中文短文本摘要数据集，弥补了这个空缺。并且在数据集的基础上用了最简单seq2seq给出了一个baseline，为后人的研究提供了基础。从本文的模型中可以看出，unk问题在文本摘要任务中的重要性，如何解决unk问题是提升摘要系统性能的一个重要方向。本文给出了一个思路，用character-based model来绕过这个问题，看过的paper中还有其他的解决思路，后面的博客将会专门介绍unk这个问题。</code></p>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>自动文本摘要是一个非常难的问题，部分原因是因为缺乏大规模的高质量数据集。本文将会介绍一个取自于新浪微博的大规模中文短文本摘要数据集，数据集中包含了200万真实的中文短文本数据和每个文本作者给出的摘要。同时我们也手动标注了10666份文本的摘要。基于本数据集，我们测试了用RNN来生成摘要得到了不错的效果，不仅仅亚验证了数据集的有效性，而且为今后的研究提供了基准。</p>
+<p><code>数据集一直都是困扰deep learning技术更好地应用在各大领域的一大瓶颈，尤其是中文数据集的匮乏，本文工作的意义在于给研究中文自动文摘的学者提供了数据支持。</code></p>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><img src="/2016/05/11/自动文摘（九）/weibo.png" width="500" height="500">
+<p>本文中的数据类似于上图中的形式。</p>
+<p>传统研究abstractive summarization的方法将摘要过程分类两步，第一步是使用无监督方法或者语言知识将关键文本提取出来；第二步是用语言规则或者文本生成技术将第一步的结果转述（<code>paraphrase</code>）。近期研究表明深度学习技术有很强地表示学习能力和语言生成能力，尤其是用GPU在大规模数据集上进行计算，许多学者将该技术应用在abstractive summarization任务中。</p>
+<p>然而，公开的高质量大规模文本摘要数据集还是少之又少，DUC、TAC、TREC的数据仅仅包括几百条英文人工摘要数据，这种情况在中文环境中更加糟糕。所以本文构建了一个大规模中文短文本摘要数据集。</p>
+<p>以下是本文的贡献：</p>
+<p>1、构建了目前最大的一个中文短文本摘要数据集。</p>
+<p>2、提供了数据集分割的标准方法。</p>
+<p>3、研究了数据集的特性，采样10666条样本，并进行数据集的质量评价。</p>
+<p>4、利用了基于encoder-decoder rnn技术来生成摘要，作为该任务的基准。</p>
+<p><code>大规模数据集的构建往往来自于网络爬虫，获取到了大量的raw data之后，如何处理得到高质量的内容是关键。本文通过抽样选出样本对数据集质量进行评价，并且用当下最流行的seq2seq技术给出了本数据集的benchmark，以供后人研究超越。</code></p>
+<h1 id="Data-Collection"><a href="#Data-Collection" class="headerlink" title="Data Collection"></a>Data Collection</h1><p>为了保证质量，我们仅抓取通过认证组织的微博，这些微博更加清楚、规范和有信息。流程具体如下图：</p>
+<img src="/2016/05/11/自动文摘（九）/arch.png" width="500" height="500">
+<p>1、首先收集50个流行的官方组织用户作为种子。分别来自政治、经济、军事、电影、游戏等领域，比如人民日报。</p>
+<p>2、然后从种子用户中抓取他们关注的用户，并且将不是大V，且粉丝少于100万的用户过滤掉。</p>
+<p>3、然后抓取候选用户的微博内容。</p>
+<p>4、最后通过过滤，清洗，提取等工作得到最后的数据集。</p>
+<p><code>这个环节涉及到的技术是爬虫技术，整体的思路比较简单，先选择一些高质量的用户作为起点，从他们关注的用户中过滤出类似的大V用户，然后再爬取所有候选用户的微博内容，清洗、过滤和提取有效数据。</code></p>
+<h1 id="Data-Properties"><a href="#Data-Properties" class="headerlink" title="Data Properties"></a>Data Properties</h1><p>数据集主要分为三个部分，如下表：</p>
+<img src="/2016/05/11/自动文摘（九）/table.png" width="500" height="500">
+<p>1、第一部分是本数据集的主要部分，包含了2400591对（短文本，摘要），这部分数据用来训练生成摘要的模型。</p>
+<p>2、第二部分包括了10666对人工标注的（短文本，摘要），每个样本都打了1-5分，分数是用来评判短文本与摘要的相关程度，1代表最不相关，5代表最相关。这部分数据是从第一部分数据中随机采样出来的，用来分析第一部分数据的分布情况。其中，标注为3、4、5分的样本原文与摘要相关性更好一些，从中也可以看出很多摘要中会包含一些没有出现在原文中的词，这也说明与句子压缩任务不同。标注为1、2分的相关性差一些，更像是标题或者是评论而不是摘要。统计表明，1、2分的数据少于两成，可以用监督学习的方法过滤掉。</p>
+<p>3、第三部分包括了1106对，三个人对2000对进行了评判，这里的数据独立于第一部分和第二部分。选择3分以上的数据作为短文本摘要任务的测试数据集。</p>
+<p><code>数据集的构造是一个非常大的工作，因为涉及到大量的人工标注工作，如何保证所用的训练集、测试集都有很高的质量是一个问题。本文对第一部分的数据做了采样分析，用第二部分数据作为训练高质量数据的样本，提取出了更高质量的训练集，第三部分提供了测试集。到此，数据集比较完整了。</code></p>
+<h1 id="Experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h1><p>本文用了当下流行的seq2seq技术来做验证实验，用第一部分的数据作为训练集，第三部分的3分以上数据作为测试集。一共用了两种方法来处理数据：</p>
+<p>1、基于汉字的方法(character-based)，将词汇表降维到了4000。</p>
+<p>2、基于词的方法（word-based），本文用jieba做分词，词汇表维度为50000。</p>
+<p>两种网络架构：</p>
+<p>1、RNN作为Encoder，用最后一个hidden state作为Decoder的输入。</p>
+<img src="/2016/05/11/自动文摘（九）/fig1.png" width="500" height="500">
+<p>2、Encoder中的所有hidden state的组合作为Decoder的输入。</p>
+<img src="/2016/05/11/自动文摘（九）/fig2.png" width="500" height="500">
+<p>RNN隐藏层用GRU，生成摘要时用beam search，beam size设置为10。对比结果如下：</p>
+<img src="/2016/05/11/自动文摘（九）/result.png" width="500" height="500">
+<p>评测方法采用ROUGE-1，ROUGE-2，ROUGE-L，由于标准的ROUGE包是用来评测英文的，所以这里将中文汉字转换成id。结果中基于汉字的RNN context模型有更好的效果。简单分析下原因，基于词的模型由于词汇表的限制，非常容易遇到unknown words，而基于字则不同，可以轻松解决unk的问题。</p>
+<p><code>本文的两种模型搭配两种网络架构，涵盖了简单的seq2seq和seq2seq+attention，很明显地可以看到基于字的模型效果更加好，因为成功地避免了unk的问题。最近有的文章在解决unk的问题，比如用了Pointer/Copy Mechanism来解决。下一次要好好总结一下unk问题的解决方案和ROUGE评测方法。</code></p>
+<h1 id="Conclusion-and-Future-Work"><a href="#Conclusion-and-Future-Work" class="headerlink" title="Conclusion and Future Work"></a>Conclusion and Future Work</h1><p>未来工作：</p>
+<p>1、多层次RNN。</p>
+<p>2、unk的改进。</p>
+<p><code>本文的数据集中输入部分并非只有一句话，而是一段话，简单的rnn并不能准确捕捉其意思。unk是一个很棘手的问题，接下来的博客会单独介绍unk的问题。</code></p>
+<h1 id="Link"><a href="#Link" class="headerlink" title="Link"></a>Link</h1><p>[1] <a href="http://cn.arxiv.org/pdf/1506.05865" target="_blank" rel="external">LCSTS: A Large Scale Chinese Short Text Summarization Dataset</a></p>
+<h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-05-10T23:50:08.000Z"><a href="/2016/05/10/自动文摘（八）/">2016-05-10</a></time>
       
       
@@ -750,71 +832,6 @@ Beyond</a></p>
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2016-03-06T23:40:40.000Z"><a href="/2016/03/06/RSarXiv前世今生/">2016-03-06</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2016/03/06/RSarXiv前世今生/">RSarXiv前世今生</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <h1 id="RSarXiv是什么？"><a href="#RSarXiv是什么？" class="headerlink" title="RSarXiv是什么？"></a>RSarXiv是什么？</h1><p>RSarXiv是我的一个side project，甚至有一段时间几乎做成了main project，从开始利用课余时间做设计，写代码到后面的每天全天时间都在写代码。</p>
-<p>RSarXiv是一个让人用起来很愉快的论文推荐App，在其简单的操作背后，蕴藏着复杂的、有趣的智能算法作为支撑。</p>
-<p>RSarXiv的目的是让用户可以轻松、快乐地获得感兴趣的论文。</p>
-<h1 id="为什么要做RSarXiv？"><a href="#为什么要做RSarXiv？" class="headerlink" title="为什么要做RSarXiv？"></a>为什么要做RSarXiv？</h1><blockquote>
-<p><strong>博观而约取 厚积而薄发</strong></p>
-</blockquote>
-<p>11年开始，断断续续地关注过推荐系统算法及相关的应用，也亲眼见证了从11年开始国内互联网界如雨后春笋般地涌现出大量的推荐系统应用，最早的是豆瓣猜，猜你喜欢的电影、书籍、歌曲，亚马逊、淘宝等一些电商的猜你可能喜欢的商品，无觅网、指阅到今日头条猜你感兴趣的新闻事件，以及12年一位该领域的大神为了写书而推出的paperlens项目，也是推荐用户论文等等。</p>
-<p>大约两三年的时间，推荐系统几乎成了各大网站的标配系统，甚至一度出现了一种声音，推荐系统可能会将搜索引擎替代了。实践证明，将推荐系统作为搜索引擎的一种补充和增强是一种更加理智的选择。那个时候，也可以看得出概念的炒作，很多的人写博客、写书来鼓吹某一项技术可以打遍天下无敌手。现在，回头看看都是一个笑话。</p>
-<p>世界上没有完美的技术，只有完美的产品。千万不要有一招武功吃遍天下鲜的想法，只有产品真真正正、踏踏实实地好用，给用户提供了方便才是真理！给自己身上贴满了热门标签的产品，只能表现出其浮夸的内心。</p>
-<p>当时，做RSarXiv这个产品的想法其实早几年就在心里种下了种子，可能没有做出来那么具体，只是想着能够做一个好用的推荐系统，让自己真正地享受一把人工智能带来的乐趣。</p>
-<p>时间定格在15年9月底，在烟台出差的无聊日子中，终于忍不住想做一些实实在在的事情了，于是写下了一个很粗糙的计划，包括搭建爬虫系统，学习swift ios app开发，API服务器的开发等等相关的东西。要推荐什么内容？这个问题想了一段时间，后来决定是论文，因为那段时间需要多读一些论文准备开题的工作，真正地感觉找论文，尤其是真正感兴趣的论文和质量高的论文是一件很难的事情，所以这个事情就这样开始了。</p>
-<h1 id="如何做RSarXiv？"><a href="#如何做RSarXiv？" class="headerlink" title="如何做RSarXiv？"></a>如何做RSarXiv？</h1><h2 id="Version-1-0"><a href="#Version-1-0" class="headerlink" title="Version 1.0"></a>Version 1.0</h2><p>第一个版本的RSarXiv其实主要是做了一个前端的APP，功能非常简单，输入自己感兴趣的tag，提交给服务器，返回与这几个tag相关的paper，如果对哪篇paper感兴趣，通过点赞的方式反馈给系统，系统将这篇paper的tag分解出来，推荐给用户，用户通过管理这些tag，删除不感兴趣的tag，留下感兴趣的tag，重新提交给服务器，获取感兴趣的paper，就这样循环迭代地使用这个APP。</p>
-<p>当时主要的目的是练习写APP，检验一下前一段时间学习swift的成果，最后还提交了一个版本到App Store，因为各种不规范的原因，没有能够发布出来。</p>
-<p>这个版本非常简单，因为只需要做前端的APP，后端的算法使用的 <a href="http://lateral.io" target="_blank" rel="external">http://lateral.io</a> 这个网站的API，因为人家服务器在欧洲，所以每次返回的结果都需要花费3s以上，根本无法忍受。</p>
-<h2 id="Version-2-0"><a href="#Version-2-0" class="headerlink" title="Version 2.0"></a>Version 2.0</h2><p>通过1.0的版本学习到了如何写一个简单的APP，但离真正地实现自己想做的事情还有好大一步。</p>
-<p>于是，酝酿了几天的时间，终于下了狠心说，这次要做就做一个大的，决不草草了事。从11月初开始，从构建一个高可靠的爬虫系统开始，开始了一段main project生涯。那个时候开始，用teambition来管理任务和添加每天的感受，每天做完前一天晚上定下的task，然后晚上再定出第二天的task，day by day，task by task，隔三差五地写一篇心得，记录一下最近的想法和进步。</p>
-<p>回过头看，那段时间打下了很扎实的基础，动手使用了很多以前望而却步的技术，攻克了许多以前想都不敢想的难题。感觉自己每天都在进步，很大的进步，人生简直充满了力量，当然体重也跟着增长了起来。</p>
-<p>当然，现在看来，那段时间的很多实现方法还是有些幼稚，但正说明现在还在进步。</p>
-<p>2.0版本最终的产品形式是微信公众号，提供了查询服务和推荐服务，还有一些其他好玩的东西。在后端技术上有了一个非常大的飞跃，打下了坚实的基础，极大地提升了自信心。</p>
-<p>做完这个版本之后，我深深地感受到了一点，自信是做好事情最重要的一个因素。</p>
-<h2 id="Version-2-3"><a href="#Version-2-3" class="headerlink" title="Version 2.3"></a>Version 2.3</h2><p>之所以没有将版本改为3.0，是因为后端的技术大多数沿用了2.0的基础，并没有做出太多的新的内容。这个版本最大的特点是技术性，这里说的技术不是开发的技术，而是对算法的学习、理解和应用，是一个将应用推向了一个新高度的技术。</p>
-<p>这段时间里，我读了大量的paper、博客和代码，很多也很杂，有语言模型相关的，关键词提取相关的，词表示相关的，句子表示相关的，深度学习框架相关的，情感分析相关的等等等等。因为，这个阶段，我想让自己的APP真正的具有智能，让APP中用的信息都是高质量的，比如一篇paper中的关键词提取，用了很多方法；比如paper之间按照title来计算相似度，不仅仅是基于词袋模型来做，而是用了一些语义上的表示，比如用了word2vec将keywords，authors，subjects映射到了同一个空间中，输入一个tag，可以得到多个与之相关的tag，这里的tag是keywords，authors，subjects。</p>
-<p>真正地接触到了这些知识之后，才慢慢感觉到了人工智能这个神秘的词汇在我们生活中的每一个角落里都发着光，每一次使用Google的时候，看新闻的时候，回复邮件的时候，都在使用着人工智能带给我们的方便。以前觉得CNN，RNN，LSTM这些词多么牛逼，多么难懂，看过paper，看过code，看过别人的分享之后，尤其是自己动手用过之后，觉得这些神奇就在不远处。用w2v训练出paper graph的时候，让我感到疯狂，那是我一直想做的事情，原来做起来就是那么地简单。</p>
-<p>这个版本，开创了一个新纪元，不仅仅具备上述的技术含量，而且成功地在App Store中发布了，并且报名参加了一个App比赛。</p>
-<h1 id="RSarXiv的未来如何？"><a href="#RSarXiv的未来如何？" class="headerlink" title="RSarXiv的未来如何？"></a>RSarXiv的未来如何？</h1><p>万事开头难，开了一个好头，现在说一说RSarXiv的未来如何。</p>
-<ul>
-<li><p>丰富数据源。目前RSarXiv只包括arXiv上cs领域的paper，因为之前的2.0版本包括了所有领域，感觉很多功能无法融合进去，比如code。所以，我考虑只做cs方向，但是不仅仅是arXiv的数据，还要包括ACM、citeseer等其他一些数据源。而且，如果只有paper，服务还是不够，因为在看paper的时候，很希望知道这个算法如何实现的，github或者一些其他代码收录平台的数据就会很重要，paper的评论和讨论，相关的news和blog也是一些非常好的数据。</p>
-</li>
-<li><p>提升技术性。因为刚刚迈入NLP的大门，刚刚找到一点门道，很多问题的理解和解决方法并不是最好的，所以这里我仍然需要利用大量的业余时间来学习相关的理论和解决方法，丰富自己的认知。比如，关键词的提取怎么做到更加高质量；title的表示可以不仅仅是word表示的加权线性组合，而是通过借助CNN来提取特征来表示title，来找相似paper；如何将N篇paper做一个自动摘要，就像专家写的survey一样，将用户的查询结果，以一个概括性的总结呈现给用户等等。一个东西做到很宽其实并不难，真正挖掘很深很细致才是最难的。</p>
-</li>
-<li><p>前端多样性。现在的产品版本其实是参加比赛的一个简化版本，很多有用的功能都没做进去，而且只有ios版本。当然手机操作有自己的好处，简单方便，但却真的不如电脑上可以做的那么丰富，所以之后会添加一个网站版本，提供更多更强大的功能。</p>
-</li>
-</ul>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -840,7 +857,7 @@ Beyond</a></p>
   <h3 class="title">标签</h3>
   <ul class="entry">
   
-    <li><a href="/tags/PaperWeekly/">PaperWeekly</a><small>4</small></li>
+    <li><a href="/tags/PaperWeekly/">PaperWeekly</a><small>5</small></li>
   
     <li><a href="/tags/ROUGE/">ROUGE</a><small>1</small></li>
   
@@ -854,7 +871,7 @@ Beyond</a></p>
   
     <li><a href="/tags/language-model/">language model</a><small>1</small></li>
   
-    <li><a href="/tags/nlp/">nlp</a><small>20</small></li>
+    <li><a href="/tags/nlp/">nlp</a><small>21</small></li>
   
     <li><a href="/tags/paper/">paper</a><small>7</small></li>
   
