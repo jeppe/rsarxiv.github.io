@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <meta charset="utf-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
   <title>RSarXiv</title>
   
@@ -30,14 +30,14 @@
 	ga('create', 'UA-77933764-1', 'auto');
 	ga('send', 'pageview');
 
-</script>
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
 </head>
 
 
 <body>
-  <header id="header" class="inner"><div class="alignleft">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header id="header" class="inner"><div class="alignleft">
   <h1><a href="/">RSarXiv</a></h1>
   <h2><a href="/"></a></h2>
 </div>
@@ -55,6 +55,71 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-05-28T15:51:24.000Z"><a href="/2016/05/28/Skip-Thought-Vectors-PaperWeekly/">2016-05-28</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/05/28/Skip-Thought-Vectors-PaperWeekly/">Skip-Thought Vectors #PaperWeekly#</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>已经分享过多种无监督的word level表示模型，和多种有监督的sentence level表示模型，以及与word2vec模型类似的paragraph vector模型。无监督模型比有监督模型带给大家更多的惊喜，本文将会分享一篇sentence level的无监督表示模型，模型中用到了当下流行的seq2seq框架。paper的题目是<a href="http://cn.arxiv.org/pdf/1506.06726v1.pdf" target="_blank" rel="external">Skip-Thought Vectors</a>，作者是来自多伦多大学的<a href="http://www.cs.toronto.edu/~rkiros/" target="_blank" rel="external">Ryan Kiros</a>博士。</p>
+<p>word level表示已经有太多无监督模型，然而sentence level表示大多仍停留在监督模型的范畴内，比如之前分享过的RNN、CNN、RCNN等模型来表示一个句子，主要是针对具体的分类任务来构造句子向量，仅适用于本任务，不具有一般性。之前，Tomas Mikolov（word2vec的作者）提出了一种类似于Word2vec的paragraph vector，也是一种无监督模型，但并不能很好地扩展来用。</p>
+<p>本文旨在提出一个通用的无监督句子表示模型，借鉴了word2vec中skip-gram模型，通过一句话来预测这句话的上一句和下一句。本文的模型被称为skip-thoughts，生成的向量称为skip-thought vector。模型采用了当下流行的端到端框架，通过搜集了大量的小说作为训练数据集，将得到的模型中encoder部分作为feature extractor，可以给任意句子生成vector。</p>
+<p>当然，这里存在一个很大的问题是，如果测试数据中有未登录词，如何表示这个未登录词？针对这个问题，本文提出了一种词汇表扩展的方法来解决这个问题。</p>
+<p>首先，介绍本文的模型，参考下图来理解：</p>
+<img src="/2016/05/28/Skip-Thought-Vectors-PaperWeekly/fig1.png" width="600" height="600">
+<p>模型分为两个部分，一个是encoder，一个是两个decoder，分别decode出当前句子的上一句和下一句。</p>
+<p>encoder-decoder框架已经介绍过太多次了，这里不再赘述。本文采用了GRU-RNN作为encoder和decoder，encoder部分的最后一个词的hidden state作为decoder的输入来生成词。这里用的是最简单的网络结构，并没有考虑复杂的多层网络、双向网络等提升效果。decoder部分也只是一个考虑了encoder last hidden state的语言模型，并无其他特殊之处，只是有两个decoder，是一个one maps two的情况，但计算方法一样。模型中的目标函数也是两个部分，一个来自于预测下一句，一个来自于预测上一句。如下式：</p>
+<img src="/2016/05/28/Skip-Thought-Vectors-PaperWeekly/fig2.png" width="300" height="300">
+<p>其次，介绍下本文的另一大亮点，词汇表扩展。</p>
+<p>借鉴于Tomas Mikolov的一篇文章<a href="http://arxiv.org/pdf/1309.4168.pdf" target="_blank" rel="external">Exploiting Similarities among Languages for Machine Translation</a>中解决机器翻译missing words问题的思路，对本文训练集产生的词汇表V(RNN)进行了扩展，具体的思路可参考Mikolov的文章，达到的效果是建立了大数据集下V(Word2Vec)和本文V(RNN)之间的映射，V(Word2Vec)的规模远远大于V(RNN)，本文中V(RNN)包括了20000个词，V(Word2Vec)包括了930000多个词，成功地解决了这一问题，使得本文提出的无监督模型有大的应用价值。文中给出了一个例子，如下图：</p>
+<img src="/2016/05/28/Skip-Thought-Vectors-PaperWeekly/fig3.png" width="400" height="400">
+<p>当然，词汇表扩展有很多方法，比如不同词，而用字符来作为基本元素，这种思路在语言模型中也常常被用到。</p>
+<p>最后，作者在Semantic relateness、Paraphrase detection、Image-sentence ranking和classification任务中进行了测试和对比，验证了本文模型的效果。最后还给出了在多个数据集上对句子聚类的可视化结果，以及用decoder部分生成一段话。</p>
+<p>关于未来的改进，作者有几点想法：</p>
+<ul>
+<li><p>用更深的encoder和decoder网络。</p>
+</li>
+<li><p>用更大的窗口，而不仅仅预测上一句和下一句。</p>
+</li>
+<li><p>试着将sentence替换成paragraph。</p>
+</li>
+<li><p>换一些别的encoder来做，比如用CNN。</p>
+</li>
+</ul>
+<p>每个想法都可能会是未来另一篇牛paper的思路。</p>
+<p><code>看过了很多的decoder，有char-level，word-level和sentence-level，我有一个小小的想法是，到底哪种level生成的paragraph更出色呢？速度方面，不必比较了，sentence-level一定要快一些，但是质量方面呢？</code>文中最后给出了一个本文模型生成的demo，如下：</p>
+<img src="/2016/05/28/Skip-Thought-Vectors-PaperWeekly/fig4.png" width="600" height="600">
+<p>本文作者还开源了该模型的实现<a href="https://github.com/ryankiros/skip-thoughts" target="_blank" rel="external">代码</a>。</p>
+<p><b>工具推荐</b></p>
+<p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article class="post">
   
   <div class="post-content">
@@ -572,77 +637,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2016-05-17T23:24:26.000Z"><a href="/2016/05/17/自动文摘（十二）/">2016-05-17</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2016/05/17/自动文摘（十二）/">自动文摘（十二）</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><blockquote>
-<p><strong> 心是自由的，世界就是自由的 </strong></p>
-</blockquote>
-<p>今天分享的paper是<b>Neural Headline Generation with Minimum Risk Training</b>。</p>
-<p><code>本文通过将评价指标融入目标函数来训练模型，在中文和英文数据集上均取得了超过之前所有模型的结果。结果一点也不意外，因为传统的MLE并不是以ROUGE评价指标最大为目标函数，而本文的方法针对了评价指标来做文章，一定会得到不错的结果。反过来，我们需要思考一个问题，如果文本摘要领域中出现了一个更加科学和准确的评价指标，不仅仅简单的比共现n-gram，那么本文的模型会不会得到一个优于其他模型的结果呢？个人觉得本文的方法很好地利用了评价指标，但对于研究摘要问题的本质并无太多的帮助，只是获得了更好的指标。有一点投其所好的感觉。</code></p>
-<h1 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h1><p>本文研究<code>NHG</code>(Neural Headline Generation)模型。</p>
-<p>用Neural的思路来解决HG问题有以下优势：</p>
-<p>1、完全数据驱动，不依赖与人工标注和语言学特征。</p>
-<p>2、完全端到端，引入注意力机制会得到更好的效果。</p>
-<p>存在以下弊端：</p>
-<p>1、当前的优化方法都是用最大似然估计（<code>MLE</code>）来训练数据，没有将评价指标考虑在内。</p>
-<p>本文用Minimum Risk Training(<code>MRT</code>)来改善NHG模型，将评价指标考虑在优化目标内，在中文和英文两个真实数据集上取得了不错的结果。</p>
-<h1 id="NHG模型"><a href="#NHG模型" class="headerlink" title="NHG模型"></a>NHG模型</h1><img src="/2016/05/17/自动文摘（十二）/fig1.png" width="400" height="400">
-<p>模型采用encoder-decoder框架，encoder和decoder都采用rnn作为模型。</p>
-<h2 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h2><p>Encoder包括两种：<code>GRU</code>和<code>Bi-RNN</code>。</p>
-<p>Bi-RNN克服了传统RNN的语义偏置最后一个词的缺点。</p>
-<h2 id="Decoder"><a href="#Decoder" class="headerlink" title="Decoder"></a>Decoder</h2><p>Decoder采用GRU，在生成结果时引入了注意力模型。</p>
-<h1 id="MRT-NHG"><a href="#MRT-NHG" class="headerlink" title="MRT+NHG"></a>MRT+NHG</h1><h2 id="MLE"><a href="#MLE" class="headerlink" title="MLE"></a>MLE</h2><p>传统的训练方法都是采用最大似然估计来做，目标函数如下：</p>
-<img src="/2016/05/17/自动文摘（十二）/fig2.png" width="300" height="300">
-<h2 id="MRT"><a href="#MRT" class="headerlink" title="MRT"></a>MRT</h2><p>本文采用了最小风险训练方法来训练模型，目的是减少期望的损失。目标函数如下：</p>
-<img src="/2016/05/17/自动文摘（十二）/fig3.png" width="300" height="300">
-<p>进一步可以推出：</p>
-<img src="/2016/05/17/自动文摘（十二）/fig4.png" width="300" height="300">
-<p>作进一步近似处理：</p>
-<img src="/2016/05/17/自动文摘（十二）/fig5.png" width="300" height="300">
-<p>公式中的<img src="/2016/05/17/自动文摘（十二）/fig6.png" width="100" height="100">用来计算误差，这样训练处的模型将会将评价指标考虑在内。ROUGE是最常见的评价方法，所以本文考虑将ROUGE评价方法融入到目标函数中。</p>
-<h2 id="ROUGE"><a href="#ROUGE" class="headerlink" title="ROUGE"></a>ROUGE</h2><p>本文考虑两种ROUGE指标，ROUGE-N和ROUGE-L。本文为了将ROUGE评价指标融入到目标函数中，定义了</p>
-<img src="/2016/05/17/自动文摘（十二）/fig7.png" width="200" height="300">
-<h1 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h1><p>DUC2004评测对比结果：</p>
-<img src="/2016/05/17/自动文摘（十二）/t1.png" width="400" height="400">
-<p>英文数据集上，本文模型的结果明显优于其他模型，包括之前的ABS+模型。</p>
-<p>中文LCSTS数据上平尺对比结果：</p>
-<img src="/2016/05/17/自动文摘（十二）/t2.png" width="400" height="400">
-<p>采用MRT目标函数的模型远优于MLE作为目标函数的模型。</p>
-<h1 id="Link"><a href="#Link" class="headerlink" title="Link"></a>Link</h1><p>[1] <a href="http://cn.arxiv.org/pdf/1604.01904.pdf" target="_blank" rel="external">Neural Headline Generation
-with Minimum Risk Training</a></p>
-<h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p><code>PaperWeekly</code>，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
-<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -668,7 +662,7 @@ with Minimum Risk Training</a></p>
   
     <li><a href="/tags/CNN/">CNN</a><small>2</small></li>
   
-    <li><a href="/tags/PaperWeekly/">PaperWeekly</a><small>8</small></li>
+    <li><a href="/tags/PaperWeekly/">PaperWeekly</a><small>9</small></li>
   
     <li><a href="/tags/RNN/">RNN</a><small>1</small></li>
   
@@ -684,7 +678,7 @@ with Minimum Risk Training</a></p>
   
     <li><a href="/tags/language-model/">language model</a><small>1</small></li>
   
-    <li><a href="/tags/nlp/">nlp</a><small>24</small></li>
+    <li><a href="/tags/nlp/">nlp</a><small>25</small></li>
   
     <li><a href="/tags/paper/">paper</a><small>7</small></li>
   
@@ -748,7 +742,7 @@ with Minimum Risk Training</a></p>
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
-</script>
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </body>
 </html>

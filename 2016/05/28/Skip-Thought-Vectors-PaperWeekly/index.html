@@ -3,16 +3,15 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>Efficient Estimation of Word Representations in Vector Space #PaperWeekly# | RSarXiv</title>
+  <title>Skip-Thought Vectors #PaperWeekly# | RSarXiv</title>
   
   
-  <meta name="description" content="词向量是语言模型的一个副产品，但这个副产品在2013年随着一个叫做word2vec的工具包而火了起来，大家在各种场合中都在用，并且取得了不错的效果。
-本篇分享的文章是Efficient Estimation of Word Representations in Vector Space。作者是来自G">
+  <meta name="description" content="已经分享过多种无监督的word level表示模型，和多种有监督的sentence level表示模型，以及与word2vec模型类似的paragraph vector模型。无监督模型比有监督模型带给大家更多的惊喜，本文将会分享一篇sentence level的无监督表示模型，模型中用到了当下流行的">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="Efficient Estimation of Word Representations in Vector Space #PaperWeekly#"/>
+  <meta property="og:title" content="Skip-Thought Vectors #PaperWeekly#"/>
   <meta property="og:site_name" content="RSarXiv"/>
 
   
@@ -63,50 +62,45 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-05-21T21:43:54.000Z"><a href="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/">2016-05-21</a></time>
+        <time datetime="2016-05-28T15:51:24.000Z"><a href="/2016/05/28/Skip-Thought-Vectors-PaperWeekly/">2016-05-28</a></time>
       
       
   
-    <h1 class="title">Efficient Estimation of Word Representations in Vector Space #PaperWeekly#</h1>
+    <h1 class="title">Skip-Thought Vectors #PaperWeekly#</h1>
   
 
     </header>
     <div class="entry">
       
-        <p>词向量是语言模型的一个副产品，但这个副产品在2013年随着一个叫做word2vec的工具包而火了起来，大家在各种场合中都在用，并且取得了不错的效果。</p>
-<p>本篇分享的文章是<a href="http://cn.arxiv.org/pdf/1301.3781v3.pdf" target="_blank" rel="external">Efficient Estimation of Word Representations in Vector Space</a>。作者是来自Google的Tomas Mikolov，也是Word2Vec和RNNLM开源软件的作者。本文的最大贡献有：</p>
-<p>1、提出了两种新的“神经网络语言模型”，这里之所以打引号，是因为其实两个模型都没有隐藏层，只是看起来像是神经网络而已。两种模型具有很高的计算效率和准确率，可谓是真正的“又好又快”。</p>
-<p>2、设计了一种验证词向量效果的测试数据，从semantic和syntactic两个维度上进行测试。</p>
-<p>首先介绍下传统模型的复杂度。</p>
+        <p>已经分享过多种无监督的word level表示模型，和多种有监督的sentence level表示模型，以及与word2vec模型类似的paragraph vector模型。无监督模型比有监督模型带给大家更多的惊喜，本文将会分享一篇sentence level的无监督表示模型，模型中用到了当下流行的seq2seq框架。paper的题目是<a href="http://cn.arxiv.org/pdf/1506.06726v1.pdf" target="_blank" rel="external">Skip-Thought Vectors</a>，作者是来自多伦多大学的<a href="http://www.cs.toronto.edu/~rkiros/" target="_blank" rel="external">Ryan Kiros</a>博士。</p>
+<p>word level表示已经有太多无监督模型，然而sentence level表示大多仍停留在监督模型的范畴内，比如之前分享过的RNN、CNN、RCNN等模型来表示一个句子，主要是针对具体的分类任务来构造句子向量，仅适用于本任务，不具有一般性。之前，Tomas Mikolov（word2vec的作者）提出了一种类似于Word2vec的paragraph vector，也是一种无监督模型，但并不能很好地扩展来用。</p>
+<p>本文旨在提出一个通用的无监督句子表示模型，借鉴了word2vec中skip-gram模型，通过一句话来预测这句话的上一句和下一句。本文的模型被称为skip-thoughts，生成的向量称为skip-thought vector。模型采用了当下流行的端到端框架，通过搜集了大量的小说作为训练数据集，将得到的模型中encoder部分作为feature extractor，可以给任意句子生成vector。</p>
+<p>当然，这里存在一个很大的问题是，如果测试数据中有未登录词，如何表示这个未登录词？针对这个问题，本文提出了一种词汇表扩展的方法来解决这个问题。</p>
+<p>首先，介绍本文的模型，参考下图来理解：</p>
+<img src="/2016/05/28/Skip-Thought-Vectors-PaperWeekly/fig1.png" width="600" height="600">
+<p>模型分为两个部分，一个是encoder，一个是两个decoder，分别decode出当前句子的上一句和下一句。</p>
+<p>encoder-decoder框架已经介绍过太多次了，这里不再赘述。本文采用了GRU-RNN作为encoder和decoder，encoder部分的最后一个词的hidden state作为decoder的输入来生成词。这里用的是最简单的网络结构，并没有考虑复杂的多层网络、双向网络等提升效果。decoder部分也只是一个考虑了encoder last hidden state的语言模型，并无其他特殊之处，只是有两个decoder，是一个one maps two的情况，但计算方法一样。模型中的目标函数也是两个部分，一个来自于预测下一句，一个来自于预测上一句。如下式：</p>
+<img src="/2016/05/28/Skip-Thought-Vectors-PaperWeekly/fig2.png" width="300" height="300">
+<p>其次，介绍下本文的另一大亮点，词汇表扩展。</p>
+<p>借鉴于Tomas Mikolov的一篇文章<a href="http://arxiv.org/pdf/1309.4168.pdf" target="_blank" rel="external">Exploiting Similarities among Languages for Machine Translation</a>中解决机器翻译missing words问题的思路，对本文训练集产生的词汇表V(RNN)进行了扩展，具体的思路可参考Mikolov的文章，达到的效果是建立了大数据集下V(Word2Vec)和本文V(RNN)之间的映射，V(Word2Vec)的规模远远大于V(RNN)，本文中V(RNN)包括了20000个词，V(Word2Vec)包括了930000多个词，成功地解决了这一问题，使得本文提出的无监督模型有大的应用价值。文中给出了一个例子，如下图：</p>
+<img src="/2016/05/28/Skip-Thought-Vectors-PaperWeekly/fig3.png" width="400" height="400">
+<p>当然，词汇表扩展有很多方法，比如不同词，而用字符来作为基本元素，这种思路在语言模型中也常常被用到。</p>
+<p>最后，作者在Semantic relateness、Paraphrase detection、Image-sentence ranking和classification任务中进行了测试和对比，验证了本文模型的效果。最后还给出了在多个数据集上对句子聚类的可视化结果，以及用decoder部分生成一段话。</p>
+<p>关于未来的改进，作者有几点想法：</p>
 <ul>
-<li>NNLM的模型复杂度：</li>
+<li><p>用更深的encoder和decoder网络。</p>
+</li>
+<li><p>用更大的窗口，而不仅仅预测上一句和下一句。</p>
+</li>
+<li><p>试着将sentence替换成paragraph。</p>
+</li>
+<li><p>换一些别的encoder来做，比如用CNN。</p>
+</li>
 </ul>
-<img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f1.png" width="300" height="300">
-<p>这里，N是输入的单词数量，D是词向量维度，H是隐藏层维度，V是词汇表维度。</p>
-<ul>
-<li>RNNLM的模型复杂度：</li>
-</ul>
-<img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f3.png" width="200" height="200">
-<p>两个模型的输出层都可以用<code>hierarchical softmax</code>来替换，V的复杂度可以降为log2(V)</p>
-<p>NNLM模型的计算瓶颈在于N <em> D </em> H，而RNNLM的计算瓶颈在与H * H。</p>
-<p>本文提出的两种模型架构图如下：</p>
-<img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/arch.png" width="600" height="600">
-<p>从架构图中可以看出本文的模型并没有隐藏层，直接由输入层做一次映射，就进行分类。</p>
-<p>左图是CBOW模型,输入是指定单词的context单词（前后各取几个单词），预测的是该单词。模型复杂度如下：</p>
-<img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f5.png" width="200" height="200">
-<p>右图是Skip-gram（SG）模型，输入时某个单词，预测的是它的context。模型复杂度如下：</p>
-<img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f5.png" width="200" height="200">
-<p>这里的C表示单词距离上限，用来限制预测context的窗口大小。</p>
-<p>本文的模型和NNLM和RNNLM有着不同的使命，前者更加专注于解决词向量的问题，在保证准确率的情况下，尽量地提高计算效率；而后者更加专注于解决语言模型的问题，词向量只是其副产品，因此并没有过多地在这部分进行优化。最后的实验结果表明，sg和cbow模型在semantic和syntactic两个维度上进行相似度测试时表现远好于nnlm和rnnlm。并且，sg在semantic上表现更好，cbow更擅长做syntactic。</p>
-<p>将word映射成某个空间内的向量之后，我们可以轻松地通过cos similarity来计算word之间的相似度，并且可以做一些简单的加减运算。</p>
-<p>Paris - France + Italy = Rome</p>
-<p>Small - Smaller + Large = Larger</p>
-<p>可以将word映射到vector space中，那么是否可以将phrase，sentence，paragraph，document都映射到vector space中呢？进一步是否可以将topic也映射到vector space呢？是否任何东西都可以映射到vector space呢？</p>
-<p>丰富的想象力给了人类更大的动力去探索未知的世界，将word2vec的想法拓展到各个level的问题上。在后续的很多nlp研究中，词向量都起到了关键的作用。不仅如此，word2vec在其他领域中也有了广泛的应用，比如：app推荐，将每个user下载过的app作为word，就可以得到给user推荐类似的app（相似的word）；我在做rsarxiv时，构建了一个简单的paper graph，将authors，subjects，keywords都映射到了同一个空间中，给定一个author，很容易找到与之相关的authors，subjects，keywords。比如喜欢了这个作者，</p>
-<img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f7.png" width="300" height="300">
-<p>之后就会得到推荐：</p>
-<img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f8.png" width="600" height="600">
-<p>Word2Vec一个很重要的意义在于，是无监督方法，不需要花额外的功夫去构建数据集来teach模型，只需要给入一个非常大的文本数据集，就可以得到非常好的效果。</p>
+<p>每个想法都可能会是未来另一篇牛paper的思路。</p>
+<p><code>看过了很多的decoder，有char-level，word-level和sentence-level，我有一个小小的想法是，到底哪种level生成的paragraph更出色呢？速度方面，不必比较了，sentence-level一定要快一些，但是质量方面呢？</code>文中最后给出了一个本文模型生成的demo，如下：</p>
+<img src="/2016/05/28/Skip-Thought-Vectors-PaperWeekly/fig4.png" width="600" height="600">
+<p>本文作者还开源了该模型的实现<a href="https://github.com/ryankiros/skip-thoughts" target="_blank" rel="external">代码</a>。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
 <p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
@@ -120,7 +114,7 @@
         
   
   <div class="tags">
-    <a href="/tags/PaperWeekly/">PaperWeekly</a>, <a href="/tags/nlp/">nlp</a>, <a href="/tags/word2vec/">word2vec</a>
+    <a href="/tags/PaperWeekly/">PaperWeekly</a>, <a href="/tags/nlp/">nlp</a>
   </div>
 
         
@@ -163,7 +157,7 @@
   }(document, 'script', 'facebook-jssdk'));
 </script>
 
-<div class="fb-comments" data-href="http://rsarxiv.github.io/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
+<div class="fb-comments" data-href="http://rsarxiv.github.io/2016/05/28/Skip-Thought-Vectors-PaperWeekly/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
       
   
 </section>
