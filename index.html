@@ -61,6 +61,72 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-05-30T20:49:58.000Z"><a href="/2016/05/30/Learning-Distributed-Representations-of-Sentences-from-Unlabelled-Data-PaperWeekly/">2016-05-30</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/05/30/Learning-Distributed-Representations-of-Sentences-from-Unlabelled-Data-PaperWeekly/">Learning Distributed Representations of Sentences from Unlabelled Data #PaperWeekly#</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>sentence representation的文章已经分享了几篇，包括了supervise和unsupervise的方法，但并没有对各种model进行系统地对比和分析，今天分享的这篇文章对现有各种各样的distributed representations of sentences model进行了分类、对比和分析，为了增强对比效果，还提出了两种虚拟的模型。最后将所有的模型在supervised和unsupervised评价任务中进行对比，得出了一些有意义的结论。本文的题目是：<a href="http://arxiv.org/pdf/1602.03483v1.pdf" target="_blank" rel="external">Learning Distributed Representations of Sentences from Unlabelled Data</a>，作者是来自剑桥大学的<a href="https://www.cl.cam.ac.uk/~fh295/" target="_blank" rel="external">Felix Hill</a>博士。</p>
+<p>首先对现有模型进行了分类描述。</p>
+<ul>
+<li><p>直接在纯文本上进行训练的模型，模型包括：<a href="http://rsarxiv.github.io/2016/05/28/Skip-Thought-Vectors-PaperWeekly/">Skip-Thought Vector</a>、<a href="http://rsarxiv.github.io/2016/05/24/Distributed-Representations-of-Sentences-and-Documents-PaperWeekly/">Paragraph Vector</a>，两种模型都在之前分享过。</p>
+</li>
+<li><p>在结构化资源上进行训练的模型，这种模型借助了一些纯文本之外的资源进行辅助训练。模型包括：DictRep、CaptionRep、NMT。</p>
+</li>
+</ul>
+<p><code>DictRep</code>是本文作者之前提出的一个模型，模型训练了一个从词典定义到预训练好的词向量之间的映射。</p>
+<p><code>CaptionRep</code>模型架构与DictRep一样，采用的数据集不同而已，这里使用了COCO数据集，训练一个从图像vector representation到图像caption的映射。</p>
+<p><code>NMT</code>是神经网络机器翻译，该模型架构与skip-thought vector模型相同，但训练数据换成了sentence-aligned翻译文本，WMT语料中的En-Fr和En-De。</p>
+<ul>
+<li>本文提出的一些新模型。为了解决当前存在模型的问题，本文设计了两种虚拟模型。包括：Sequential (Denoising) Autoencoders(SDAE、SAE)和FastSent。</li>
+</ul>
+<p><code>SDAE</code>模型是为了解决Skip-Thought Vector模型对语料中句子连贯性的依赖问题。传统的去噪自编码器（DAE）一般都是一个输入是固定尺寸图像数据的前馈神经网络，本文利用一个噪声函数将传统的DAE扩展到变长度句子中，噪声函数是N(S|p0,px)，S表示一个句子，p0,px都是一个[0,1]的数，表示概率。首先，对于每一个S中的word，N函数会以一个p0的概率来删除word，概率是相互对立的。然后，对于S中的每一对不重叠的bigram，w(i)w(i+1)，N函数会以一个px的概率来交换两个词的位置。最后用一个类似NMT的encoder-decoder模型进行训练，只不过不同的是目标函数变了，变成了使得噪声最小。这里，source是经过噪声函数处理过的sentence，target是原始的sentence。这个模型就是SDAE模型，相比于skip-thought vector，可以处理任意顺序的句子集。如果令px=0,p0=0，我们称为<code>SAE</code>模型。这里p0其实就是防止深度网络模型训练时过拟合的正则化方法<code>Dropout</code>。</p>
+<p><code>FastSent</code>模型旨在解决Skip-Thought Vector模型计算速度慢的缺点，解决的思路与word2vec突破传统多层神经网络语言模型的思路类似，只用了一个简单的log-linear层。给定一个用词袋模型表示的句子，模型来预测该句子两边相邻的句子。该模型在训练时也会学习句中每个单词的词向量，并且将句子用句中所有词的词向量之和来表示。</p>
+<p>下图给出了所有模型在性能上的比较：</p>
+<img src="/2016/05/30/Learning-Distributed-Representations-of-Sentences-from-Unlabelled-Data-PaperWeekly/fig1.png" width="500" height="500">
+<p>其中，OS是指是否需要保留句子在语料中的顺序；R表示需要结构化的训练资源；WO：对词序敏感；SD：句子向量维度；WD：词向量维度；TR：训练时间；TE：编码50w句子需要的时间。</p>
+<p>任务评价一共分为两类，监督学习任务和无监督学习任务。通过大量实验的比较，得出了一下的结论：</p>
+<ul>
+<li><p>不同的任务适合不同的表示模型，这听起来像一句废话，也就是说没有哪种模型可以通吃所有的任务。比如：Skip-Thought Vector模型在TREC任务中最好，是因为句子和句子之间的衔接非常好，非常适合这个模型的特点。而Paraphrase detection任务更加适合于SDAE模型。</p>
+</li>
+<li><p>监督学习和无监督学习任务的表现存在差异，在监督学习任务中表现好的模型在无监督学习模型中表现的就会很一般，带有非线性网络结构的Skip Thought Vector、SDAE、NMT模型在监督学习中表现更好，而log-linear类的模型FastSent则在无监督学习任务中表现更好。</p>
+</li>
+<li><p>额外的资源会影响到训练处模型的通用性和实用性，比如一个在线demo需要很快的查询最近邻速度，用fastsent可能就没有问题，但用其他模型就达不到快速的要求。</p>
+</li>
+<li><p>词序的重要性并没有得到体现。本文的结果给出了一个与常识相左的结论，词序在决定句子意思表示时并没有想象中的那么重要。作者说到，可能是因为当前的评价方式并不能反映出词序的重要性，所以这个问题得不出一个明确的答案。（这点很有意思，在前面分享的一篇文章<a href="http://rsarxiv.github.io/2016/05/26/How-to-Generate-a-Good-Word-Embedding-PaperWeekly/">How to Generate a Good Word Embedding</a>中，引用了一个结论，词序信息占了语义信息的20%，那么到底词序对于句子语义有多大的影响？需要好好研究一番）</p>
+</li>
+<li><p>评价指标存在缺陷，并不能绝对准确的对比出各个模型的差异。</p>
+</li>
+</ul>
+<p>最后，展示一个各模型训练之后的应用效果。</p>
+<img src="/2016/05/30/Learning-Distributed-Representations-of-Sentences-from-Unlabelled-Data-PaperWeekly/fig2.png" width="600" height="600">
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-05-29T21:09:18.000Z"><a href="/2016/05/29/我以为/">2016-05-29</a></time>
       
       
@@ -86,38 +152,6 @@
 <p>我以为，陪伴才是最长情的告白，感谢我家狗子hare童鞋每一个日日夜夜的陪伴，感谢我的爱人无条件地支持我做我喜欢做的事情，并且真的敢于放弃一些已有的、很好的待遇来跟着我去完成一个梦想。谢谢！</p>
 <img src="/2016/05/29/我以为/1.jpg" width="600" height="600">
 
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2016-05-29T18:16:24.000Z"><a href="/2016/05/29/Learning-Distributed-Representations-of-Sentences-from-Unlabelled-Data-PaperWeekly/">2016-05-29</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2016/05/29/Learning-Distributed-Representations-of-Sentences-from-Unlabelled-Data-PaperWeekly/">Learning Distributed Representations of Sentences from Unlabelled Data #PaperWeekly#</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        
       
     </div>
     <footer>
@@ -607,7 +641,7 @@
   
     <li><a href="/tags/CNN/">CNN</a><small>2</small></li>
   
-    <li><a href="/tags/PaperWeekly/">PaperWeekly</a><small>9</small></li>
+    <li><a href="/tags/PaperWeekly/">PaperWeekly</a><small>10</small></li>
   
     <li><a href="/tags/RNN/">RNN</a><small>1</small></li>
   
@@ -623,7 +657,7 @@
   
     <li><a href="/tags/language-model/">language model</a><small>1</small></li>
   
-    <li><a href="/tags/nlp/">nlp</a><small>25</small></li>
+    <li><a href="/tags/nlp/">nlp</a><small>26</small></li>
   
     <li><a href="/tags/paper/">paper</a><small>7</small></li>
   
