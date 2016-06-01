@@ -607,6 +607,617 @@
 
 
 
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-05-23T14:10:32.000Z"><a href="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/">2016-05-23</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/">Character-Aware Neural Language Models #PaperWeekly#</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>本篇分享的文章是<a href="http://cn.arxiv.org/pdf/1508.06615.pdf" target="_blank" rel="external">Character-Aware Neural Language Models</a>，作者是Yoon Kim、Alexander M. Rush。两位是HarvardNLP组的学生和老师，前者贡献了一些有意义的torch代码，比如<a href="https://github.com/harvardnlp/seq2seq-attn" target="_blank" rel="external">seq2seq+attn</a>，后者第一次将seq2seq的模型应用到了文本摘要。</p>
+<p>卷积神经网络之前常常用在计算机视觉领域，用来在图像中寻找features，前几年被研究者应用到了nlp任务中，在文本分类等任务中取得了不错的效果。传统的word embedding对低频词并没有太好的效果，而本文将char embedding作为CNN的输入，用CNN的输出经过一层highway层处理表示word embedding，然后作为RNNLM的输入，避免了这个问题。而且之前的神经网络语言模型中绝大多数需要优化的参数是word embedding，而本文的模型则会将优化参数减少非常多。</p>
+<p>本文模型的架构图如下：</p>
+<img src="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/arch.png" width="600" height="600">
+<p>可以分为三层，一层是charCNN，通过构建一个char embedding矩阵，将word表示成matrix，和图像类似，输入到CNN模型中提取经过filter层和max pooling层得到一个输出表示，然后将该输出放到Highway Network中，得到一个处理后的效果更好的word embedding作为输出，在第三层中是一个典型的RNN模型，后面的处理与传统方法一样了。</p>
+<p>这里需要学习的参数中char embedding规模非常小，相对比之前的模型有非常明显的优势。这里需要说明的一点是HighWay Network，在Rupesh Kumar Srivastava的paper <a href="http://cn.arxiv.org/pdf/1507.06228.pdf" target="_blank" rel="external">Training Very Deep Networks</a>被提出，受lstm解决rnn梯度衰减问题的思路启发，用来解决训练very deep networks，因为模型越深效果越好，但越难训练。本文的HighWay层如下：</p>
+<img src="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/fig1.png" width="400" height="400">
+<p>其中</p>
+<img src="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/fig2.png" width="200" height="200">
+<p>t被称为transform gate，1-t被称为carry gate。</p>
+<p>最终的实验证明，使用HighWay层效果比使用普通的MLP或者不使用该层效果更好。</p>
+<img src="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/result.png" width="500" height="500">
+<p>本文通过将传统的word embedding降级到char level，避免了大规模的embedding计算和低频词的问题，通过Highway network技术构建更深的网络，得到了不错的结果。</p>
+<p><b>工具推荐</b></p>
+<p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-05-22T16:23:52.000Z"><a href="/2016/05/22/GloVe-Global-Vectors-for-Word-Representation-PaperWeekly/">2016-05-22</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/05/22/GloVe-Global-Vectors-for-Word-Representation-PaperWeekly/">GloVe: Global Vectors for Word Representation #PaperWeekly#</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Word2Vec虽然取得了很好的效果，但模型上仍然存在明显的缺陷，比如没有考虑词序，再比如没有考虑全局的统计信息。本篇分享的是<a href="http://nlp.stanford.edu/pubs/glove.pdf" target="_blank" rel="external">GloVe: Global Vectors for Word Representation</a>，作者是stanford的Jeffrey Pennington, Richard Socher(metamind CEO)和Christopher Manning。同时作者还开源了相应的工具GloVe和一些训练好的模型。</p>
+<p>本文的思路是将全局词-词共现矩阵进行了分解，训练得到词向量。整体上的思路和推荐系统当年横扫Netflix百万美元比赛的LFM模型类似，也和信息检索中LSI的思路类似。不同的地方是，本文采用的词-词共现矩阵比起词-文档矩阵更加稠密，模型中对低频词和高频词的影响做了一定地弱化处理。</p>
+<p>首先，构建词-词共现矩阵，共现是建立在一个固定窗口范围内，给定范围之后，可以得到一个V*V的矩阵，这里V是词汇表大小。（虽然矩阵的稠密程度比词-文档矩阵好一些，但大多数也都是0）</p>
+<p>然后，本文的模型如下：</p>
+<img src="/2016/05/22/GloVe-Global-Vectors-for-Word-Representation-PaperWeekly/fig1.png" width="300" height="300">
+<p>通过使该目标函数最小来得到最终的词向量，在计算误差时只考虑共现矩阵中非0的项。因为不同频次的词对目标的贡献不同，所以设定了一个权重函数f(x)，具有以下特点：</p>
+<p>1、f(0) = 0</p>
+<p>2、f(x)是增函数，这样低频词不会被over weight。</p>
+<p>3、当x很大时，f(x)相对小一些，这样高频词也不会被over weight。</p>
+<p>根据以上特性，选择下面的函数来作为f(x)：</p>
+<img src="/2016/05/22/GloVe-Global-Vectors-for-Word-Representation-PaperWeekly/fig2.png" width="400" height="400">
+<img src="/2016/05/22/GloVe-Global-Vectors-for-Word-Representation-PaperWeekly/fig3.png" width="500" height="500">
+<p>本文的模型在Word Analogy Task（Tomas Mikolov提出的测试集）中获得了75%的正确率，击败了Word2Vec。</p>
+<p>虽然paper中GloVe有着指标上的领先，但在实际使用中Word2Vec的使用率相对来说更多一些，可能的原因是Word2Vec可以更快地提供一个相对来说不错的word embedding层的初始值。从中得到的启发是，指标上的胜利有些时候只是paper上的胜利，不一定能代表在工程中也是赢家，而只有更加好的model被提出，才会真正地既赢得指标上的胜利，也赢得工程上的胜利。</p>
+<p><b>工具推荐</b></p>
+<p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-05-21T21:43:54.000Z"><a href="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/">2016-05-21</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/">Efficient Estimation of Word Representations in Vector Space #PaperWeekly#</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>词向量是语言模型的一个副产品，但这个副产品在2013年随着一个叫做word2vec的工具包而火了起来，大家在各种场合中都在用，并且取得了不错的效果。</p>
+<p>本篇分享的文章是<a href="http://cn.arxiv.org/pdf/1301.3781v3.pdf" target="_blank" rel="external">Efficient Estimation of Word Representations in Vector Space</a>。作者是来自Google的Tomas Mikolov，也是Word2Vec和RNNLM开源软件的作者。本文的最大贡献有：</p>
+<p>1、提出了两种新的“神经网络语言模型”，这里之所以打引号，是因为其实两个模型都没有隐藏层，只是看起来像是神经网络而已。两种模型具有很高的计算效率和准确率，可谓是真正的“又好又快”。</p>
+<p>2、设计了一种验证词向量效果的测试数据，从semantic和syntactic两个维度上进行测试。</p>
+<p>首先介绍下传统模型的复杂度。</p>
+<ul>
+<li>NNLM的模型复杂度：</li>
+</ul>
+<img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f1.png" width="300" height="300">
+<p>这里，N是输入的单词数量，D是词向量维度，H是隐藏层维度，V是词汇表维度。</p>
+<ul>
+<li>RNNLM的模型复杂度：</li>
+</ul>
+<img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f3.png" width="200" height="200">
+<p>两个模型的输出层都可以用<code>hierarchical softmax</code>来替换，V的复杂度可以降为log2(V)</p>
+<p>NNLM模型的计算瓶颈在于N <em> D </em> H，而RNNLM的计算瓶颈在与H * H。</p>
+<p>本文提出的两种模型架构图如下：</p>
+<img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/arch.png" width="600" height="600">
+<p>从架构图中可以看出本文的模型并没有隐藏层，直接由输入层做一次映射，就进行分类。</p>
+<p>左图是CBOW模型,输入是指定单词的context单词（前后各取几个单词），预测的是该单词。模型复杂度如下：</p>
+<img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f5.png" width="200" height="200">
+<p>右图是Skip-gram（SG）模型，输入时某个单词，预测的是它的context。模型复杂度如下：</p>
+<img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f5.png" width="200" height="200">
+<p>这里的C表示单词距离上限，用来限制预测context的窗口大小。</p>
+<p>本文的模型和NNLM和RNNLM有着不同的使命，前者更加专注于解决词向量的问题，在保证准确率的情况下，尽量地提高计算效率；而后者更加专注于解决语言模型的问题，词向量只是其副产品，因此并没有过多地在这部分进行优化。最后的实验结果表明，sg和cbow模型在semantic和syntactic两个维度上进行相似度测试时表现远好于nnlm和rnnlm。并且，sg在semantic上表现更好，cbow更擅长做syntactic。</p>
+<p>将word映射成某个空间内的向量之后，我们可以轻松地通过cos similarity来计算word之间的相似度，并且可以做一些简单的加减运算。</p>
+<p>Paris - France + Italy = Rome</p>
+<p>Small - Smaller + Large = Larger</p>
+<p>可以将word映射到vector space中，那么是否可以将phrase，sentence，paragraph，document都映射到vector space中呢？进一步是否可以将topic也映射到vector space呢？是否任何东西都可以映射到vector space呢？</p>
+<p>丰富的想象力给了人类更大的动力去探索未知的世界，将word2vec的想法拓展到各个level的问题上。在后续的很多nlp研究中，词向量都起到了关键的作用。不仅如此，word2vec在其他领域中也有了广泛的应用，比如：app推荐，将每个user下载过的app作为word，就可以得到给user推荐类似的app（相似的word）；我在做rsarxiv时，构建了一个简单的paper graph，将authors，subjects，keywords都映射到了同一个空间中，给定一个author，很容易找到与之相关的authors，subjects，keywords。比如喜欢了这个作者，</p>
+<img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f7.png" width="300" height="300">
+<p>之后就会得到推荐：</p>
+<img src="/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f8.png" width="600" height="600">
+<p>Word2Vec一个很重要的意义在于，是无监督方法，不需要花额外的功夫去构建数据集来teach模型，只需要给入一个非常大的文本数据集，就可以得到非常好的效果。</p>
+<p><b>工具推荐</b></p>
+<p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-05-21T04:37:06.000Z"><a href="/2016/05/20/A-Neural-Probabilistic-Language-Model-PaperWeekly/">2016-05-20</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/05/20/A-Neural-Probabilistic-Language-Model-PaperWeekly/">A Neural Probabilistic Language Model #PaperWeekly#</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <blockquote>
+<p><strong> 站得高，望得远 </strong></p>
+</blockquote>
+<p>今天分享一篇年代久远但却意义重大的paper，<a href="http://www.iro.umontreal.ca/~vincentp/Publications/lm_jmlr.pdf" target="_blank" rel="external">A Neural Probabilistic Language Model</a>。作者是来自蒙特利尔大学的Yoshua Bengio教授，deep learning技术奠基人之一。</p>
+<p>本文于2003年第一次用神经网络来解决语言模型的问题，虽然在当时并没有得到太多的重视，却为后来深度学习在解决语言模型问题甚至很多别的nlp问题时奠定了坚实的基础，后人站在Yoshua Bengio的肩膀上，做出了更多的成就。包括Word2Vec的作者Tomas Mikolov在NNLM的基础上提出了RNNLM和后来的Word2Vec。文中也较早地提出将word表示一个低秩的向量，而不是one-hot。word embedding作为一个language model的副产品，在后面的研究中起到了关键作用，为研究者提供了更加宽广的思路。</p>
+<p>本文最大的贡献在于用多层感知器（<code>MLP</code>）构造了语言模型，如下图：</p>
+<img src="/2016/05/20/A-Neural-Probabilistic-Language-Model-PaperWeekly/arch.png" width="600" height="600">
+<p>模型一共三层，第一层是映射层，将n个单词映射为对应word embeddings的拼接，其实这一层就是MLP的输入层；第二层是隐藏层，激活函数用tanh；第三层是输出层，因为是语言模型，需要根据前n个单词预测下一个单词，所以是一个多分类器，用softmax。整个模型最大的计算量集中在最后一层上，因为一般来说词汇表都很大，需要计算每个单词的条件概率，是整个模型的计算瓶颈。</p>
+<p>这里，需要注意的是需要提前初始化一个word embedding矩阵，每一行表示一个单词的向量。词向量也是训练参数，在每次训练中进行更新。这里可以看出词向量是语言模型的一个附属品，因为语言模型本身的工作是为了估计给定的一句话有多像人类的话，但从后来的研究发现，语言模型成了一个非常好的工具。</p>
+<p>softmax是一个非常低效的处理方式，需要先计算每个单词的概率，并且还要计算指数，指数在计算机中都是用级数来近似的，计算复杂度很高，最后再做归一化处理。此后很多研究都针对这个问题进行了优化，比如层级softmax，比如softmax tree。</p>
+<p>当然NNLM的效果在现在看来并不算什么，但对于后面的相关研究具有非常重要的意义。文中的Future Work提到了用RNN来代替MLP作为模型可能会取得更好的效果，在后面Tomas Mikolov的博士论文中得到了验证，也就是后来的RNNLM。</p>
+<p>所以说我们赶上了一个好的时代，可以站在巨人的肩膀上，看到更远的未来。</p>
+<p><b>工具推荐</b></p>
+<p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-05-19T00:56:53.000Z"><a href="/2016/05/18/自动文摘（十三）/">2016-05-18</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/05/18/自动文摘（十三）/">自动文摘（十三）</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><blockquote>
+<p><strong> 天下武功，唯快不破 </strong></p>
+</blockquote>
+<p>今天分享的paper是<b>Incorporating Copying Mechanism in Sequence-to-Sequence Learning</b>，作者来自香港大学和华为诺亚方舟实验室。</p>
+<p><code>本文的模型通过借鉴人类在处理难理解的文字时采用的死记硬背的方法，提出了COPYNET。将拷贝模式融入到了Seq2Seq模型中，将传统的生成模式和拷贝模式混合起来构建了新的模型，非常好地解决了OOV问题。解决问题的思路与之前的一篇有关Pointer的文章十分类似。decoder部分不断地变复杂，考虑的因素越来越多，模型的效果也越来越好。如果结合上一篇Minimum Risk Training的训练方法，相信在评价指标上会更进一步。</code></p>
+<h1 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h1><p>Seq2Seq技术占据了nlp多个研究任务的评测榜首，包括最早提出该技术的机器翻译，句法分析，文本摘要，对话系统。Seq2Seq本质上是一个encoder-decoder的模型，encoder部分将输入的序列变换成某一种表示，然后decoder将这种表示变换成输出序列。在Seq2Seq的基础上，首次增加注意力机制来做机器翻译的自动对齐。注意力机制在很大程度上提升了Seq2Seq的性能。</p>
+<p>本文研究了人类语言交流的另一个机制，“拷贝机制”（<code>copy mechanism</code>），定位到输入序列中的某个片段，然后将该片段拷贝到输出序列中。比如：</p>
+<img src="/2016/05/18/自动文摘（十三）/fig1.png" width="400" height="400">
+<p>但是注意力机制严重依赖于语义的表示，在系统需要获取到命名实体或者日期时难以准确地表示。相对之下，拷贝机制更加接近于人类处理语言问题的方式。本文提出了COPYNET系统，不仅具备传统Seq2Seq生成词的能力，而且可以从输入序列中拷贝合适的片段到输出序列中。在合成数据和真实数据中均取得了不错的结果。</p>
+<h1 id="Seq2Seq"><a href="#Seq2Seq" class="headerlink" title="Seq2Seq"></a>Seq2Seq</h1><p>文章的这部分简单介绍了一下Seq2Seq+Attention Mechanism技术，前面的博客分享了很多这部分的内容，这里就不再赘述了。</p>
+<h1 id="COPYNET"><a href="#COPYNET" class="headerlink" title="COPYNET"></a>COPYNET</h1><p>从神经学角度来讲，拷贝机制和人类的死记硬背类似，较少地理解到了意思但保留了字面的完整。从模型的角度来讲，拷贝机制相比于soft注意力模型更加死板，所以更难整合到神经网络模型中。</p>
+<h2 id="模型综述"><a href="#模型综述" class="headerlink" title="模型综述"></a>模型综述</h2><p>COPYNET依然是一个encoder-decoder模型，如图1所示：</p>
+<img src="/2016/05/18/自动文摘（十三）/fig2.png" width="600" height="600">
+<p>encoder采用了一个双向RNN模型，输出一个隐藏层表示的矩阵M作为decoder的输入。decoder部分与传统的Seq2Seq不同之处在于以下三部分：</p>
+<ul>
+<li><b>预测</b>：在生成词时存在两种模式，一种是生成模式，一种是拷贝模式，生成模型是一个结合两种模式的概率模型。</li>
+<li><b>状态更新</b>：用t-1时刻的预测出的词来更新t时刻的状态，COPYNET不仅仅词向量，而且使用M矩阵中特定位置的hidden state。</li>
+<li><b>读取M</b>：COPYNET也会选择性地读取M矩阵，来获取混合了内容和位置的信息。</li>
+</ul>
+<h2 id="拷贝模式和生成模式"><a href="#拷贝模式和生成模式" class="headerlink" title="拷贝模式和生成模式"></a>拷贝模式和生成模式</h2><p>首先，构造了两个词汇表，一个是高频词词汇表，另一个是只在输入序列中出现过一次的词，这部分的词用来支持COPYNET，用UNK表示超纲词（OOV），最终输入序列的词汇表是三者的并集。</p>
+<p>给定了decoder当前状态和M矩阵，生成目标单词的概率模型如下：</p>
+<img src="/2016/05/18/自动文摘（十三）/fig3.png" width="300" height="300">
+<p>模型中g表示生成模式，c表示拷贝模式。两种模式的概率由下式给定：</p>
+<img src="/2016/05/18/自动文摘（十三）/fig4.png" width="300" height="300">
+<p>共四种可能情况，下图会更形象一些：</p>
+<img src="/2016/05/18/自动文摘（十三）/fig5.png" width="300" height="300">
+<p>其中生成模式的打分公式是：</p>
+<img src="/2016/05/18/自动文摘（十三）/fig6.png" width="300" height="300">
+<p>拷贝模式的打分公式是：</p>
+<img src="/2016/05/18/自动文摘（十三）/fig7.png" width="300" height="300">
+<h2 id="状态更新"><a href="#状态更新" class="headerlink" title="状态更新"></a>状态更新</h2><p>decoder状态更新的公式是</p>
+<img src="/2016/05/18/自动文摘（十三）/fig8.png" width="300" height="300">
+<p>不同的是这里的t-1时刻的y由下式表示：</p>
+<img src="/2016/05/18/自动文摘（十三）/fig9.png" width="300" height="300">
+<p>后面的部分是M矩阵中与t时刻y相关的状态权重之和，如下：</p>
+<img src="/2016/05/18/自动文摘（十三）/fig10.png" width="300" height="300">
+<h2 id="M矩阵"><a href="#M矩阵" class="headerlink" title="M矩阵"></a>M矩阵</h2><p>M矩阵中既包含了内容（语义）信息，又包含了位置信息。COPYNET在attentive read时由内容（语义）信息和语言模型来驱动，即生成模式；在拷贝模式时，由位置信息来控制。</p>
+<p>位置信息的更新方式如下图所示：</p>
+<img src="/2016/05/18/自动文摘（十三）/fig11.png" width="300" height="300">
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><p>一共分为三个实验：</p>
+<ul>
+<li>简单规则构造的合成数据。</li>
+<li>文本摘要相关的真实数据。</li>
+<li>简单对话系统的数据。</li>
+</ul>
+<p>这里只看文本摘要实验。</p>
+<h2 id="文本摘要"><a href="#文本摘要" class="headerlink" title="文本摘要"></a>文本摘要</h2><p>数据采用LCSTS中文短文本摘要数据集，分为两个level来测试：word-level和char-level，并且以LCSTS的baseline作为对比，结果如下：</p>
+<img src="/2016/05/18/自动文摘（十三）/fig11.png" width="400" height="400">
+<p>本文的模型远远优于baseline，而且word-level的结果比char-level更好，这与当时LCSTS paper中的结论不同，一个可能的原因是，数据集中包含了大量的命名实体名词（entity name），LCSTS paper中的方法并不能很好地处理大量的UNK单词，因此baseline中的char-level效果比word-level更好，而本文的模型的优势在于处理OOV问题，所以word-level结果更好一些。</p>
+<h1 id="Link"><a href="#Link" class="headerlink" title="Link"></a>Link</h1><p>[1] <a href="http://cn.arxiv.org/pdf/1603.06393v2.pdf" target="_blank" rel="external">Incorporating Copying Mechanism in Sequence-to-Sequence Learning Training</a></p>
+<h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p><code>PaperWeekly</code>，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-05-17T23:24:26.000Z"><a href="/2016/05/17/自动文摘（十二）/">2016-05-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/05/17/自动文摘（十二）/">自动文摘（十二）</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><blockquote>
+<p><strong> 心是自由的，世界就是自由的 </strong></p>
+</blockquote>
+<p>今天分享的paper是<b>Neural Headline Generation with Minimum Risk Training</b>。</p>
+<p><code>本文通过将评价指标融入目标函数来训练模型，在中文和英文数据集上均取得了超过之前所有模型的结果。结果一点也不意外，因为传统的MLE并不是以ROUGE评价指标最大为目标函数，而本文的方法针对了评价指标来做文章，一定会得到不错的结果。反过来，我们需要思考一个问题，如果文本摘要领域中出现了一个更加科学和准确的评价指标，不仅仅简单的比共现n-gram，那么本文的模型会不会得到一个优于其他模型的结果呢？个人觉得本文的方法很好地利用了评价指标，但对于研究摘要问题的本质并无太多的帮助，只是获得了更好的指标。有一点投其所好的感觉。</code></p>
+<h1 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h1><p>本文研究<code>NHG</code>(Neural Headline Generation)模型。</p>
+<p>用Neural的思路来解决HG问题有以下优势：</p>
+<p>1、完全数据驱动，不依赖与人工标注和语言学特征。</p>
+<p>2、完全端到端，引入注意力机制会得到更好的效果。</p>
+<p>存在以下弊端：</p>
+<p>1、当前的优化方法都是用最大似然估计（<code>MLE</code>）来训练数据，没有将评价指标考虑在内。</p>
+<p>本文用Minimum Risk Training(<code>MRT</code>)来改善NHG模型，将评价指标考虑在优化目标内，在中文和英文两个真实数据集上取得了不错的结果。</p>
+<h1 id="NHG模型"><a href="#NHG模型" class="headerlink" title="NHG模型"></a>NHG模型</h1><img src="/2016/05/17/自动文摘（十二）/fig1.png" width="400" height="400">
+<p>模型采用encoder-decoder框架，encoder和decoder都采用rnn作为模型。</p>
+<h2 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h2><p>Encoder包括两种：<code>GRU</code>和<code>Bi-RNN</code>。</p>
+<p>Bi-RNN克服了传统RNN的语义偏置最后一个词的缺点。</p>
+<h2 id="Decoder"><a href="#Decoder" class="headerlink" title="Decoder"></a>Decoder</h2><p>Decoder采用GRU，在生成结果时引入了注意力模型。</p>
+<h1 id="MRT-NHG"><a href="#MRT-NHG" class="headerlink" title="MRT+NHG"></a>MRT+NHG</h1><h2 id="MLE"><a href="#MLE" class="headerlink" title="MLE"></a>MLE</h2><p>传统的训练方法都是采用最大似然估计来做，目标函数如下：</p>
+<img src="/2016/05/17/自动文摘（十二）/fig2.png" width="300" height="300">
+<h2 id="MRT"><a href="#MRT" class="headerlink" title="MRT"></a>MRT</h2><p>本文采用了最小风险训练方法来训练模型，目的是减少期望的损失。目标函数如下：</p>
+<img src="/2016/05/17/自动文摘（十二）/fig3.png" width="300" height="300">
+<p>进一步可以推出：</p>
+<img src="/2016/05/17/自动文摘（十二）/fig4.png" width="300" height="300">
+<p>作进一步近似处理：</p>
+<img src="/2016/05/17/自动文摘（十二）/fig5.png" width="300" height="300">
+<p>公式中的<img src="/2016/05/17/自动文摘（十二）/fig6.png" width="100" height="100">用来计算误差，这样训练处的模型将会将评价指标考虑在内。ROUGE是最常见的评价方法，所以本文考虑将ROUGE评价方法融入到目标函数中。</p>
+<h2 id="ROUGE"><a href="#ROUGE" class="headerlink" title="ROUGE"></a>ROUGE</h2><p>本文考虑两种ROUGE指标，ROUGE-N和ROUGE-L。本文为了将ROUGE评价指标融入到目标函数中，定义了</p>
+<img src="/2016/05/17/自动文摘（十二）/fig7.png" width="200" height="300">
+<h1 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h1><p>DUC2004评测对比结果：</p>
+<img src="/2016/05/17/自动文摘（十二）/t1.png" width="400" height="400">
+<p>英文数据集上，本文模型的结果明显优于其他模型，包括之前的ABS+模型。</p>
+<p>中文LCSTS数据上平尺对比结果：</p>
+<img src="/2016/05/17/自动文摘（十二）/t2.png" width="400" height="400">
+<p>采用MRT目标函数的模型远优于MLE作为目标函数的模型。</p>
+<h1 id="Link"><a href="#Link" class="headerlink" title="Link"></a>Link</h1><p>[1] <a href="http://cn.arxiv.org/pdf/1604.01904.pdf" target="_blank" rel="external">Neural Headline Generation
+with Minimum Risk Training</a></p>
+<h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p><code>PaperWeekly</code>，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-05-14T05:12:01.000Z"><a href="/2016/05/13/Paper翻译列表/">2016-05-13</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/05/13/Paper翻译列表/">Paper翻译列表</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><blockquote>
+<p><strong> 读万卷书，行万里路 </strong></p>
+</blockquote>
+<p>最近精读了多篇自动文摘方面的paper，并且写成了博客，感觉受益良多。接下来会读更多的好paper，并且以一种更加精炼的形式摘译和评价。如果你有兴趣可以扫码关注微信账号：</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
+<h1 id="Accomplised"><a href="#Accomplised" class="headerlink" title="Accomplised"></a>Accomplised</h1><ul>
+<li><b>Generating News Headlines with Recurrent Neural Networks</b></li>
+<li><b>A Neural Attention Model for Abstractive Sentence Summarization </b></li>
+<li><b>Abstractive Sentence Summarization with Attentive Recurrent Neural Networks</b></li>
+<li><b>Abstractive Text Summarization using Sequence-to-sequence RNNs and Beyond</b></li>
+<li><b>AttSum-Joint Learning of Focusing and Summarization with Neural Attention</b></li>
+<li><b>LCSTS: A Large Scale Chinese Short Text Summarization Dataset</b></li>
+</ul>
+<h1 id="To-Do"><a href="#To-Do" class="headerlink" title="To Do"></a>To Do</h1><ul>
+<li><b>Incorporating Copying Mechanism in Sequence-to-Sequence Learning</b></li>
+<li><b>Neural Headline Generation with Minimum Risk Training</b></li>
+<li><b>Toward Abstractive Summarization Using Semantic Representations</b></li>
+<li><b>Better Summarization Evaluation with Word Embeddings for ROUGE</b></li>
+</ul>
+<h1 id="Future-Work"><a href="#Future-Work" class="headerlink" title="Future Work"></a>Future Work</h1><p>在完成这文章的翻译和评价之后，会继续读nlp各顶级会议每年的best paper，一方面拓宽自己的视野，另一方面分享给同样感兴趣的童鞋。如果你也有兴趣做这件事情，可以发邮件联系我。（rsarxiv@163.com）</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-05-12T22:38:09.000Z"><a href="/2016/05/12/自动文摘（十一）/">2016-05-12</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/05/12/自动文摘（十一）/">自动文摘（十一）</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><blockquote>
+<p><strong> 除了诗和远方，还有眼前的评价方法 </strong></p>
+</blockquote>
+<p>之前的博客中提到过影响一个技术发展的重要因素有几个，其中一个就是评价方法。因为评价方法是牵引，是参考，是衡量各个模型孰优孰劣的尺子。评价指标是否科学可行直接影响着这个领域能否进入一个正常的研究方向，目前在文本摘要任务中最常用的评价方法是<code>ROUGE</code>（<b>Recall-Oriented Understudy for Gisting Evaluation</b>，最细节的内容可参见Lin,2003的paper <b>Automatic Evaluation of Summaries Using N-gram Co-Occurrence Statistics</b>）。</p>
+<p>10多年前提出的方法至今都是自动文摘系统评价的主流方法，不是说它没有缺点，而是至今没有提出一个更加好的评价方法来取代它。</p>
+<p>ROUGE收到了机器翻译自动评价方法BLEU的启发，不同之处在于，采用召回率来作为指标。基本思想是将模型生成的摘要与参考摘要的n元组贡献统计量作为评判依据。这里，不同具体任务的参考文献获取方法不同，比如：DUC2003文本摘要中的参考摘要是由人工给出的，而seq2seq模型在处理Gigaword数据集时，用news headline作为摘要，中文微博短文本摘要数据集（哈工大）的参考摘要都是包含在微博内容中。</p>
+<h1 id="ROUGE评价指标"><a href="#ROUGE评价指标" class="headerlink" title="ROUGE评价指标"></a>ROUGE评价指标</h1><h2 id="ROUGE-N"><a href="#ROUGE-N" class="headerlink" title="ROUGE-N"></a>ROUGE-N</h2><p>这个指标计算生成的摘要与相应的参考摘要的n-gram召回率。</p>
+<h2 id="ROUGE-L"><a href="#ROUGE-L" class="headerlink" title="ROUGE-L"></a>ROUGE-L</h2><p>这个指标匹配两个文本单元之间的最长公共序列（LCS，Longest Common Subsequence）。</p>
+<h2 id="ROUGE-W"><a href="#ROUGE-W" class="headerlink" title="ROUGE-W"></a>ROUGE-W</h2><p>这个指标计算加权的LCS。</p>
+<h2 id="ROUGE-S"><a href="#ROUGE-S" class="headerlink" title="ROUGE-S"></a>ROUGE-S</h2><p>计算跳二元组（skip-bigram）同现统计量。</p>
+<p>ROUGE自动评测方法最大的优点是不依赖语言处理工具，缺点是死板，不够灵活，没有考虑语义层次上的匹配。可以考虑用word embedding来做语义层次上的评判，而不仅仅是n-gram的匹配。</p>
+<h1 id="ROUGE使用方法"><a href="#ROUGE使用方法" class="headerlink" title="ROUGE使用方法"></a>ROUGE使用方法</h1><p>在实际使用时，用ROUGE的开源程序，perl写的脚本，根据提示操作即可。通常用ROUGE-1,ROUGE-2指标来评测文摘的效果。</p>
+<h1 id="Link"><a href="#Link" class="headerlink" title="Link"></a>Link</h1><p>[1] <a href="http://research.microsoft.com/en-us/people/cyl/naacl2003.pdf" target="_blank" rel="external">Automatic Evaluation of Summaries Using N-gram Co-Occurrence Statistics</a></p>
+<p>[2] <a href="http://www.berouge.com/Pages/default.aspx" target="_blank" rel="external">ROUGE开源工具包</a></p>
+<h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-05-12T17:20:59.000Z"><a href="/2016/05/12/自动文摘（十）/">2016-05-12</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/05/12/自动文摘（十）/">自动文摘（十）</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><blockquote>
+<p><strong> 生活不只是眼前的苟且，还有paper和远方 </strong></p>
+</blockquote>
+<p>不知不觉坚持写自动文摘系列的博客已经50天了，本篇是系列的第十篇。其实说是系列文章并不准确，只是每篇博客与自动文摘有关系，但相互之间并没有递进的关系，只是get到了一些点顺手写下来，又懒得起一些好听的名字，所以就简单地命名为系列博客。我不知道这个系列可以写到几，但探索自动文摘技术并不会停止下来。言归正传，最近读了些paper，觉得UNK问题是一个值得关注的问题，所以本文简单讨论一下UNK问题。</p>
+<h1 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h1><p>UNK是Unknown Words的简称，在用seq2seq解决问题上经常出现，比如机器翻译任务，比如文本摘要任务。在decoder中生成某个单词的时候就会出现UNK问题。decoder本质上是一个语言模型，而语言模型本质上是一个多分类器，通过计算词汇表中的每个单词在当前条件下出现的概率，来生成该条件下的单词。为了提高计算效率，往往只选择出现频次最高的Top N个单词作为词汇表，其他的单词都用UNK来替换，这样导致decoder的时候会出现UNK。其中，很多UNK可能都是一些不常出现的但有意义的词，比如机构名、地名。</p>
+<h1 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h1><p>解决方法有以下几个：</p>
+<h2 id="Char-based"><a href="#Char-based" class="headerlink" title="Char-based"></a>Char-based</h2><p>英文字符的种类远远少于词的种类，用char来代替word可以将decoder输出层的维度降低很多，而且覆盖了所有的可能，从根本上避免了UNK的问题。在文本摘要任务中，数据中往往包括很多的人名、地名，基于word来做词汇表的话，经常会在摘要中看到大量的UNK，用基于char的模型来做，会得到不错的效果。</p>
+<p>char方法虽然缓解了output部分的计算压力，却将大量计算耗在了input部分，尤其是在处理英文问题时，会将input放大很多倍。而且处理中文问题也不太有优势，常用汉字也有3000左右的规模。</p>
+<h2 id="Vocabulary-expansion"><a href="#Vocabulary-expansion" class="headerlink" title="Vocabulary expansion"></a>Vocabulary expansion</h2><p>词汇表扩展的方法，在高频词词汇表中添加一定数量的UNK，并且编号。通过word embedding计算出带编号UNK的第一层最邻近words，如果匹配的这些词在原来词汇表中，则为有效词。有效词越多，本质上词汇表虽然规模没有增加，但表达能力会越强，在decoder生成词时遇到UNK就可以用词汇表中的高频词来替换。</p>
+<p>这个方法是一个辅助技巧，可以提升效果，但不会解决根本问题。</p>
+<h2 id="Output-layer-boost"><a href="#Output-layer-boost" class="headerlink" title="Output layer boost"></a>Output layer boost</h2><p>这个方法的思路是想办法提升输出层的效率，原始的方法是softmax，这是消耗计算资源的根源。有比如</p>
+<p>1、importance sampling : (Bengio et al., 2003)</p>
+<p>2、uniform sampling of ranking criterion : (Collobert et al., 2011)</p>
+<p>3、hierarchical softmax : (Morin et al., 2005) </p>
+<p>4、hierarchical log-bilinear model : (Mnih et al., 2009) </p>
+<p>5、structured output layer : (Le et al., 2011)</p>
+<p>6、noise-constrastive estimation : (Mnih et al., 2012)</p>
+<p>各种各样的方法来提升多分类问题的效率。效率高了，词汇表中就可以放入更多的单词，但治标不治本，只能说改善了效果。</p>
+<h2 id="Pointing-Copy"><a href="#Pointing-Copy" class="headerlink" title="Pointing/Copy"></a>Pointing/Copy</h2><p>观察人工参考摘要时会发现，摘要中有很多词都是来自于输入部分，比如机构名、地名、人名。这些词出现很少有的甚至只出现一次，如果靠语言模型来生成是不可能的。基于这个现象，有几篇paper提出用Pointing/Copy机制来生成摘要，两种模型意思上茶太不多，在decoder中存在两种模型来生成单词，一种是常规的生成方式，另一种就是拷贝方式。拷贝模型在很大程度上解决了UNK的问题，rare words都直接用原文中的词放在摘要的相应位置上。</p>
+<p>本方法从正面解决了UNK问题，而且计算效率上可能比char-based的方法更好一些，因为并没有引入太大规模的input数据，output部分规模也不大。</p>
+<h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-05-11T14:14:52.000Z"><a href="/2016/05/11/自动文摘（九）/">2016-05-11</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/05/11/自动文摘（九）/">自动文摘（九）</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><blockquote>
+<p><strong>坚持下去就是胜利。</strong></p>
+</blockquote>
+<p>今天分享一篇关于构造自动文摘数据集的paper，数据集的质量、内容和规模都是直接影响deep learning效果的最直接因素，作用非常重要。题目是<b>LCSTS: A Large Scale Chinese Short Text Summarization Dataset</b>。</p>
+<p><code>本文最大的贡献在于构建了一个大规模、高质量中文短文本摘要数据集，弥补了这个空缺。并且在数据集的基础上用了最简单seq2seq给出了一个baseline，为后人的研究提供了基础。从本文的模型中可以看出，unk问题在文本摘要任务中的重要性，如何解决unk问题是提升摘要系统性能的一个重要方向。本文给出了一个思路，用character-based model来绕过这个问题，看过的paper中还有其他的解决思路，后面的博客将会专门介绍unk这个问题。</code></p>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>自动文本摘要是一个非常难的问题，部分原因是因为缺乏大规模的高质量数据集。本文将会介绍一个取自于新浪微博的大规模中文短文本摘要数据集，数据集中包含了200万真实的中文短文本数据和每个文本作者给出的摘要。同时我们也手动标注了10666份文本的摘要。基于本数据集，我们测试了用RNN来生成摘要得到了不错的效果，不仅仅亚验证了数据集的有效性，而且为今后的研究提供了基准。</p>
+<p><code>数据集一直都是困扰deep learning技术更好地应用在各大领域的一大瓶颈，尤其是中文数据集的匮乏，本文工作的意义在于给研究中文自动文摘的学者提供了数据支持。</code></p>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><img src="/2016/05/11/自动文摘（九）/weibo.png" width="500" height="500">
+<p>本文中的数据类似于上图中的形式。</p>
+<p>传统研究abstractive summarization的方法将摘要过程分类两步，第一步是使用无监督方法或者语言知识将关键文本提取出来；第二步是用语言规则或者文本生成技术将第一步的结果转述（<code>paraphrase</code>）。近期研究表明深度学习技术有很强地表示学习能力和语言生成能力，尤其是用GPU在大规模数据集上进行计算，许多学者将该技术应用在abstractive summarization任务中。</p>
+<p>然而，公开的高质量大规模文本摘要数据集还是少之又少，DUC、TAC、TREC的数据仅仅包括几百条英文人工摘要数据，这种情况在中文环境中更加糟糕。所以本文构建了一个大规模中文短文本摘要数据集。</p>
+<p>以下是本文的贡献：</p>
+<p>1、构建了目前最大的一个中文短文本摘要数据集。</p>
+<p>2、提供了数据集分割的标准方法。</p>
+<p>3、研究了数据集的特性，采样10666条样本，并进行数据集的质量评价。</p>
+<p>4、利用了基于encoder-decoder rnn技术来生成摘要，作为该任务的基准。</p>
+<p><code>大规模数据集的构建往往来自于网络爬虫，获取到了大量的raw data之后，如何处理得到高质量的内容是关键。本文通过抽样选出样本对数据集质量进行评价，并且用当下最流行的seq2seq技术给出了本数据集的benchmark，以供后人研究超越。</code></p>
+<h1 id="Data-Collection"><a href="#Data-Collection" class="headerlink" title="Data Collection"></a>Data Collection</h1><p>为了保证质量，我们仅抓取通过认证组织的微博，这些微博更加清楚、规范和有信息。流程具体如下图：</p>
+<img src="/2016/05/11/自动文摘（九）/arch.png" width="500" height="500">
+<p>1、首先收集50个流行的官方组织用户作为种子。分别来自政治、经济、军事、电影、游戏等领域，比如人民日报。</p>
+<p>2、然后从种子用户中抓取他们关注的用户，并且将不是大V，且粉丝少于100万的用户过滤掉。</p>
+<p>3、然后抓取候选用户的微博内容。</p>
+<p>4、最后通过过滤，清洗，提取等工作得到最后的数据集。</p>
+<p><code>这个环节涉及到的技术是爬虫技术，整体的思路比较简单，先选择一些高质量的用户作为起点，从他们关注的用户中过滤出类似的大V用户，然后再爬取所有候选用户的微博内容，清洗、过滤和提取有效数据。</code></p>
+<h1 id="Data-Properties"><a href="#Data-Properties" class="headerlink" title="Data Properties"></a>Data Properties</h1><p>数据集主要分为三个部分，如下表：</p>
+<img src="/2016/05/11/自动文摘（九）/table.png" width="500" height="500">
+<p>1、第一部分是本数据集的主要部分，包含了2400591对（短文本，摘要），这部分数据用来训练生成摘要的模型。</p>
+<p>2、第二部分包括了10666对人工标注的（短文本，摘要），每个样本都打了1-5分，分数是用来评判短文本与摘要的相关程度，1代表最不相关，5代表最相关。这部分数据是从第一部分数据中随机采样出来的，用来分析第一部分数据的分布情况。其中，标注为3、4、5分的样本原文与摘要相关性更好一些，从中也可以看出很多摘要中会包含一些没有出现在原文中的词，这也说明与句子压缩任务不同。标注为1、2分的相关性差一些，更像是标题或者是评论而不是摘要。统计表明，1、2分的数据少于两成，可以用监督学习的方法过滤掉。</p>
+<p>3、第三部分包括了1106对，三个人对2000对进行了评判，这里的数据独立于第一部分和第二部分。选择3分以上的数据作为短文本摘要任务的测试数据集。</p>
+<p><code>数据集的构造是一个非常大的工作，因为涉及到大量的人工标注工作，如何保证所用的训练集、测试集都有很高的质量是一个问题。本文对第一部分的数据做了采样分析，用第二部分数据作为训练高质量数据的样本，提取出了更高质量的训练集，第三部分提供了测试集。到此，数据集比较完整了。</code></p>
+<h1 id="Experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h1><p>本文用了当下流行的seq2seq技术来做验证实验，用第一部分的数据作为训练集，第三部分的3分以上数据作为测试集。一共用了两种方法来处理数据：</p>
+<p>1、基于汉字的方法(character-based)，将词汇表降维到了4000。</p>
+<p>2、基于词的方法（word-based），本文用jieba做分词，词汇表维度为50000。</p>
+<p>两种网络架构：</p>
+<p>1、RNN作为Encoder，用最后一个hidden state作为Decoder的输入。</p>
+<img src="/2016/05/11/自动文摘（九）/fig1.png" width="500" height="500">
+<p>2、Encoder中的所有hidden state的组合作为Decoder的输入。</p>
+<img src="/2016/05/11/自动文摘（九）/fig2.png" width="500" height="500">
+<p>RNN隐藏层用GRU，生成摘要时用beam search，beam size设置为10。对比结果如下：</p>
+<img src="/2016/05/11/自动文摘（九）/result.png" width="500" height="500">
+<p>评测方法采用ROUGE-1，ROUGE-2，ROUGE-L，由于标准的ROUGE包是用来评测英文的，所以这里将中文汉字转换成id。结果中基于汉字的RNN context模型有更好的效果。简单分析下原因，基于词的模型由于词汇表的限制，非常容易遇到unknown words，而基于字则不同，可以轻松解决unk的问题。</p>
+<p><code>本文的两种模型搭配两种网络架构，涵盖了简单的seq2seq和seq2seq+attention，很明显地可以看到基于字的模型效果更加好，因为成功地避免了unk的问题。最近有的文章在解决unk的问题，比如用了Pointer/Copy Mechanism来解决。下一次要好好总结一下unk问题的解决方案和ROUGE评测方法。</code></p>
+<h1 id="Conclusion-and-Future-Work"><a href="#Conclusion-and-Future-Work" class="headerlink" title="Conclusion and Future Work"></a>Conclusion and Future Work</h1><p>未来工作：</p>
+<p>1、多层次RNN。</p>
+<p>2、unk的改进。</p>
+<p><code>本文的数据集中输入部分并非只有一句话，而是一段话，简单的rnn并不能准确捕捉其意思。unk是一个很棘手的问题，接下来的博客会单独介绍unk的问题。</code></p>
+<h1 id="Link"><a href="#Link" class="headerlink" title="Link"></a>Link</h1><p>[1] <a href="http://cn.arxiv.org/pdf/1506.05865" target="_blank" rel="external">LCSTS: A Large Scale Chinese Short Text Summarization Dataset</a></p>
+<h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
 
 <nav id="pagination">
   
