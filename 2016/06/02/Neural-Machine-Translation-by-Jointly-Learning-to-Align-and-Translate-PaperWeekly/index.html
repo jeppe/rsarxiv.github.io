@@ -3,18 +3,15 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>自动文摘（十一） | RSarXiv</title>
+  <title>Neural Machine Translation by Jointly Learning to Align and Translate #PaperWeekly# | RSarXiv</title>
   
   
-  <meta name="description" content="引
- 除了诗和远方，还有眼前的评价方法 
-
-之前的博客中提到过影响一个技术发展的重要因素有几个，其中一个就是评价方法。因为评价方法是牵引，是参考，是衡量各个模型孰优孰劣的尺子。评价指标是否科学可行直接影响着这个领域能否进入一个正常的研究方向，目前在文本摘要任务中最常用的评价方法是ROUGE（Reca">
+  <meta name="description" content="前面的两篇文章简单介绍了seq2seq在机器翻译领域的尝试，效果令人满意。上一篇也介绍到这一类问题可以归纳为求解P(output|context)的问题，不同的地方在于context的构建思路不同，上两篇中的seq2seq将context定义为encoder的last hidden state，即认">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="自动文摘（十一）"/>
+  <meta property="og:title" content="Neural Machine Translation by Jointly Learning to Align and Translate #PaperWeekly#"/>
   <meta property="og:site_name" content="RSarXiv"/>
 
   
@@ -65,33 +62,36 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-05-12T22:38:09.000Z"><a href="/2016/05/12/自动文摘（十一）/">2016-05-12</a></time>
+        <time datetime="2016-06-02T19:30:30.000Z"><a href="/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/">2016-06-02</a></time>
       
       
   
-    <h1 class="title">自动文摘（十一）</h1>
+    <h1 class="title">Neural Machine Translation by Jointly Learning to Align and Translate #PaperWeekly#</h1>
   
 
     </header>
     <div class="entry">
       
-        <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><blockquote>
-<p><strong> 除了诗和远方，还有眼前的评价方法 </strong></p>
-</blockquote>
-<p>之前的博客中提到过影响一个技术发展的重要因素有几个，其中一个就是评价方法。因为评价方法是牵引，是参考，是衡量各个模型孰优孰劣的尺子。评价指标是否科学可行直接影响着这个领域能否进入一个正常的研究方向，目前在文本摘要任务中最常用的评价方法是<code>ROUGE</code>（<b>Recall-Oriented Understudy for Gisting Evaluation</b>，最细节的内容可参见Lin,2003的paper <b>Automatic Evaluation of Summaries Using N-gram Co-Occurrence Statistics</b>）。</p>
-<p>10多年前提出的方法至今都是自动文摘系统评价的主流方法，不是说它没有缺点，而是至今没有提出一个更加好的评价方法来取代它。</p>
-<p>ROUGE收到了机器翻译自动评价方法BLEU的启发，不同之处在于，采用召回率来作为指标。基本思想是将模型生成的摘要与参考摘要的n元组贡献统计量作为评判依据。这里，不同具体任务的参考文献获取方法不同，比如：DUC2003文本摘要中的参考摘要是由人工给出的，而seq2seq模型在处理Gigaword数据集时，用news headline作为摘要，中文微博短文本摘要数据集（哈工大）的参考摘要都是包含在微博内容中。</p>
-<h1 id="ROUGE评价指标"><a href="#ROUGE评价指标" class="headerlink" title="ROUGE评价指标"></a>ROUGE评价指标</h1><h2 id="ROUGE-N"><a href="#ROUGE-N" class="headerlink" title="ROUGE-N"></a>ROUGE-N</h2><p>这个指标计算生成的摘要与相应的参考摘要的n-gram召回率。</p>
-<h2 id="ROUGE-L"><a href="#ROUGE-L" class="headerlink" title="ROUGE-L"></a>ROUGE-L</h2><p>这个指标匹配两个文本单元之间的最长公共序列（LCS，Longest Common Subsequence）。</p>
-<h2 id="ROUGE-W"><a href="#ROUGE-W" class="headerlink" title="ROUGE-W"></a>ROUGE-W</h2><p>这个指标计算加权的LCS。</p>
-<h2 id="ROUGE-S"><a href="#ROUGE-S" class="headerlink" title="ROUGE-S"></a>ROUGE-S</h2><p>计算跳二元组（skip-bigram）同现统计量。</p>
-<p>ROUGE自动评测方法最大的优点是不依赖语言处理工具，缺点是死板，不够灵活，没有考虑语义层次上的匹配。可以考虑用word embedding来做语义层次上的评判，而不仅仅是n-gram的匹配。</p>
-<h1 id="ROUGE使用方法"><a href="#ROUGE使用方法" class="headerlink" title="ROUGE使用方法"></a>ROUGE使用方法</h1><p>在实际使用时，用ROUGE的开源程序，perl写的脚本，根据提示操作即可。通常用ROUGE-1,ROUGE-2指标来评测文摘的效果。</p>
-<h1 id="Link"><a href="#Link" class="headerlink" title="Link"></a>Link</h1><p>[1] <a href="http://research.microsoft.com/en-us/people/cyl/naacl2003.pdf" target="_blank" rel="external">Automatic Evaluation of Summaries Using N-gram Co-Occurrence Statistics</a></p>
-<p>[2] <a href="http://www.berouge.com/Pages/default.aspx" target="_blank" rel="external">ROUGE开源工具包</a></p>
-<h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
-<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
+        <p>前面的两篇文章简单介绍了seq2seq在机器翻译领域的尝试，效果令人满意。上一篇也介绍到这一类问题可以归纳为求解P(output|context)的问题，不同的地方在于context的构建思路不同，上两篇中的seq2seq将context定义为encoder的last hidden state，即认为rnn将整个input部分的信息都保存在了last hidden state中。而事实上，rnn是一个有偏的模型，越靠后的单词在last state中占据的“比例”越高，所以这样的context并不是一个非常好的办法，本文将分享的文章来解决这个问题。题目是<a href="http://arxiv.org/pdf/1409.0473.pdf" target="_blank" rel="external">Neural Machine Translation by Jointly Learning to Align and Translate</a>，作者是来自德国雅各布大学的<a href="http://minds.jacobs-university.de/dima" target="_blank" rel="external">Dzmitry Bahdanau</a>，现在是Yoshua Bengio组的一个博士生，文章于2015年4月放在arxiv上。</p>
+<p>本篇不再讨论seq2seq，如果您想了解seq2seq，可以去看<a href="http://rsarxiv.github.io/2016/05/31/Sequence-to-Sequence-Learning-with-Neural-Networks-PaperWeekly/">Sequence to Sequence Learning with Neural Networks</a>和<a href="http://rsarxiv.github.io/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder%E2%80%93Decoder-for-Statistical-Machine-Translation-PaperWeekly/">Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation</a>两篇博客。本篇只讨论不同的地方。</p>
+<p>本文用encoder所有hidden state的加权平均来表示context，权重表示decoder中各state与encoder各state的相关性，简单的seq2seq认为decoder中每一个state都与input的全部信息（用last state表示）有关，而本文则认为只与相关的state有关系，即在decoder部分中，模型只将注意力放在了相关的部分，对其他部分注意很少，这一点与人类的行为很像，当人看到一段话或者一幅图的时候，往往会将注意力放在一个很小的局部，而不是全部。具体看下图：</p>
+<img src="/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/fig1.png" width="600" height="600">
+<p>decoder中预测每个输出的条件概率变为：</p>
+<img src="/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/fig2.png" width="300" height="300">
+<p>这里每个time step的state变为：</p>
+<img src="/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/fig3.png" width="300" height="300">
+<p>这里，context vector由下式计算：</p>
+<img src="/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/fig4.png" width="300" height="300">
+<p>权重用了一个最简单的mlp来计算，</p>
+<img src="/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/fig6.png" width="300" height="300">
+<p>然后做归一化：</p>
+<img src="/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/fig5.png" width="300" height="300">
+<p>这里的权重反应了decoder中的state s(i-1)和encoder中的state h(j)之间的相关性。本文在为了得到相对来说无偏的state，在encoder部分采用了BiRNN。</p>
+<p>在机器翻译领域中，attention model可以理解为source和target words的soft alignment，像下图一样：</p>
+<img src="/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/fig7.png" width="500" height="500">
+<p>上图是英语翻译成法语的一个结果。越亮的地方表示source和target中的words相关性越强（或者说对齐地越准），图中的每一个点的亮度就是前面计算出的权重。</p>
+<p>本文最大的贡献在于提出了attention model，为今后研究对话生成，问答系统，自动文摘等任务打下了坚实的基础。context的定义也成为了一个非常有意思的研究点，rnn是一种思路，cnn同样也是一种思路，简单的word embedding也可以算是一种思路，交叉起来rnn+cnn也可以作为一种思路，将word替换成char可以作为一种思路，思路其实非常多，不同的组合有不同的模型，都可以去探索。</p>
+<p>另外，不知道是不是Yoshua Bengio组的习惯，本文也在附录附上了详细的模型推导过程。</p>
 
       
     </div>
@@ -101,7 +101,7 @@
         
   
   <div class="tags">
-    <a href="/tags/ROUGE/">ROUGE</a>, <a href="/tags/nlp/">nlp</a>, <a href="/tags/自动文摘/">自动文摘</a>
+    <a href="/tags/PaperWeekly/">PaperWeekly</a>, <a href="/tags/attention/">attention</a>, <a href="/tags/nlp/">nlp</a>
   </div>
 
         
@@ -144,7 +144,7 @@
   }(document, 'script', 'facebook-jssdk'));
 </script>
 
-<div class="fb-comments" data-href="http://rsarxiv.github.io/2016/05/12/自动文摘（十一）/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
+<div class="fb-comments" data-href="http://rsarxiv.github.io/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
       
   
 </section>
