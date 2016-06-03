@@ -4,16 +4,14 @@
 
     
   <url>
-    <loc>http://rsarxiv.github.io/2016/06/03/REASONING-ABOUT-ENTAILMENT-WITH-NEURAL-ATTENTION-PaperWeekly/</loc>
-    <lastmod>2016-06-03T15:14:35.000Z</lastmod>
+    <loc>http://rsarxiv.github.io/2016/05/30/%E5%A4%A7%E7%89%9B%E4%B8%BB%E9%A1%B5/</loc>
+    <lastmod>2016-06-03T15:25:37.000Z</lastmod>
     <data>
         <display>
-        <title>REASONING ABOUT ENTAILMENT WITH NEURAL ATTENTION #PaperWeekly#</title>
-        <pubTime>2016-06-03T14:06:55.000Z</pubTime>
+        <title>大牛主页</title>
+        <pubTime>2016-05-31T05:11:49.000Z</pubTime>
         
         <tag>PaperWeekly</tag>
-         
-        <tag>attention</tag>
          
         <tag>nlp</tag>
          
@@ -26,7 +24,7 @@
     
   <url>
     <loc>http://rsarxiv.github.io/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/</loc>
-    <lastmod>2016-06-02T20:16:12.000Z</lastmod>
+    <lastmod>2016-06-03T15:21:44.000Z</lastmod>
     <data>
         <display>
         <title>Neural Machine Translation by Jointly Learning to Align and Translate #PaperWeekly#</title>
@@ -47,7 +45,7 @@
     
   <url>
     <loc>http://rsarxiv.github.io/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder%E2%80%93Decoder-for-Statistical-Machine-Translation-PaperWeekly/</loc>
-    <lastmod>2016-06-01T15:58:00.000Z</lastmod>
+    <lastmod>2016-06-03T15:21:39.000Z</lastmod>
     <data>
         <display>
         <title>Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation #PaperWeekly#</title>
@@ -67,27 +65,8 @@
 
     
   <url>
-    <loc>http://rsarxiv.github.io/2016/05/30/%E5%A4%A7%E7%89%9B%E4%B8%BB%E9%A1%B5/</loc>
-    <lastmod>2016-05-31T16:00:19.000Z</lastmod>
-    <data>
-        <display>
-        <title>大牛主页</title>
-        <pubTime>2016-05-31T05:11:49.000Z</pubTime>
-        
-        <tag>PaperWeekly</tag>
-         
-        <tag>nlp</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://rsarxiv.github.io/2016/05/31/Sequence-to-Sequence-Learning-with-Neural-Networks-PaperWeekly/</loc>
-    <lastmod>2016-05-31T15:52:39.000Z</lastmod>
+    <lastmod>2016-06-03T15:21:35.000Z</lastmod>
     <data>
         <display>
         <title>Sequence to Sequence Learning with Neural Networks #PaperWeekly#</title>
@@ -108,7 +87,7 @@
     
   <url>
     <loc>http://rsarxiv.github.io/2016/05/30/Learning-Distributed-Representations-of-Sentences-from-Unlabelled-Data-PaperWeekly/</loc>
-    <lastmod>2016-05-30T22:25:46.000Z</lastmod>
+    <lastmod>2016-06-03T15:21:30.000Z</lastmod>
     <data>
         <display>
         <title>Learning Distributed Representations of Sentences from Unlabelled Data #PaperWeekly#</title>
@@ -126,25 +105,8 @@
 
     
   <url>
-    <loc>http://rsarxiv.github.io/2016/05/29/%E6%88%91%E4%BB%A5%E4%B8%BA/</loc>
-    <lastmod>2016-05-29T22:32:58.000Z</lastmod>
-    <data>
-        <display>
-        <title>我以为</title>
-        <pubTime>2016-05-29T21:09:18.000Z</pubTime>
-        
-        <tag>随笔</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://rsarxiv.github.io/2016/05/28/Skip-Thought-Vectors-PaperWeekly/</loc>
-    <lastmod>2016-05-28T21:18:22.000Z</lastmod>
+    <lastmod>2016-06-03T15:21:26.000Z</lastmod>
     <data>
         <display>
         <title>Skip-Thought Vectors #PaperWeekly#</title>
@@ -163,7 +125,7 @@
     
   <url>
     <loc>http://rsarxiv.github.io/2016/05/27/Recurrent-Convolutional-Neural-Networks-for-Text-Classification-PaperWeekly/</loc>
-    <lastmod>2016-05-27T17:25:58.000Z</lastmod>
+    <lastmod>2016-06-03T15:21:21.000Z</lastmod>
     <data>
         <display>
         <title>Recurrent Convolutional Neural Networks for Text Classification #PaperWeekly#</title>
@@ -186,7 +148,7 @@
     
   <url>
     <loc>http://rsarxiv.github.io/2016/05/26/How-to-Generate-a-Good-Word-Embedding-PaperWeekly/</loc>
-    <lastmod>2016-05-26T16:27:31.000Z</lastmod>
+    <lastmod>2016-06-03T15:21:17.000Z</lastmod>
     <data>
         <display>
         <title>How to Generate a Good Word Embedding #PaperWeekly#</title>
@@ -207,7 +169,7 @@
     
   <url>
     <loc>http://rsarxiv.github.io/2016/05/25/Convolutional-Neural-Networks-for-Sentence-Classification-PaperWeekly/</loc>
-    <lastmod>2016-05-25T20:49:36.000Z</lastmod>
+    <lastmod>2016-06-03T15:21:13.000Z</lastmod>
     <data>
         <display>
         <title>Convolutional Neural Networks for Sentence Classification #PaperWeekly#</title>
@@ -228,7 +190,7 @@
     
   <url>
     <loc>http://rsarxiv.github.io/2016/05/24/Distributed-Representations-of-Sentences-and-Documents-PaperWeekly/</loc>
-    <lastmod>2016-05-24T20:20:43.000Z</lastmod>
+    <lastmod>2016-06-03T15:21:08.000Z</lastmod>
     <data>
         <display>
         <title>Distributed Representations of Sentences and Documents #PaperWeekly#</title>
@@ -247,7 +209,7 @@
     
   <url>
     <loc>http://rsarxiv.github.io/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/</loc>
-    <lastmod>2016-05-23T15:28:15.000Z</lastmod>
+    <lastmod>2016-06-03T15:21:04.000Z</lastmod>
     <data>
         <display>
         <title>Character-Aware Neural Language Models #PaperWeekly#</title>
@@ -268,7 +230,7 @@
     
   <url>
     <loc>http://rsarxiv.github.io/2016/05/22/GloVe-Global-Vectors-for-Word-Representation-PaperWeekly/</loc>
-    <lastmod>2016-05-22T23:30:06.000Z</lastmod>
+    <lastmod>2016-06-03T15:20:59.000Z</lastmod>
     <data>
         <display>
         <title>GloVe: Global Vectors for Word Representation #PaperWeekly#</title>
@@ -289,7 +251,7 @@
     
   <url>
     <loc>http://rsarxiv.github.io/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/</loc>
-    <lastmod>2016-05-21T23:50:49.000Z</lastmod>
+    <lastmod>2016-06-03T15:20:55.000Z</lastmod>
     <data>
         <display>
         <title>Efficient Estimation of Word Representations in Vector Space #PaperWeekly#</title>
@@ -310,7 +272,7 @@
     
   <url>
     <loc>http://rsarxiv.github.io/2016/05/20/A-Neural-Probabilistic-Language-Model-PaperWeekly/</loc>
-    <lastmod>2016-05-21T05:38:53.000Z</lastmod>
+    <lastmod>2016-06-03T15:20:50.000Z</lastmod>
     <data>
         <display>
         <title>A Neural Probabilistic Language Model #PaperWeekly#</title>
@@ -321,6 +283,44 @@
         <tag>deeplearning</tag>
          
         <tag>nlp</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://rsarxiv.github.io/2016/06/03/REASONING-ABOUT-ENTAILMENT-WITH-NEURAL-ATTENTION-PaperWeekly/</loc>
+    <lastmod>2016-06-03T15:20:40.000Z</lastmod>
+    <data>
+        <display>
+        <title>REASONING ABOUT ENTAILMENT WITH NEURAL ATTENTION #PaperWeekly#</title>
+        <pubTime>2016-06-03T14:06:55.000Z</pubTime>
+        
+        <tag>PaperWeekly</tag>
+         
+        <tag>attention</tag>
+         
+        <tag>nlp</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://rsarxiv.github.io/2016/05/29/%E6%88%91%E4%BB%A5%E4%B8%BA/</loc>
+    <lastmod>2016-05-29T22:32:58.000Z</lastmod>
+    <data>
+        <display>
+        <title>我以为</title>
+        <pubTime>2016-05-29T21:09:18.000Z</pubTime>
+        
+        <tag>随笔</tag>
          
          
            

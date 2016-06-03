@@ -91,7 +91,7 @@
 <p>整体上来说，seq2seq+attention的组合给很多研究领域带来了春天，给了研究者们更多的启发，attention的形式有多种，可能针对不同的问题，不同的attention会带来不同的效果，也不好说哪一种一定更加适合某一个特定的任务，所以需要去不断地探索。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<p>PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。</p>
 <img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
 
       
@@ -147,7 +147,7 @@
 <p>另外，不知道是不是Yoshua Bengio组的习惯，本文也在附录附上了详细的模型推导过程。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<p>PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。</p>
 <img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
 
       
@@ -204,7 +204,7 @@
 <p>从context预测output，是一件很神奇的事情。而context又是千变万化的，当下正流行的模型attention model正是在context上做了文章，得到了更好的结果。相信，对context的变化和应用会带来更多好玩的模型。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<p>PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。</p>
 <img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
 
       
@@ -257,7 +257,7 @@
 <p>这里需要讨论的一点是，为什么将输入倒序效果比正序好？文中并没有说，只是说这是一个trick。但后面读了关于attention的文章之后，发现soft attention或者说alignment对于seq2seq这类问题有着很大的提升，我们都知道rnn是一个有偏模型，顺序越靠后的单词在最终占据的信息量越大，那么如果是正序的话，最后一个词对应的state作为decoder的输入来预测第一个词，显然在alignment上来看，这两个词并不是对齐的，反过来，如果用倒序的话，之前的一个词成了最后一个词，在last state中占据了主导，用这个词来预测decoder的第一个词，从某种意义上来说实现了alignment，所以效果会好一些。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<p>PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。</p>
 <img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
 
       
@@ -305,6 +305,8 @@
 <p>11、<a href="http://www.cs.toronto.edu/~rkiros/" target="_blank" rel="external">Ryan Kiros</a>  <b><a href="https://github.com/ryankiros" target="_blank" rel="external">Github</a></b></p>
 <p>12、<a href="http://www.cl.cam.ac.uk/~fh295/" target="_blank" rel="external">Felix Hill</a></p>
 <p>13、<a href="http://www.cs.toronto.edu/~ilya/" target="_blank" rel="external">Ilya Sutskever</a></p>
+<p>14、[Dzmitry Bahdanau] <b><a href="https://github.com/rizar" target="_blank" rel="external">Github</a></b></p>
+<p>15、<a href="http://rockt.github.io/" target="_blank" rel="external">TIM ROCKTÄSCHEL</a> <b><a href="https://github.com/rockt" target="_blank" rel="external">Github</a></b></p>
 
       
     </div>
@@ -373,7 +375,7 @@
 <img src="/2016/05/30/Learning-Distributed-Representations-of-Sentences-from-Unlabelled-Data-PaperWeekly/fig2.png" width="600" height="600">
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<p>PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。</p>
 <img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
 
       
@@ -484,7 +486,7 @@
 <p>本文作者还开源了该模型的实现<a href="https://github.com/ryankiros/skip-thoughts" target="_blank" rel="external">代码</a>。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<p>PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。</p>
 <img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
 
       
@@ -531,7 +533,7 @@
 <p>本文灵活地结合RNN和CNN构造了新的模型，利用了两种模型的优点，提升了文本分类的性能。这也提供了一种研究思路，因为每一种model都有其鲜明的优点和无法回避的缺点，如何利用别的model的优点来弥补自身model的缺点，是改进model的一种重要思路。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<p>PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。</p>
 <img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
 
       
@@ -597,7 +599,7 @@
 <p>本文作者做了大量的工作，针对当前词向量模型的方方面面问题进行了研究，并且给出了许多有意义的结果，对今后研究和使用词向量的童鞋们搭建了一个非常坚实的平台。并且在github上开源了<a href="https://github.com/licstar/compare" target="_blank" rel="external">实验结果</a>。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<p>PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。</p>
 <img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
 
       
@@ -649,7 +651,7 @@
 <p>CNN最初应用在图像领域，将文本进行一些处理之后，也可以应用在nlp中，同样的思路，attention mechanism最初也是应用在图像识别领域中，现在seq2seq+attention的模型横扫了很多nlp task。其实很多问题在某个维度上看，是相似的问题，是可以用类似的方法进行解决的。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p>PaperWeekly，每周会分享N篇人工智能领域的funny paper，内容包括提炼和评价，欢迎大家扫码关注。</p>
+<p>PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。</p>
 <img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
 
       
@@ -699,7 +701,7 @@
 <p>本文的意义在于提出了一个无监督的paragraph向量表示模型，无监督的意义非常重大。有了paragraph级别的高效表示模型之后，解决类似于句子分类，检索，问答系统，文本摘要等各种问题都会带来极大地帮助。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<p>PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。</p>
 <img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
 
       
@@ -748,7 +750,7 @@
 <p>本文通过将传统的word embedding降级到char level，避免了大规模的embedding计算和低频词的问题，通过Highway network技术构建更深的网络，得到了不错的结果。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<p>PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。</p>
 <img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
 
       
@@ -798,7 +800,7 @@
 <p>虽然paper中GloVe有着指标上的领先，但在实际使用中Word2Vec的使用率相对来说更多一些，可能的原因是Word2Vec可以更快地提供一个相对来说不错的word embedding层的初始值。从中得到的启发是，指标上的胜利有些时候只是paper上的胜利，不一定能代表在工程中也是赢家，而只有更加好的model被提出，才会真正地既赢得指标上的胜利，也赢得工程上的胜利。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<p>PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。</p>
 <img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
 
       
@@ -868,7 +870,7 @@
 <p>Word2Vec一个很重要的意义在于，是无监督方法，不需要花额外的功夫去构建数据集来teach模型，只需要给入一个非常大的文本数据集，就可以得到非常好的效果。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<p>PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。</p>
 <img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
 
       
@@ -916,7 +918,7 @@
 <p>所以说我们赶上了一个好的时代，可以站在巨人的肩膀上，看到更远的未来。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<p>PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。</p>
 <img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
 
       

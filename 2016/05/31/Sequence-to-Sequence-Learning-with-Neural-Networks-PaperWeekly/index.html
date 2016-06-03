@@ -91,7 +91,7 @@
 <p>这里需要讨论的一点是，为什么将输入倒序效果比正序好？文中并没有说，只是说这是一个trick。但后面读了关于attention的文章之后，发现soft attention或者说alignment对于seq2seq这类问题有着很大的提升，我们都知道rnn是一个有偏模型，顺序越靠后的单词在最终占据的信息量越大，那么如果是正序的话，最后一个词对应的state作为decoder的输入来预测第一个词，显然在alignment上来看，这两个词并不是对齐的，反过来，如果用倒序的话，之前的一个词成了最后一个词，在last state中占据了主导，用这个词来预测decoder的第一个词，从某种意义上来说实现了alignment，所以效果会好一些。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<p>PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。</p>
 <img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
 
       
