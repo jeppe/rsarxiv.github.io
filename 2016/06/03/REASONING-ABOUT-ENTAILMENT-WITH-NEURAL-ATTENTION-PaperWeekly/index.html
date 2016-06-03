@@ -90,6 +90,10 @@
 <p>4、最后一种模型称为two-way模型，其实是一个trick，借鉴了BiRNN的思想，使用两个相同参数的LSTM，第一个LSTM从一个方向上对基于hypothesis的premise进行表示，而第二个LSTM从相反的方向上对基于premise的hypothesis进行表示，最终得到两个句子表示，拼接起来作为分类的输入。（过程与BiRNN类似，从两个方向上对hypothesis-premise进行了表示，可与前面的模型组合使用，从结果上来看并没有什么明显的作用）</p>
 <p>最后的实验结果表明，采用模型C，即word-by-word attention模型效果最好，其次是B模型，最差的是A模型。结果与预期基本符合，但加了two-way的效果并没有更好，反而更差。作者分析说用了相同的参数来做two-way可能会给训练给来更多的噪声影响，所以效果并不好。</p>
 <p>整体上来说，seq2seq+attention的组合给很多研究领域带来了春天，给了研究者们更多的启发，attention的形式有多种，可能针对不同的问题，不同的attention会带来不同的效果，也不好说哪一种一定更加适合某一个特定的任务，所以需要去不断地探索。</p>
+<p><b>工具推荐</b></p>
+<p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
+<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
+<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="350" height="350">
 
       
     </div>
