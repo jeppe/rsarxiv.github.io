@@ -3,18 +3,15 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>自动文摘（十一） | RSarXiv</title>
+  <title>REASONING ABOUT ENTAILMENT WITH NEURAL ATTENTION #PaperWeekly# | RSarXiv</title>
   
   
-  <meta name="description" content="引
- 除了诗和远方，还有眼前的评价方法 
-
-之前的博客中提到过影响一个技术发展的重要因素有几个，其中一个就是评价方法。因为评价方法是牵引，是参考，是衡量各个模型孰优孰劣的尺子。评价指标是否科学可行直接影响着这个领域能否进入一个正常的研究方向，目前在文本摘要任务中最常用的评价方法是ROUGE（Reca">
+  <meta name="description" content="前面几篇文章分享的都是seq2seq和attention model在机器翻译领域中的应用，在自动文摘系列文章中也分享了六七篇在自动文摘领域中的应用。本文将分享的这篇文章研究了seq2seq+attention在textual entailment领域的应用。本文题目是REASONING ABOUT">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="自动文摘（十一）"/>
+  <meta property="og:title" content="REASONING ABOUT ENTAILMENT WITH NEURAL ATTENTION #PaperWeekly#"/>
   <meta property="og:site_name" content="RSarXiv"/>
 
   
@@ -65,33 +62,34 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-05-12T22:38:09.000Z"><a href="/2016/05/12/自动文摘（十一）/">2016-05-12</a></time>
+        <time datetime="2016-06-03T14:06:55.000Z"><a href="/2016/06/03/REASONING-ABOUT-ENTAILMENT-WITH-NEURAL-ATTENTION-PaperWeekly/">2016-06-03</a></time>
       
       
   
-    <h1 class="title">自动文摘（十一）</h1>
+    <h1 class="title">REASONING ABOUT ENTAILMENT WITH NEURAL ATTENTION #PaperWeekly#</h1>
   
 
     </header>
     <div class="entry">
       
-        <h1 id="引"><a href="#引" class="headerlink" title="引"></a>引</h1><blockquote>
-<p><strong> 除了诗和远方，还有眼前的评价方法 </strong></p>
-</blockquote>
-<p>之前的博客中提到过影响一个技术发展的重要因素有几个，其中一个就是评价方法。因为评价方法是牵引，是参考，是衡量各个模型孰优孰劣的尺子。评价指标是否科学可行直接影响着这个领域能否进入一个正常的研究方向，目前在文本摘要任务中最常用的评价方法是<code>ROUGE</code>（<b>Recall-Oriented Understudy for Gisting Evaluation</b>，最细节的内容可参见Lin,2003的paper <b>Automatic Evaluation of Summaries Using N-gram Co-Occurrence Statistics</b>）。</p>
-<p>10多年前提出的方法至今都是自动文摘系统评价的主流方法，不是说它没有缺点，而是至今没有提出一个更加好的评价方法来取代它。</p>
-<p>ROUGE收到了机器翻译自动评价方法BLEU的启发，不同之处在于，采用召回率来作为指标。基本思想是将模型生成的摘要与参考摘要的n元组贡献统计量作为评判依据。这里，不同具体任务的参考文献获取方法不同，比如：DUC2003文本摘要中的参考摘要是由人工给出的，而seq2seq模型在处理Gigaword数据集时，用news headline作为摘要，中文微博短文本摘要数据集（哈工大）的参考摘要都是包含在微博内容中。</p>
-<h1 id="ROUGE评价指标"><a href="#ROUGE评价指标" class="headerlink" title="ROUGE评价指标"></a>ROUGE评价指标</h1><h2 id="ROUGE-N"><a href="#ROUGE-N" class="headerlink" title="ROUGE-N"></a>ROUGE-N</h2><p>这个指标计算生成的摘要与相应的参考摘要的n-gram召回率。</p>
-<h2 id="ROUGE-L"><a href="#ROUGE-L" class="headerlink" title="ROUGE-L"></a>ROUGE-L</h2><p>这个指标匹配两个文本单元之间的最长公共序列（LCS，Longest Common Subsequence）。</p>
-<h2 id="ROUGE-W"><a href="#ROUGE-W" class="headerlink" title="ROUGE-W"></a>ROUGE-W</h2><p>这个指标计算加权的LCS。</p>
-<h2 id="ROUGE-S"><a href="#ROUGE-S" class="headerlink" title="ROUGE-S"></a>ROUGE-S</h2><p>计算跳二元组（skip-bigram）同现统计量。</p>
-<p>ROUGE自动评测方法最大的优点是不依赖语言处理工具，缺点是死板，不够灵活，没有考虑语义层次上的匹配。可以考虑用word embedding来做语义层次上的评判，而不仅仅是n-gram的匹配。</p>
-<h1 id="ROUGE使用方法"><a href="#ROUGE使用方法" class="headerlink" title="ROUGE使用方法"></a>ROUGE使用方法</h1><p>在实际使用时，用ROUGE的开源程序，perl写的脚本，根据提示操作即可。通常用ROUGE-1,ROUGE-2指标来评测文摘的效果。</p>
-<h1 id="Link"><a href="#Link" class="headerlink" title="Link"></a>Link</h1><p>[1] <a href="http://research.microsoft.com/en-us/people/cyl/naacl2003.pdf" target="_blank" rel="external">Automatic Evaluation of Summaries Using N-gram Co-Occurrence Statistics</a></p>
-<p>[2] <a href="http://www.berouge.com/Pages/default.aspx" target="_blank" rel="external">ROUGE开源工具包</a></p>
-<h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
-<p>PaperWeekly，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。</p>
-<img src="/2016/05/13/Paper翻译列表/qrcode.jpg" width="650" height="650">
+        <p>前面几篇文章分享的都是seq2seq和attention model在机器翻译领域中的应用，在自动文摘系列文章中也分享了六七篇在<a href="http://rsarxiv.github.io/tags/%E8%87%AA%E5%8A%A8%E6%96%87%E6%91%98/">自动文摘</a>领域中的应用。本文将分享的这篇文章研究了seq2seq+attention在<a href="https://en.wikipedia.org/wiki/Textual_entailment" target="_blank" rel="external">textual entailment</a>领域的应用。本文题目是<a href="http://arxiv.org/pdf/1509.06664.pdf" target="_blank" rel="external">REASONING ABOUT ENTAILMENT WITH NEURAL ATTENTION</a>，作者是来自英国伦敦大学学院的<a href="http://rockt.github.io/" target="_blank" rel="external">Tim Rocktaschel</a>博士（后面两个作者来自Google Deepmind），文章于2015年9月放在arxiv上，被ICLR 2016录用。</p>
+<p>首先，介绍一下文本蕴藏（textual entailment）是一个怎样的任务，简单点说就是用来判断两个文本序列之间的是否存在推断关系，是一个分类问题（具体可参见Wikipedia）。两个文本序列分别称为premise和hypothesis。</p>
+<p>本文最大的贡献在于：</p>
+<p>1、将end2end的思想应用到了文本蕴藏领域，取得了不错的效果。</p>
+<p>2、提出了一种seq2seq模型、两种attention模型和一种trick模型。</p>
+<p>本篇关注的重点在于四种模型的构建，来看模型架构图：</p>
+<img src="/2016/06/03/REASONING-ABOUT-ENTAILMENT-WITH-NEURAL-ATTENTION-PaperWeekly/fig1.png" width="600" height="600">
+<p>图中A是我们最熟悉的简单seq2seq模型，本文称为conditional encoding模型；B是本文提出的Attention模型，context与之前分享的都不一样；C是我们之前介绍过的attention模型，本文称为word-by-word attention模型。</p>
+<p>1、首先介绍A模型。将premise和hypothesis认为是source和target，即用encoder来处理premise，用decoder来处理hypothesis，只不过这里的decoder并不是一个语言模型，而只是一个和encoder一样的LSTM，decoder的输入是encoder的最后一个hidden state，对应图中的c5和h5。最后decoder的输出是一个联合表示premise和hypothesis的向量，用于最终的分类。</p>
+<p>2、介绍B模型。该任务和机器翻译不同，并不一定需要做所谓的soft alignment，而是只需要表示好两个句子之间的关系即可，因此这个模型的想法是将hypothesis的句子表示与premise建立注意力机制，而不是将hypothesis的每个单词都与premise做alignment。从上图中标记B的地方也可以看出，attention仅仅依赖于hypothesis的last hidden state。结果可以参看下图：</p>
+<img src="/2016/06/03/REASONING-ABOUT-ENTAILMENT-WITH-NEURAL-ATTENTION-PaperWeekly/fig2.png" width="600" height="600">
+<p>从图中可以看出hypothesis与premise中哪些词相关性更强。</p>
+<p>3、介绍C模型。这个模型与我们之前一直分享的attention模型一致，模型对hypothesis和premise每个单词做了alignment，所以这里称为word-by-word attention，从模型架构图中也可以看出，hypothesis中的每个词都与premise中对应的词进行了alignment。这里并不是生成单词，而是建立起两个文本序列之间的关系。结果可以参看下图：</p>
+<img src="/2016/06/03/REASONING-ABOUT-ENTAILMENT-WITH-NEURAL-ATTENTION-PaperWeekly/fig3.png" width="600" height="600">
+<p>图中表示的是alignment矩阵，更暗的地方表示这两个词更加相关。</p>
+<p>4、最后一种模型称为two-way模型，其实是一个trick，借鉴了BiRNN的思想，使用两个相同参数的LSTM，第一个LSTM从一个方向上对基于hypothesis的premise进行表示，而第二个LSTM从相反的方向上对基于premise的hypothesis进行表示，最终得到两个句子表示，拼接起来作为分类的输入。（过程与BiRNN类似，从两个方向上对hypothesis-premise进行了表示，可与前面的模型组合使用，从结果上来看并没有什么明显的作用）</p>
+<p>最后的实验结果表明，采用模型C，即word-by-word attention模型效果最好，其次是B模型，最差的是A模型。结果与预期基本符合，但加了two-way的效果并没有更好，反而更差。作者分析说用了相同的参数来做two-way可能会给训练给来更多的噪声影响，所以效果并不好。</p>
+<p>整体上来说，seq2seq+attention的组合给很多研究领域带来了春天，给了研究者们更多的启发，attention的形式有多种，可能针对不同的问题，不同的attention会带来不同的效果，也不好说哪一种一定更加适合某一个特定的任务，所以需要去不断地探索。</p>
 
       
     </div>
@@ -101,7 +99,7 @@
         
   
   <div class="tags">
-    <a href="/tags/ROUGE/">ROUGE</a>, <a href="/tags/nlp/">nlp</a>, <a href="/tags/自动文摘/">自动文摘</a>
+    <a href="/tags/PaperWeekly/">PaperWeekly</a>, <a href="/tags/attention/">attention</a>, <a href="/tags/nlp/">nlp</a>
   </div>
 
         
@@ -144,7 +142,7 @@
   }(document, 'script', 'facebook-jssdk'));
 </script>
 
-<div class="fb-comments" data-href="http://rsarxiv.github.io/2016/05/12/自动文摘（十一）/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
+<div class="fb-comments" data-href="http://rsarxiv.github.io/2016/06/03/REASONING-ABOUT-ENTAILMENT-WITH-NEURAL-ATTENTION-PaperWeekly/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
       
   
 </section>
