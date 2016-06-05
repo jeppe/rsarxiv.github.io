@@ -3,15 +3,15 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>Character-Aware Neural Language Models #PaperWeekly# | RSarXiv</title>
+  <title>Multiresolution Recurrent Neural Networks: An Application to Dialogue Response Generation #PaperWeekly# | RSarXiv</title>
   
   
-  <meta name="description" content="本篇分享的文章是Character-Aware Neural Language Models，作者是Yoon Kim、Alexander M. Rush。两位是HarvardNLP组的学生和老师，前者贡献了一些有意义的torch代码，比如seq2seq+attn，后者第一次将seq2seq的模型应用">
+  <meta name="description" content="昨天介绍了一篇工程性比较强的paper，关于对话生成（bot）任务的，今天继续分享一篇bot方面的paper，6月2日刚刚submit在arxiv上。昨天的文章用了一种最最简单的端到端模型来生成对话，取得了不错的结果，而本文用了一种更加复杂的模型来解决这个问题，取得了更好的结果。文章的题目是Mult">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="Character-Aware Neural Language Models #PaperWeekly#"/>
+  <meta property="og:title" content="Multiresolution Recurrent Neural Networks: An Application to Dialogue Response Generation #PaperWeekly#"/>
   <meta property="og:site_name" content="RSarXiv"/>
 
   
@@ -62,29 +62,31 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-05-23T14:10:32.000Z"><a href="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/">2016-05-23</a></time>
+        <time datetime="2016-06-05T17:57:48.000Z"><a href="/2016/06/05/Multiresolution-Recurrent-Neural-Networks-An-Application-to-Dialogue-Response-Generation-PaperWeekly/">2016-06-05</a></time>
       
       
   
-    <h1 class="title">Character-Aware Neural Language Models #PaperWeekly#</h1>
+    <h1 class="title">Multiresolution Recurrent Neural Networks: An Application to Dialogue Response Generation #PaperWeekly#</h1>
   
 
     </header>
     <div class="entry">
       
-        <p>本篇分享的文章是<a href="http://cn.arxiv.org/pdf/1508.06615.pdf" target="_blank" rel="external">Character-Aware Neural Language Models</a>，作者是Yoon Kim、Alexander M. Rush。两位是HarvardNLP组的学生和老师，前者贡献了一些有意义的torch代码，比如<a href="https://github.com/harvardnlp/seq2seq-attn" target="_blank" rel="external">seq2seq+attn</a>，后者第一次将seq2seq的模型应用到了文本摘要。</p>
-<p>卷积神经网络之前常常用在计算机视觉领域，用来在图像中寻找features，前几年被研究者应用到了nlp任务中，在文本分类等任务中取得了不错的效果。传统的word embedding对低频词并没有太好的效果，而本文将char embedding作为CNN的输入，用CNN的输出经过一层highway层处理表示word embedding，然后作为RNNLM的输入，避免了这个问题。而且之前的神经网络语言模型中绝大多数需要优化的参数是word embedding，而本文的模型则会将优化参数减少非常多。</p>
-<p>本文模型的架构图如下：</p>
-<img src="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/arch.png" width="600" height="600">
-<p>可以分为三层，一层是charCNN，通过构建一个char embedding矩阵，将word表示成matrix，和图像类似，输入到CNN模型中提取经过filter层和max pooling层得到一个输出表示，然后将该输出放到Highway Network中，得到一个处理后的效果更好的word embedding作为输出，在第三层中是一个典型的RNN模型，后面的处理与传统方法一样了。</p>
-<p>这里需要学习的参数中char embedding规模非常小，相对比之前的模型有非常明显的优势。这里需要说明的一点是HighWay Network，在Rupesh Kumar Srivastava的paper <a href="http://cn.arxiv.org/pdf/1507.06228.pdf" target="_blank" rel="external">Training Very Deep Networks</a>被提出，受lstm解决rnn梯度衰减问题的思路启发，用来解决训练very deep networks，因为模型越深效果越好，但越难训练。本文的HighWay层如下：</p>
-<img src="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/fig1.png" width="400" height="400">
-<p>其中</p>
-<img src="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/fig2.png" width="200" height="200">
-<p>t被称为transform gate，1-t被称为carry gate。</p>
-<p>最终的实验证明，使用HighWay层效果比使用普通的MLP或者不使用该层效果更好。</p>
-<img src="/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/result.png" width="500" height="500">
-<p>本文通过将传统的word embedding降级到char level，避免了大规模的embedding计算和低频词的问题，通过Highway network技术构建更深的网络，得到了不错的结果。</p>
+        <p>昨天介绍了一篇工程性比较强的paper，关于对话生成（bot）任务的，今天继续分享一篇bot方面的paper，6月2日刚刚submit在arxiv上。昨天的文章用了一种最最简单的端到端模型来生成对话，取得了不错的结果，而本文用了一种更加复杂的模型来解决这个问题，取得了更好的结果。文章的题目是<a href="http://cn.arxiv.org/pdf/1606.00776v1" target="_blank" rel="external">Multiresolution Recurrent Neural Networks: An Application to Dialogue Response Generation</a>，作者是来自蒙特利尔大学的博士生<a href="https://mila.umontreal.ca/en/person/iulian-vlad-serban/" target="_blank" rel="external">Iulian Vlad Serban</a>。</p>
+<p>本文最大的贡献在于提出了一种多尺度循环神经网络（Multiresolution RNN,MrRNN），这里的多尺度是指描述文本序列的方式有多种尺度，不仅仅是传统的用一个又一个word来表示序列，这种表示称为自然语言表示，还包括了一种所谓的high-level信息来表示文本序列，这种表示称为粗糙序列表示。本文的模型受启发于分层循环端到端模型（Hierarchical Recurrent Encoder-Decoder，HERD），该模型应用于搜索领域，将用户的search session划分为两个层次的序列，一个是query的序列，一个是每个query中词的序列。</p>
+<p>本文模型中一个非常重要的部分是数据的预处理，将训练数据中的所谓high-level信息提取出来构造第二种序列来表示整个文本，这里用了两种思路。</p>
+<p>1、提取文本中的名词。用词性标注工具提取出文本中的名词，去掉停用词和重复的词，并且保持原始的词序，还添加了句子的时态。通过这个过程构造了一种表示原始文本的序列。</p>
+<p>2、提取文本中的动词和命名实体。用词性标注工具提取文本中的动词，并标记为activity，然后通过一些其他工具从所有训练数据中构造了一个命名实体的词典，帮助提取原句中的命名实体。因为数据集是ubuntu对话数据集，会涉及到大量的linux命令，所以还构造了一个linux命令词典，以标记原句中的命令。同样地也添加了句子的时态。通过这个处理过程，构造了另外一种表示原始文本的序列。</p>
+<p>两种处理方法将原句用一种关键词的形式表示出来，尤其是第二种方法针对Ubuntu数据集的特点，包含了非常多的特征进来。这样的表示本文称为coarse sequence representation，包含了high-level的信息，比起单纯的word by word sequence具有更加丰富的意义。</p>
+<p>接下来，看一下本文模型的架构图：</p>
+<img src="/2016/06/05/Multiresolution-Recurrent-Neural-Networks-An-Application-to-Dialogue-Response-Generation-PaperWeekly/fig1.png" width="600" height="600">
+<p>模型中包括了两个层次，或者说是两种尺度，一种用了很多的词来表示一个句子，另外一种用了经过处理的包含了更加重要的信息的词来表示一个句子。下层生成的预测值将会作为上层docoder在做预测时的context的一部分，这部分context包含了重要的、high-level的信息，再加上上层自己encoder的输出也作为context，可以说这个模型的context包含了非常丰富的内容。理解上面的图，只要仔细看好箭头的指向，也就明白了各个部分的输入输出是哪些。每个time step的数据流过程如下：</p>
+<p>下层：coarse encoder -&gt; coarse context -&gt; coarse decdoer -&gt; coarse predciton encoder</p>
+<p>上层：natural language encoder -&gt; <b>(natural language context + coarse prediction encoder)</b> -&gt; natural language decoder -&gt; natural language prediction</p>
+<p>不管是用自动评价指标还是人工评价，结果都表明了本文的模型效果比baseline要高出很多个百分点，远远好于其他模型。下面展示一个结果，是ubuntu数据集上的测试效果：</p>
+<img src="/2016/06/05/Multiresolution-Recurrent-Neural-Networks-An-Application-to-Dialogue-Response-Generation-PaperWeekly/fig2.png" width="600" height="600">
+<p>可以看的出本文模型生成的结果效果比其他模型好很多。</p>
+<p>本文模型并不是一个纯粹的数据驱动的模型，在初始的阶段需要做一些非常重要的数据预处理，正是这个预处理得到的序列表示给本文的好结果带来了保证。我想，这种处理问题的思路可以推广到解决其他问题上，虽然本文模型很难直接应用到其他问题上，但我相信经过一些不大的变化之后，可以很好地解决其他问题，比如我一直关注的自动文摘问题，还有机器翻译、自动问答等等各种涉及到自然语言生成问题的任务上。这篇文章的结果也支持了我之前的一个观点，就是在解决问题上不可能存在银弹，不同的问题虽然可以经过一些假设变成相同的数学问题，但真正在应用中，不同的问题就是具有不同的特点，如果只是想用一种简单粗暴的data driven模型来解决问题的话，相信效果会不如结合着一些该问题feature的模型。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
 <p>PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。</p>
@@ -98,7 +100,7 @@
         
   
   <div class="tags">
-    <a href="/tags/PaperWeekly/">PaperWeekly</a>, <a href="/tags/language-model/">language model</a>, <a href="/tags/nlp/">nlp</a>
+    <a href="/tags/PaperWeekly/">PaperWeekly</a>, <a href="/tags/bot/">bot</a>, <a href="/tags/nlp/">nlp</a>, <a href="/tags/seq2seq/">seq2seq</a>
   </div>
 
         
@@ -141,7 +143,7 @@
   }(document, 'script', 'facebook-jssdk'));
 </script>
 
-<div class="fb-comments" data-href="http://rsarxiv.github.io/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
+<div class="fb-comments" data-href="http://rsarxiv.github.io/2016/06/05/Multiresolution-Recurrent-Neural-Networks-An-Application-to-Dialogue-Response-Generation-PaperWeekly/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
       
   
 </section>
