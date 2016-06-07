@@ -1,0 +1,979 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>RSarXiv</title>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://rsarxiv.github.io/"/>
+  <updated>2016-06-06T15:00:17.000Z</updated>
+  <id>http://rsarxiv.github.io/</id>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>A Hierarchical Neural Autoencoder for Paragraphs and Documents #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/06/06/A-Hierarchical-Neural-Autoencoder-for-Paragraphs-and-Documents-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/06/06/A-Hierarchical-Neural-Autoencoder-for-Paragraphs-and-Documents-PaperWeekly/</id>
+    <published>2016-06-06T14:09:52.000Z</published>
+    <updated>2016-06-06T15:00:17.000Z</updated>
+    
+    <content type="html">&lt;p&gt;本篇将会分享一篇用自动编码器(AutoEncoder)来做文档表示的文章，本文的结果会给自然语言生成、自动文摘等任务提供更多的帮助。本文作者是来自斯坦福大学的博士生&lt;a href=&quot;http://web.stanford.edu/~jiweil/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Jiwei Li&lt;/a&gt;，简单看了下其简历，本科居然是北大生物系的，是一个跨界选手。本文的题目是&lt;a href=&quot;http://arxiv.org/pdf/1506.01057.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;A Hierarchical Neural Autoencoder for Paragraphs and Documents&lt;/a&gt;，于2015年6月放在arxiv上。&lt;/p&gt;
+&lt;p&gt;自动编码器之前接触的并不多，所以读了下Yoshua Bengio的deep learning一书补了一下知识。其实挺简单的，就是通过构造一个网络来学习x-&amp;gt;x，最简单的原型就是h=f(x)，x=g(h)。如果输入和输出的x都是完全一样的话，那么就没什么意义了。一般来说，后一个x会与前一个x有一些“误差”或者说“噪声”。而且自动编码器关注的是中间层h，即对输入的表示。如果h的维度小于x的维度，学习这个表示其实就是一个降维的过程。自动编码器有很多种类型，这里就不一一赘述了。&lt;/p&gt;
+&lt;p&gt;本文的贡献在于用分层LSTM模型来做自动编码器。模型分为三个，为递进关系。&lt;/p&gt;
+&lt;p&gt;1、标准的LSTM，没有分层。模型结构看起来和最简单的seq2seq没有区别，只是说这里输入和输出一样。看下图：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/06/A-Hierarchical-Neural-Autoencoder-for-Paragraphs-and-Documents-PaperWeekly/fig1.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;2、分层LSTM。这里分层的思想是用句子中的所有单词意思来表示这个句子，用文档中的所有句子意思来表示这个文档，一层接一层。看下图：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/06/A-Hierarchical-Neural-Autoencoder-for-Paragraphs-and-Documents-PaperWeekly/fig2.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;在word这一层，用一个标准的LSTM作为encoder，每一句中的最后一个word的hidden state作为该句的state，在sentence这一层，文档中所有的句子构成一个序列，用一个标准的LSTM作为encoder，得到整个文档的表示。decoder部分同样是一个分层结构，初始state就是刚刚生成的文档表示向量，然后先decoder出sentence这一层的表示，然后再进入该sentence对其内部的word进行decoder。&lt;/p&gt;
+&lt;p&gt;3、分层LSTM+Attention，这里的Attention机制和之前分享的是一样的，并且只在sentence这一层用了attention，参看下图：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/06/A-Hierarchical-Neural-Autoencoder-for-Paragraphs-and-Documents-PaperWeekly/fig3.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;在decoder部分中生成句子表示时，会重点注意输入中与该句子相关的句子，也就是输入中与之相同的句子。这里注意力的权重与&lt;a href=&quot;http://rsarxiv.github.io/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/&quot;&gt;Neural Machine Translation by Jointly Learning to Align and Translate &lt;/a&gt;中的计算方法一样。&lt;/p&gt;
+&lt;p&gt;在实验中验证了本文模型的有效性，并且经过对比验证了第三种模型的效果最好，其次是第二种，最差的第一种，也与预期的相符。&lt;/p&gt;
+&lt;p&gt;昨天分享的也是一个分层模型，相比于单层的模型效果更好一些，这是否可以引起一些思考？本文也提到后面可以将本文的这种思想应用到自动文摘、对话系统、问答系统上。虽然seq2seq+attention已经在这几大领域中取得了不错的成绩，但如果改成分层模型呢，是不是可以取得更好的成绩？是不是可以将本文的input和output换作自动文摘中的input和target，然后用同样的方法来解决呢？我想应该是可以的。&lt;/p&gt;
+&lt;p&gt;另外，因为我个人比较关注自动文摘技术，自动文摘中abstractive类的方法一般都会涉及到Paraphrase（转述，换句话说），本文的自动编码器模型正好很适合做Paraphrase，输入一句话或者一段话，得到一个带有“误差”的语句通顺的版本。一种最简单的思路，用传统的方法提取出文中最重要的几句话（extractive式的方法），用Paraphrase处理一下得到文本摘要。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本篇将会分享一篇用自动编码器(AutoEncoder)来做文档表示的文章，本文的结果会给自然语言生成、自动文摘等任务提供更多的帮助。本文作者是来自斯坦福大学的博士生&lt;a href=&quot;http://web.stanford.edu/~jiweil/&quot; target=&quot;_bla
+    
+    </summary>
+    
+    
+      <category term="Autoencoder" scheme="http://rsarxiv.github.io/tags/Autoencoder/"/>
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Multiresolution Recurrent Neural Networks: An Application to Dialogue Response Generation #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/06/05/Multiresolution-Recurrent-Neural-Networks-An-Application-to-Dialogue-Response-Generation-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/06/05/Multiresolution-Recurrent-Neural-Networks-An-Application-to-Dialogue-Response-Generation-PaperWeekly/</id>
+    <published>2016-06-05T17:57:48.000Z</published>
+    <updated>2016-06-05T20:23:22.000Z</updated>
+    
+    <content type="html">&lt;p&gt;昨天介绍了一篇工程性比较强的paper，关于对话生成（bot）任务的，今天继续分享一篇bot方面的paper，6月2日刚刚submit在arxiv上。昨天的文章用了一种最最简单的端到端模型来生成对话，取得了不错的结果，而本文用了一种更加复杂的模型来解决这个问题，取得了更好的结果。文章的题目是&lt;a href=&quot;http://cn.arxiv.org/pdf/1606.00776v1&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Multiresolution Recurrent Neural Networks: An Application to Dialogue Response Generation&lt;/a&gt;，作者是来自蒙特利尔大学的博士生&lt;a href=&quot;https://mila.umontreal.ca/en/person/iulian-vlad-serban/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Iulian Vlad Serban&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;本文最大的贡献在于提出了一种多尺度循环神经网络（Multiresolution RNN,MrRNN），这里的多尺度是指描述文本序列的方式有多种尺度，不仅仅是传统的用一个又一个word来表示序列，这种表示称为自然语言表示，还包括了一种所谓的high-level信息来表示文本序列，这种表示称为粗糙序列表示。本文的模型受启发于分层循环端到端模型（Hierarchical Recurrent Encoder-Decoder，HERD），该模型应用于搜索领域，将用户的search session划分为两个层次的序列，一个是query的序列，一个是每个query中词的序列。&lt;/p&gt;
+&lt;p&gt;本文模型中一个非常重要的部分是数据的预处理，将训练数据中的所谓high-level信息提取出来构造第二种序列来表示整个文本，这里用了两种思路。&lt;/p&gt;
+&lt;p&gt;1、提取文本中的名词。用词性标注工具提取出文本中的名词，去掉停用词和重复的词，并且保持原始的词序，还添加了句子的时态。通过这个过程构造了一种表示原始文本的序列。&lt;/p&gt;
+&lt;p&gt;2、提取文本中的动词和命名实体。用词性标注工具提取文本中的动词，并标记为activity，然后通过一些其他工具从所有训练数据中构造了一个命名实体的词典，帮助提取原句中的命名实体。因为数据集是ubuntu对话数据集，会涉及到大量的linux命令，所以还构造了一个linux命令词典，以标记原句中的命令。同样地也添加了句子的时态。通过这个处理过程，构造了另外一种表示原始文本的序列。&lt;/p&gt;
+&lt;p&gt;两种处理方法将原句用一种关键词的形式表示出来，尤其是第二种方法针对Ubuntu数据集的特点，包含了非常多的特征进来。这样的表示本文称为coarse sequence representation，包含了high-level的信息，比起单纯的word by word sequence具有更加丰富的意义。&lt;/p&gt;
+&lt;p&gt;接下来，看一下本文模型的架构图：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/05/Multiresolution-Recurrent-Neural-Networks-An-Application-to-Dialogue-Response-Generation-PaperWeekly/fig1.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;模型中包括了两个层次，或者说是两种尺度，一种用了很多的词来表示一个句子，另外一种用了经过处理的包含了更加重要的信息的词来表示一个句子。下层生成的预测值将会作为上层docoder在做预测时的context的一部分，这部分context包含了重要的、high-level的信息，再加上上层自己encoder的输出也作为context，可以说这个模型的context包含了非常丰富的内容。理解上面的图，只要仔细看好箭头的指向，也就明白了各个部分的输入输出是哪些。每个time step的数据流过程如下：&lt;/p&gt;
+&lt;p&gt;下层：coarse encoder -&amp;gt; coarse context -&amp;gt; coarse decdoer -&amp;gt; coarse predciton encoder&lt;/p&gt;
+&lt;p&gt;上层：natural language encoder -&amp;gt; &lt;b&gt;(natural language context + coarse prediction encoder)&lt;/b&gt; -&amp;gt; natural language decoder -&amp;gt; natural language prediction&lt;/p&gt;
+&lt;p&gt;不管是用自动评价指标还是人工评价，结果都表明了本文的模型效果比baseline要高出很多个百分点，远远好于其他模型。下面展示一个结果，是ubuntu数据集上的测试效果：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/05/Multiresolution-Recurrent-Neural-Networks-An-Application-to-Dialogue-Response-Generation-PaperWeekly/fig2.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;可以看的出本文模型生成的结果效果比其他模型好很多。&lt;/p&gt;
+&lt;p&gt;本文模型并不是一个纯粹的数据驱动的模型，在初始的阶段需要做一些非常重要的数据预处理，正是这个预处理得到的序列表示给本文的好结果带来了保证。我想，这种处理问题的思路可以推广到解决其他问题上，虽然本文模型很难直接应用到其他问题上，但我相信经过一些不大的变化之后，可以很好地解决其他问题，比如我一直关注的自动文摘问题，还有机器翻译、自动问答等等各种涉及到自然语言生成问题的任务上。这篇文章的结果也支持了我之前的一个观点，就是在解决问题上不可能存在银弹，不同的问题虽然可以经过一些假设变成相同的数学问题，但真正在应用中，不同的问题就是具有不同的特点，如果只是想用一种简单粗暴的data driven模型来解决问题的话，相信效果会不如结合着一些该问题feature的模型。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;昨天介绍了一篇工程性比较强的paper，关于对话生成（bot）任务的，今天继续分享一篇bot方面的paper，6月2日刚刚submit在arxiv上。昨天的文章用了一种最最简单的端到端模型来生成对话，取得了不错的结果，而本文用了一种更加复杂的模型来解决这个问题，取得了更好的
+    
+    </summary>
+    
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="bot" scheme="http://rsarxiv.github.io/tags/bot/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+      <category term="seq2seq" scheme="http://rsarxiv.github.io/tags/seq2seq/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>A Neural Conversational Model #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/06/04/A-Neural-Conversational-Model-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/06/04/A-Neural-Conversational-Model-PaperWeekly/</id>
+    <published>2016-06-04T17:57:31.000Z</published>
+    <updated>2016-06-04T19:17:00.000Z</updated>
+    
+    <content type="html">&lt;p&gt;前面介绍过几篇seq2seq在机器翻译、文本蕴藏、自动文摘领域的应用，模型上每篇稍有不同，但基本的思想是接近的。本文继续分享一篇seq2seq在对话生成任务上的应用，是一篇工业界的论文，因此并没有什么理论创新。之所以选这一篇，是因为对话生成是一个非常热门的研究领域和应用领域，也可能是一个非常热门的创业领域，另外一个原因是为了充实seq2seq在各个领域中的应用这一主题。论文题目是&lt;a href=&quot;http://cn.arxiv.org/pdf/1506.05869.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;A Neural Conversational Model&lt;/a&gt;，作者是来自Google Brain，毕业于UC Berkeley的&lt;a href=&quot;http://www1.icsi.berkeley.edu/~vinyals/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Oriol Vinyals&lt;/a&gt;博士，论文最早于2015年7月放在arxiv上。&lt;/p&gt;
+&lt;p&gt;模型部分不用多说，是最简单的seq2seq，架构图如下：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/04/A-Neural-Conversational-Model-PaperWeekly/fig1.png&quot; width=&quot;400&quot; height=&quot;400&quot;&gt;
+&lt;p&gt;本篇主要想分享的东西是结果以及一些思考。文中采用了两个数据集，IT Helpdesk Troubleshooting dataset和OpenSubtitles dataset，前者是一个关于IT类的FAQ数据集，后者是一个电影剧本的数据集。&lt;/p&gt;
+&lt;p&gt;我们可以看一下训练后的模型生成的对话结果，这里只关注第二个数据集的结果：&lt;/p&gt;
+&lt;p&gt;常识类问题：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/04/A-Neural-Conversational-Model-PaperWeekly/fig2.png&quot; width=&quot;400&quot; height=&quot;400&quot;&gt;
+&lt;p&gt;哲学类问题：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/04/A-Neural-Conversational-Model-PaperWeekly/fig3.png&quot; width=&quot;400&quot; height=&quot;400&quot;&gt;
+&lt;p&gt;道德类问题：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/04/A-Neural-Conversational-Model-PaperWeekly/fig4.png&quot; width=&quot;400&quot; height=&quot;400&quot;&gt;
+&lt;p&gt;为了对比，作者添加了一组&lt;a href=&quot;www.cleverbot.com&quot;&gt;cleverbot&lt;/a&gt;(cleverbot是一个在线聊天机器人)的对比结果，如下：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/04/A-Neural-Conversational-Model-PaperWeekly/fig5.png&quot; width=&quot;400&quot; height=&quot;400&quot;&gt;
+&lt;p&gt;从对比结果中可以看得出，本文模型生成的结果比网上流行的在线聊天机器人要看起来更加“智能”一些，之前在知乎上回答过一个问题 &lt;a href=&quot;https://www.zhihu.com/question/46558198/answer/102722213?group_id=720215813641998336&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;三代聊天机器人在技术上的区别在哪里？&lt;/a&gt;，我想cleverbot更接近于第二代，采用了对话检索，即对话是从一个很庞大的数据库中匹配检索来的，而本文的模型属于第三代，更加智能，给定输入生成输出，并不需要借助于人工特征。&lt;/p&gt;
+&lt;p&gt;但bot这个领域确实还面临一些问题，就像文中作者所说，如何客观地评价生成的效果非常重要，尤其是对于一些没有标准答案的问题来说，根本无法衡量哪个结果更加好。其实不仅仅bot，在自动文摘、机器翻译等各种nlp任务中，评价都是一个很难的问题，自动评价只是从某种意义上解决了各个模型相互比较的一种需求，但在实际应用当中用户的评价更加重要，虽然有时并不是那么客观。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;前面介绍过几篇seq2seq在机器翻译、文本蕴藏、自动文摘领域的应用，模型上每篇稍有不同，但基本的思想是接近的。本文继续分享一篇seq2seq在对话生成任务上的应用，是一篇工业界的论文，因此并没有什么理论创新。之所以选这一篇，是因为对话生成是一个非常热门的研究领域和应用领域
+    
+    </summary>
+    
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="bot" scheme="http://rsarxiv.github.io/tags/bot/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+      <category term="seq2seq" scheme="http://rsarxiv.github.io/tags/seq2seq/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>REASONING ABOUT ENTAILMENT WITH NEURAL ATTENTION #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/06/03/REASONING-ABOUT-ENTAILMENT-WITH-NEURAL-ATTENTION-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/06/03/REASONING-ABOUT-ENTAILMENT-WITH-NEURAL-ATTENTION-PaperWeekly/</id>
+    <published>2016-06-03T14:06:55.000Z</published>
+    <updated>2016-06-03T15:20:40.000Z</updated>
+    
+    <content type="html">&lt;p&gt;前面几篇文章分享的都是seq2seq和attention model在机器翻译领域中的应用，在自动文摘系列文章中也分享了六七篇在&lt;a href=&quot;http://rsarxiv.github.io/tags/%E8%87%AA%E5%8A%A8%E6%96%87%E6%91%98/&quot;&gt;自动文摘&lt;/a&gt;领域中的应用。本文将分享的这篇文章研究了seq2seq+attention在&lt;a href=&quot;https://en.wikipedia.org/wiki/Textual_entailment&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;textual entailment&lt;/a&gt;领域的应用。本文题目是&lt;a href=&quot;http://arxiv.org/pdf/1509.06664.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;REASONING ABOUT ENTAILMENT WITH NEURAL ATTENTION&lt;/a&gt;，作者是来自英国伦敦大学学院的&lt;a href=&quot;http://rockt.github.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Tim Rocktaschel&lt;/a&gt;博士（后面两个作者来自Google Deepmind），文章于2015年9月放在arxiv上，被ICLR 2016录用。&lt;/p&gt;
+&lt;p&gt;首先，介绍一下文本蕴藏（textual entailment）是一个怎样的任务，简单点说就是用来判断两个文本序列之间的是否存在推断关系，是一个分类问题（具体可参见Wikipedia）。两个文本序列分别称为premise和hypothesis。&lt;/p&gt;
+&lt;p&gt;本文最大的贡献在于：&lt;/p&gt;
+&lt;p&gt;1、将end2end的思想应用到了文本蕴藏领域，取得了不错的效果。&lt;/p&gt;
+&lt;p&gt;2、提出了一种seq2seq模型、两种attention模型和一种trick模型。&lt;/p&gt;
+&lt;p&gt;本篇关注的重点在于四种模型的构建，来看模型架构图：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/03/REASONING-ABOUT-ENTAILMENT-WITH-NEURAL-ATTENTION-PaperWeekly/fig1.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;图中A是我们最熟悉的简单seq2seq模型，本文称为conditional encoding模型；B是本文提出的Attention模型，context与之前分享的都不一样；C是我们之前介绍过的attention模型，本文称为word-by-word attention模型。&lt;/p&gt;
+&lt;p&gt;1、首先介绍A模型。将premise和hypothesis认为是source和target，即用encoder来处理premise，用decoder来处理hypothesis，只不过这里的decoder并不是一个语言模型，而只是一个和encoder一样的LSTM，decoder的输入是encoder的最后一个hidden state，对应图中的c5和h5。最后decoder的输出是一个联合表示premise和hypothesis的向量，用于最终的分类。&lt;/p&gt;
+&lt;p&gt;2、介绍B模型。该任务和机器翻译不同，并不一定需要做所谓的soft alignment，而是只需要表示好两个句子之间的关系即可，因此这个模型的想法是将hypothesis的句子表示与premise建立注意力机制，而不是将hypothesis的每个单词都与premise做alignment。从上图中标记B的地方也可以看出，attention仅仅依赖于hypothesis的last hidden state。结果可以参看下图：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/03/REASONING-ABOUT-ENTAILMENT-WITH-NEURAL-ATTENTION-PaperWeekly/fig2.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;从图中可以看出hypothesis与premise中哪些词相关性更强。&lt;/p&gt;
+&lt;p&gt;3、介绍C模型。这个模型与我们之前一直分享的attention模型一致，模型对hypothesis和premise每个单词做了alignment，所以这里称为word-by-word attention，从模型架构图中也可以看出，hypothesis中的每个词都与premise中对应的词进行了alignment。这里并不是生成单词，而是建立起两个文本序列之间的关系。结果可以参看下图：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/03/REASONING-ABOUT-ENTAILMENT-WITH-NEURAL-ATTENTION-PaperWeekly/fig3.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;图中表示的是alignment矩阵，更暗的地方表示这两个词更加相关。&lt;/p&gt;
+&lt;p&gt;4、最后一种模型称为two-way模型，其实是一个trick，借鉴了BiRNN的思想，使用两个相同参数的LSTM，第一个LSTM从一个方向上对基于hypothesis的premise进行表示，而第二个LSTM从相反的方向上对基于premise的hypothesis进行表示，最终得到两个句子表示，拼接起来作为分类的输入。（过程与BiRNN类似，从两个方向上对hypothesis-premise进行了表示，可与前面的模型组合使用，从结果上来看并没有什么明显的作用）&lt;/p&gt;
+&lt;p&gt;最后的实验结果表明，采用模型C，即word-by-word attention模型效果最好，其次是B模型，最差的是A模型。结果与预期基本符合，但加了two-way的效果并没有更好，反而更差。作者分析说用了相同的参数来做two-way可能会给训练给来更多的噪声影响，所以效果并不好。&lt;/p&gt;
+&lt;p&gt;整体上来说，seq2seq+attention的组合给很多研究领域带来了春天，给了研究者们更多的启发，attention的形式有多种，可能针对不同的问题，不同的attention会带来不同的效果，也不好说哪一种一定更加适合某一个特定的任务，所以需要去不断地探索。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;前面几篇文章分享的都是seq2seq和attention model在机器翻译领域中的应用，在自动文摘系列文章中也分享了六七篇在&lt;a href=&quot;http://rsarxiv.github.io/tags/%E8%87%AA%E5%8A%A8%E6%96%87%E6%91%
+    
+    </summary>
+    
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="attention" scheme="http://rsarxiv.github.io/tags/attention/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Neural Machine Translation by Jointly Learning to Align and Translate #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/</id>
+    <published>2016-06-02T19:30:30.000Z</published>
+    <updated>2016-06-03T15:21:44.000Z</updated>
+    
+    <content type="html">&lt;p&gt;前面的两篇文章简单介绍了seq2seq在机器翻译领域的尝试，效果令人满意。上一篇也介绍到这一类问题可以归纳为求解P(output|context)的问题，不同的地方在于context的构建思路不同，上两篇中的seq2seq将context定义为encoder的last hidden state，即认为rnn将整个input部分的信息都保存在了last hidden state中。而事实上，rnn是一个有偏的模型，越靠后的单词在last state中占据的“比例”越高，所以这样的context并不是一个非常好的办法，本文将分享的文章来解决这个问题。题目是&lt;a href=&quot;http://arxiv.org/pdf/1409.0473.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Neural Machine Translation by Jointly Learning to Align and Translate&lt;/a&gt;，作者是来自德国雅各布大学的&lt;a href=&quot;http://minds.jacobs-university.de/dima&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Dzmitry Bahdanau&lt;/a&gt;，现在是Yoshua Bengio组的一个博士生，文章于2015年4月放在arxiv上。&lt;/p&gt;
+&lt;p&gt;本篇不再讨论seq2seq，如果您想了解seq2seq，可以去看&lt;a href=&quot;http://rsarxiv.github.io/2016/05/31/Sequence-to-Sequence-Learning-with-Neural-Networks-PaperWeekly/&quot;&gt;Sequence to Sequence Learning with Neural Networks&lt;/a&gt;和&lt;a href=&quot;http://rsarxiv.github.io/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder%E2%80%93Decoder-for-Statistical-Machine-Translation-PaperWeekly/&quot;&gt;Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation&lt;/a&gt;两篇博客。本篇只讨论不同的地方。&lt;/p&gt;
+&lt;p&gt;本文用encoder所有hidden state的加权平均来表示context，权重表示decoder中各state与encoder各state的相关性，简单的seq2seq认为decoder中每一个state都与input的全部信息（用last state表示）有关，而本文则认为只与相关的state有关系，即在decoder部分中，模型只将注意力放在了相关的部分，对其他部分注意很少，这一点与人类的行为很像，当人看到一段话或者一幅图的时候，往往会将注意力放在一个很小的局部，而不是全部。具体看下图：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/fig1.png&quot; width=&quot;400&quot; height=&quot;400&quot;&gt;
+&lt;p&gt;decoder中预测每个输出的条件概率变为：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/fig2.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;这里每个time step的state变为：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/fig3.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;这里，context vector由下式计算：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/fig4.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;权重用了一个最简单的mlp来计算，&lt;/p&gt;
+&lt;img src=&quot;/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/fig6.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;然后做归一化：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/fig5.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;这里的权重反应了decoder中的state s(i-1)和encoder中的state h(j)之间的相关性。本文在为了得到相对来说无偏的state，在encoder部分采用了BiRNN。&lt;/p&gt;
+&lt;p&gt;在机器翻译领域中，attention model可以理解为source和target words的soft alignment，像下图一样：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/fig7.png&quot; width=&quot;500&quot; height=&quot;500&quot;&gt;
+&lt;p&gt;上图是英语翻译成法语的一个结果。越亮的地方表示source和target中的words相关性越强（或者说对齐地越准），图中的每一个点的亮度就是前面计算出的权重。&lt;/p&gt;
+&lt;p&gt;本文最大的贡献在于提出了attention model，为今后研究对话生成，问答系统，自动文摘等任务打下了坚实的基础。context的定义也成为了一个非常有意思的研究点，rnn是一种思路，cnn同样也是一种思路，简单的word embedding也可以算是一种思路，交叉起来rnn+cnn也可以作为一种思路，将word替换成char可以作为一种思路，思路其实非常多，不同的组合有不同的模型，都可以去探索。&lt;/p&gt;
+&lt;p&gt;另外，不知道是不是Yoshua Bengio组的习惯，本文也在附录附上了详细的模型推导过程。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;前面的两篇文章简单介绍了seq2seq在机器翻译领域的尝试，效果令人满意。上一篇也介绍到这一类问题可以归纳为求解P(output|context)的问题，不同的地方在于context的构建思路不同，上两篇中的seq2seq将context定义为encoder的last hi
+    
+    </summary>
+    
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="attention" scheme="http://rsarxiv.github.io/tags/attention/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder%E2%80%93Decoder-for-Statistical-Machine-Translation-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder–Decoder-for-Statistical-Machine-Translation-PaperWeekly/</id>
+    <published>2016-06-01T15:15:17.000Z</published>
+    <updated>2016-06-03T15:21:39.000Z</updated>
+    
+    <content type="html">&lt;p&gt;本篇将分享的文章相比于昨天那篇&lt;a href=&quot;http://rsarxiv.github.io/2016/05/31/Sequence-to-Sequence-Learning-with-Neural-Networks-PaperWeekly/&quot;&gt;Sequence to Sequence Learning with Neural Networks&lt;/a&gt;更早地使用了seq2seq的框架来解决机器翻译的问题，可能上一篇来自于Google，工程性更强一些，学术性有一些不足。本文来自于学术机构，学术范更浓一些。本文的题目是&lt;a href=&quot;http://arxiv.org/pdf/1406.1078.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Learning Phrase Representations using RNN Encoder–Decoder for Statistical&lt;br&gt;  Machine Translation&lt;/a&gt;，作者是来自蒙特利尔大学的&lt;a href=&quot;http://www.kyunghyuncho.me/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Kyunghyun Cho&lt;/a&gt;博士（现在在纽约大学任教），2014年6月登在arxiv上。&lt;/p&gt;
+&lt;p&gt;本文最大的两个贡献是：&lt;/p&gt;
+&lt;p&gt;1、提出了一种类似于LSTM的GRU结构作为RNN的hidden unit，并且具有比LSTM更少的参数，更不容易过拟合。&lt;/p&gt;
+&lt;p&gt;2、较早地（据说2013年就有人提出用seq2seq思路来解决问题）将seq2seq应用在了机器翻译领域，并且取得了不错的效果。&lt;/p&gt;
+&lt;p&gt;自然语言生成（NLG）领域中有很多任务，比如机器翻译，&lt;a href=&quot;http://rsarxiv.github.io/tags/%E8%87%AA%E5%8A%A8%E6%96%87%E6%91%98/&quot;&gt;自动文摘&lt;/a&gt;，自动问答，对话生成等，都是根据一个上下文来生成一个文本序列，这里分类两个过程，encoder部分将输入序列表示成一个context，decoder部分在context的条件下生成一个输出序列，联合训练两个部分得到最优的模型。这里的context就像是一个memory，试着保存了encoder部分的所有信息（但往往用较低的维度表示整个输入序列一定会造成信息损失）。本文的思路就是如此，具体可参看下图：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder–Decoder-for-Statistical-Machine-Translation-PaperWeekly/fig1.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;本文模型将encoder部分的最后一个hidden state作为context输入给decoder，decoder中的每一个时间t的hidden state s(t)都与context,s(t-1),y(t-1)有关系，而每一个时间t的输出y(t)都与context,s(t),y(t-1)有关。当然，这种模型是非常灵活的，你的context可以有很多种选择，比如可以选encoder中所有hidden state组成的矩阵来作为context，可以用BiRNN计算出两个last hidden state进行拼接作为context；而s(t)和y(t)根据RNN结构不同，也可以将context作为s(0)依次向后传递，而不是每次都依赖于context。&lt;/p&gt;
+&lt;p&gt;说完了模型部分，来说说本文最大的贡献是提出了GRU，一种更轻量级的hidden unit，效果还不输LSTM，函数结构如下图：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder–Decoder-for-Statistical-Machine-Translation-PaperWeekly/fig2.png&quot; width=&quot;400&quot; height=&quot;400&quot;&gt;
+&lt;p&gt;GRU有两个门函数，reset gate和update gate，公式如下：&lt;/p&gt;
+&lt;p&gt;reset gate：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder–Decoder-for-Statistical-Machine-Translation-PaperWeekly/fig3.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;update gate：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder–Decoder-for-Statistical-Machine-Translation-PaperWeekly/fig4.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;reset gate接近于0的时候，当前hidden state会忽略前面的hidden state，在当前输入处reset。reset gate控制了哪些信息可以通过，而update gate控制着多少信息可以通过，与LSTM中的cell扮演着相似的角色。计算出每一步的reset和update gate，即可计算出当前的hidden state，如下：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder–Decoder-for-Statistical-Machine-Translation-PaperWeekly/fig5.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;这里，&lt;/p&gt;
+&lt;img src=&quot;/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder–Decoder-for-Statistical-Machine-Translation-PaperWeekly/fig6.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;实验部分，作者利用本文模型得到了满意的结果，不再赘述。&lt;/p&gt;
+&lt;p&gt;另外，本文在附录部分给出了一个比较详尽的encoder-decoder公式推导过程，大家可以参看原文。&lt;/p&gt;
+&lt;p&gt;从context预测output，是一件很神奇的事情。而context又是千变万化的，当下正流行的模型attention model正是在context上做了文章，得到了更好的结果。相信，对context的变化和应用会带来更多好玩的模型。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本篇将分享的文章相比于昨天那篇&lt;a href=&quot;http://rsarxiv.github.io/2016/05/31/Sequence-to-Sequence-Learning-with-Neural-Networks-PaperWeekly/&quot;&gt;Sequence to 
+    
+    </summary>
+    
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+      <category term="seq2seq" scheme="http://rsarxiv.github.io/tags/seq2seq/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Sequence to Sequence Learning with Neural Networks #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/05/31/Sequence-to-Sequence-Learning-with-Neural-Networks-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/05/31/Sequence-to-Sequence-Learning-with-Neural-Networks-PaperWeekly/</id>
+    <published>2016-05-31T15:22:43.000Z</published>
+    <updated>2016-06-03T15:21:35.000Z</updated>
+    
+    <content type="html">&lt;p&gt;seq2seq+各种形式的attention近期横扫了nlp的很多任务，本篇将分享的文章是比较早（可能不是最早）提出用seq2seq来解决机器翻译任务的，并且取得了不错的效果。本文的题目是&lt;a href=&quot;http://cn.arxiv.org/pdf/1409.3215.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Sequence to Sequence Learning with Neural Networks&lt;/a&gt;，作者是来自Google的&lt;a href=&quot;http://www.cs.toronto.edu/~ilya/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Ilya Sutskever&lt;/a&gt;博士（现在OpenAI）。可以说这篇文章较早地探索了seq2seq在nlp任务中的应用，后续的研究者在其基础上进行了更广泛的应用，比如自动文本摘要，对话机器人，问答系统等等。&lt;/p&gt;
+&lt;p&gt;这里看一张很经典的图，如下：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/31/Sequence-to-Sequence-Learning-with-Neural-Networks-PaperWeekly/fig1.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;图的左半边是encoder，右半边是decoder，两边都采用lstm模型，decoder本质上是一个rnn语言模型，不同的是在生成词的时候依赖于encoder的最后一个hidden state，可以用下式来表示：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/31/Sequence-to-Sequence-Learning-with-Neural-Networks-PaperWeekly/fig2.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;模型非常简单，就是最普通的多层lstm，实际实现的时候有几点不同：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;用了两种不同的lstm，一种是处理输入序列，一种是处理输出序列。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;更深的lstm会比浅的lstm效果更好，所以本文选择了四层。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;将输入的序列翻转之后作为输入效果更好一些。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这里在decoder部分中应用了beam search来提升效果，beam search大概的思路是每次生成词是取使得整个概率最高的前k个词作为候选，这里显然beam size越大，效果越好，但是beam size越大会造成计算的代价也增大，所以存在一个trade off。&lt;/p&gt;
+&lt;p&gt;最后通过机器翻译的数据集验证了了seq2seq模型的有效性。&lt;/p&gt;
+&lt;p&gt;这里需要讨论的一点是，为什么将输入倒序效果比正序好？文中并没有说，只是说这是一个trick。但后面读了关于attention的文章之后，发现soft attention或者说alignment对于seq2seq这类问题有着很大的提升，我们都知道rnn是一个有偏模型，顺序越靠后的单词在最终占据的信息量越大，那么如果是正序的话，最后一个词对应的state作为decoder的输入来预测第一个词，显然在alignment上来看，这两个词并不是对齐的，反过来，如果用倒序的话，之前的一个词成了最后一个词，在last state中占据了主导，用这个词来预测decoder的第一个词，从某种意义上来说实现了alignment，所以效果会好一些。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;seq2seq+各种形式的attention近期横扫了nlp的很多任务，本篇将分享的文章是比较早（可能不是最早）提出用seq2seq来解决机器翻译任务的，并且取得了不错的效果。本文的题目是&lt;a href=&quot;http://cn.arxiv.org/pdf/1409.3215.
+    
+    </summary>
+    
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+      <category term="seq2seq" scheme="http://rsarxiv.github.io/tags/seq2seq/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>大牛主页</title>
+    <link href="http://rsarxiv.github.io/2016/05/30/%E5%A4%A7%E7%89%9B%E4%B8%BB%E9%A1%B5/"/>
+    <id>http://rsarxiv.github.io/2016/05/30/大牛主页/</id>
+    <published>2016-05-31T05:11:49.000Z</published>
+    <updated>2016-06-06T15:01:30.000Z</updated>
+    
+    <content type="html">&lt;p&gt;本篇将汇总PaperWeekly翻译过的作者的主页（持续更新中）：&lt;/p&gt;
+&lt;p&gt;1、Konstantin Lopyrev  &lt;b&gt;&lt;a href=&quot;https://github.com/klopyrev&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Github&lt;/a&gt;&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;2、&lt;a href=&quot;http://people.seas.harvard.edu/~srush/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Alexander M. Rush&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;3、&lt;a href=&quot;https://research.facebook.com/sumit-chopra&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Sumit Chopra&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;4、&lt;a href=&quot;http://researcher.watson.ibm.com/researcher/view.php?person=us-nallapati&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Ramesh Nallapati&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;5、&lt;a href=&quot;http://researcher.watson.ibm.com/researcher/view.php?person=us-zhou&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Bowen Zhou&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;6、&lt;a href=&quot;http://nlp.stanford.edu/~jpennin/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Jeffrey Pennington&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;7、&lt;a href=&quot;https://research.facebook.com/tomas-mikolov&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Tomas Mikolov&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;8、&lt;a href=&quot;http://www.iro.umontreal.ca/~bengioy/yoshua_en/index.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Yoshua Bengio&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;9、&lt;a href=&quot;http://www.people.fas.harvard.edu/~yoonkim/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Yoon Kim&lt;/a&gt; &lt;b&gt;&lt;a href=&quot;https://github.com/yoonkim&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Github&lt;/a&gt;&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;10、&lt;a href=&quot;http://cs.stanford.edu/~quocle/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Quoc Le&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;11、&lt;a href=&quot;http://www.cs.toronto.edu/~rkiros/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Ryan Kiros&lt;/a&gt;  &lt;b&gt;&lt;a href=&quot;https://github.com/ryankiros&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Github&lt;/a&gt;&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;12、&lt;a href=&quot;http://www.cl.cam.ac.uk/~fh295/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Felix Hill&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;13、&lt;a href=&quot;http://www.cs.toronto.edu/~ilya/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Ilya Sutskever&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;14、[Dzmitry Bahdanau] &lt;b&gt;&lt;a href=&quot;https://github.com/rizar&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Github&lt;/a&gt;&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;15、&lt;a href=&quot;http://rockt.github.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;TIM ROCKTÄSCHEL&lt;/a&gt; &lt;b&gt;&lt;a href=&quot;https://github.com/rockt&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Github&lt;/a&gt;&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;16、&lt;a href=&quot;http://www1.icsi.berkeley.edu/~vinyals/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Oriol Vinyals&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;17、&lt;a href=&quot;https://mila.umontreal.ca/en/person/iulian-vlad-serban/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Iulian Vlad Serban&lt;/a&gt; &lt;b&gt;&lt;a href=&quot;https://github.com/julianser&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Github&lt;/a&gt;&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;18、&lt;a href=&quot;http://web.stanford.edu/~jiweil/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Jiwei Li&lt;/a&gt; &lt;b&gt;&lt;a href=&quot;https://github.com/jiweil&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Github&lt;/a&gt;&lt;/b&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本篇将汇总PaperWeekly翻译过的作者的主页（持续更新中）：&lt;/p&gt;
+&lt;p&gt;1、Konstantin Lopyrev  &lt;b&gt;&lt;a href=&quot;https://github.com/klopyrev&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Gi
+    
+    </summary>
+    
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Learning Distributed Representations of Sentences from Unlabelled Data #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/05/30/Learning-Distributed-Representations-of-Sentences-from-Unlabelled-Data-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/05/30/Learning-Distributed-Representations-of-Sentences-from-Unlabelled-Data-PaperWeekly/</id>
+    <published>2016-05-30T20:49:58.000Z</published>
+    <updated>2016-06-03T15:21:30.000Z</updated>
+    
+    <content type="html">&lt;p&gt;sentence representation的文章已经分享了几篇，包括了supervise和unsupervise的方法，但并没有对各种model进行系统地对比和分析，今天分享的这篇文章对现有各种各样的distributed representations of sentences model进行了分类、对比和分析，为了增强对比效果，还提出了两种虚拟的模型。最后将所有的模型在supervised和unsupervised评价任务中进行对比，得出了一些有意义的结论。本文的题目是：&lt;a href=&quot;http://arxiv.org/pdf/1602.03483v1.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Learning Distributed Representations of Sentences from Unlabelled Data&lt;/a&gt;，作者是来自剑桥大学的&lt;a href=&quot;https://www.cl.cam.ac.uk/~fh295/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Felix Hill&lt;/a&gt;博士。&lt;/p&gt;
+&lt;p&gt;首先对现有模型进行了分类描述。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;直接在纯文本上进行训练的模型，模型包括：&lt;a href=&quot;http://rsarxiv.github.io/2016/05/28/Skip-Thought-Vectors-PaperWeekly/&quot;&gt;Skip-Thought Vector&lt;/a&gt;、&lt;a href=&quot;http://rsarxiv.github.io/2016/05/24/Distributed-Representations-of-Sentences-and-Documents-PaperWeekly/&quot;&gt;Paragraph Vector&lt;/a&gt;，两种模型都在之前分享过。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;在结构化资源上进行训练的模型，这种模型借助了一些纯文本之外的资源进行辅助训练。模型包括：DictRep、CaptionRep、NMT。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;DictRep&lt;/code&gt;是本文作者之前提出的一个模型，模型训练了一个从词典定义到预训练好的词向量之间的映射。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;CaptionRep&lt;/code&gt;模型架构与DictRep一样，采用的数据集不同而已，这里使用了COCO数据集，训练一个从图像vector representation到图像caption的映射。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;NMT&lt;/code&gt;是神经网络机器翻译，该模型架构与skip-thought vector模型相同，但训练数据换成了sentence-aligned翻译文本，WMT语料中的En-Fr和En-De。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;本文提出的一些新模型。为了解决当前存在模型的问题，本文设计了两种虚拟模型。包括：Sequential (Denoising) Autoencoders(SDAE、SAE)和FastSent。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;SDAE&lt;/code&gt;模型是为了解决Skip-Thought Vector模型对语料中句子连贯性的依赖问题。传统的去噪自编码器（DAE）一般都是一个输入是固定尺寸图像数据的前馈神经网络，本文利用一个噪声函数将传统的DAE扩展到变长度句子中，噪声函数是N(S|p0,px)，S表示一个句子，p0,px都是一个[0,1]的数，表示概率。首先，对于每一个S中的word，N函数会以一个p0的概率来删除word，概率是相互对立的。然后，对于S中的每一对不重叠的bigram，w(i)w(i+1)，N函数会以一个px的概率来交换两个词的位置。最后用一个类似NMT的encoder-decoder模型进行训练，只不过不同的是目标函数变了，变成了使得噪声最小。这里，source是经过噪声函数处理过的sentence，target是原始的sentence。这个模型就是SDAE模型，相比于skip-thought vector，可以处理任意顺序的句子集。如果令px=0,p0=0，我们称为&lt;code&gt;SAE&lt;/code&gt;模型。这里p0其实就是防止深度网络模型训练时过拟合的正则化方法&lt;code&gt;Dropout&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;FastSent&lt;/code&gt;模型旨在解决Skip-Thought Vector模型计算速度慢的缺点，解决的思路与word2vec突破传统多层神经网络语言模型的思路类似，只用了一个简单的log-linear层。给定一个用词袋模型表示的句子，模型来预测该句子两边相邻的句子。该模型在训练时也会学习句中每个单词的词向量，并且将句子用句中所有词的词向量之和来表示。&lt;/p&gt;
+&lt;p&gt;下图给出了所有模型在性能上的比较：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/30/Learning-Distributed-Representations-of-Sentences-from-Unlabelled-Data-PaperWeekly/fig1.png&quot; width=&quot;500&quot; height=&quot;500&quot;&gt;
+&lt;p&gt;其中，OS是指是否需要保留句子在语料中的顺序；R表示需要结构化的训练资源；WO：对词序敏感；SD：句子向量维度；WD：词向量维度；TR：训练时间；TE：编码50w句子需要的时间。&lt;/p&gt;
+&lt;p&gt;任务评价一共分为两类，监督学习任务和无监督学习任务。通过大量实验的比较，得出了一下的结论：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;不同的任务适合不同的表示模型，这听起来像一句废话，也就是说没有哪种模型可以通吃所有的任务。比如：Skip-Thought Vector模型在TREC任务中最好，是因为句子和句子之间的衔接非常好，非常适合这个模型的特点。而Paraphrase detection任务更加适合于SDAE模型。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;监督学习和无监督学习任务的表现存在差异，在监督学习任务中表现好的模型在无监督学习模型中表现的就会很一般，带有非线性网络结构的Skip Thought Vector、SDAE、NMT模型在监督学习中表现更好，而log-linear类的模型FastSent则在无监督学习任务中表现更好。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;额外的资源会影响到训练处模型的通用性和实用性，比如一个在线demo需要很快的查询最近邻速度，用fastsent可能就没有问题，但用其他模型就达不到快速的要求。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;词序的重要性并没有得到体现。本文的结果给出了一个与常识相左的结论，词序在决定句子意思表示时并没有想象中的那么重要。作者说到，可能是因为当前的评价方式并不能反映出词序的重要性，所以这个问题得不出一个明确的答案。（这点很有意思，在前面分享的一篇文章&lt;a href=&quot;http://rsarxiv.github.io/2016/05/26/How-to-Generate-a-Good-Word-Embedding-PaperWeekly/&quot;&gt;How to Generate a Good Word Embedding&lt;/a&gt;中，引用了一个结论，词序信息占了语义信息的20%，那么到底词序对于句子语义有多大的影响？需要好好研究一番）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;评价指标存在缺陷，并不能绝对准确的对比出各个模型的差异。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;最后，展示一个各模型训练之后的应用效果。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/30/Learning-Distributed-Representations-of-Sentences-from-Unlabelled-Data-PaperWeekly/fig2.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;sentence representation的文章已经分享了几篇，包括了supervise和unsupervise的方法，但并没有对各种model进行系统地对比和分析，今天分享的这篇文章对现有各种各样的distributed representations of sent
+    
+    </summary>
+    
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>我以为</title>
+    <link href="http://rsarxiv.github.io/2016/05/29/%E6%88%91%E4%BB%A5%E4%B8%BA/"/>
+    <id>http://rsarxiv.github.io/2016/05/29/我以为/</id>
+    <published>2016-05-29T21:09:18.000Z</published>
+    <updated>2016-05-29T22:32:58.000Z</updated>
+    
+    <content type="html">&lt;p&gt;周末了，给自己放一个假，今天不分享paper了，分享一些别的东西。&lt;/p&gt;
+&lt;p&gt;一直认为人能够坚持并且努力做好一件事情的最大动力是热爱，是那种没有半点虚伪、没有半点功利的热爱。因为热爱，所以纯粹。于是，在经过几个月内心的煎熬和挣扎，我决定上路了，从此不再为那些不感兴趣、耗时耗力但却没有半点成就感的事情而纠结了，心中犹如放下一块巨石，终于可以静下心来做一些让自己内心感到充实的事情。&lt;/p&gt;
+&lt;p&gt;从小生活在一个小县城里，没有那些IT大牛传说一般的经历，小时候爸爸妈妈也并没有给我买电脑，让我成为一个电脑神童，只是希望我快乐地活在这个世界上。第一次接触电脑是小学毕业时的暑假，拿着妈妈给的零花钱在家附近的网吧打CS，那个时候第一次从电脑中获得了一些肤浅的快乐。对“编程”有一种魔性地冲动，是在初二看了一本盗版的比尔盖茨传，里面讲着盖茨各种传奇的故事，用一台电脑创造了一个帝国，当时对他的种种经历都非常崇拜，还跟着传记里的一些描述来模仿他，困了累了的时候开始前后摇晃自己的身体。那个时候讲盖茨视为自己的偶像，是那种真正的偶像，和现在很多女孩迷小鲜肉是一种感觉。那个时候经常会幻想自己有朝一日可以写代码，可以像偶像一样建立一个帝国。然而，梦想在不正确的时间可能只适合放在心里珍藏起来。&lt;/p&gt;
+&lt;p&gt;初中毕业之后，考上了省里最好高中之一，来到了省城读书，这个阶段为我打开了一扇很大很宽的门，让我走进了一个更大的世界。在这里接触到了visual basic，Pascal，机器人比赛，感受到了一个更加生动的世界，更加有趣的世界。原来学习可以不只是读书，不只是做题，还可以动手实现一个好玩的机器人，实现一个有趣的程序。三年的高中生活让我看到了一个更好玩的世界。没有辛苦地努力学习，只是因为高三参加的一次奥林匹克竞赛保送到了南方的一所985，因为一些不可控的原因，学习了一个一直想努力感兴趣却一直都没感兴趣的专业，四年除了一些竞赛成绩没有什么其他的亮点。大学的时候，抓住了一切业余时间来多写程序，也跟着刷一些学校自己online judge系统上的题目，但终究不是太系统。在大四下学期的时候，开始疯狂崇拜扎克伯格，尤其是看了《社交网络》之后，大概是因为当时自己的状态很低落，一方面考研成绩并不理想，一方面谈了三年的女朋友选择了更安稳的港湾，整个人的状态一落千丈，非常需要一些提气的东西来鼓励自己走出困境，于是用了一个开源的sns程序，php写的，在大学同学这个圈子里运营了一个社交网络，叫memory。那段时光，我开始自学一些php，每天给网站添加一些小的新功能，来满足同学们的种种好玩的需求，每天忙活到夜里一两点，却感觉到非常充实，非常有成就感。那段时光大概是大学四年里最快乐、最踏实的一段日子了。&lt;/p&gt;
+&lt;p&gt;后来，因为种种不可抗拒的原因没有在学校继续深造，去了一个自己也没法选择的单位工作。工作第一年在北京长期出差，有机会接触到了真正的IT圈，看到了真实的创业，真刀真枪，也看到了推荐系统从2011年开始在国内火起来，大大小小的网站都在搜罗推荐系统方面的人才，供不应求，关于推荐系统方面的交流活动也是一个接一个，媒体也在热炒，甚至都说推荐系统有望接管了搜索引擎的地位，现在想想真是可笑。而现在，人工智能处于一个非常火热的状态，有许多家专门报道人工智能相关资讯的媒体在社交网络上也非常活跃，还有大量的自媒体，每天也都在分享着各种各样和人工智能有关的信息。仿佛，真正的人工智能就快要实现了一样，尤其是阿尔法狗事件将人工智能推向了一个新的高度，人才市场上又开始吆喝着，严重缺乏人工智能、自然语言处理、深度学习、计算机视觉等方面的人才，媒体每天也在鼓吹着各个方面的论调，有的甚至在说AI威胁论，很多做其他研究的人也随之变成了人工智能专家，深度学习专家，自然语言处理专家。现在，这个世界上最不缺少的是专家，然后就是看热闹不嫌事大的吃瓜群众。网络上充斥各种形态的网红、大V，掌握着充分的话语权，许多不明真相的群众总是特别迷信他们说的话，形成了一种不健康的氛围。屌丝迷信小V，小V迷信大V，大V迷信大大V，一个人的title远比他的内容更能让人信服；如果学术中，总是这样迷信权威或者迷信title，学术该如何进步？长江后浪该如何推前浪？毕业之后的这些年，我看到了一个更加多元化的世界，一个兼容并包的世界，一个充满机会也充满挑战的世界。&lt;/p&gt;
+&lt;p&gt;我以为，一个人的胸怀和他的视野成正比，一个人的视野和他看到的世界有关系，一个人可以通过多旅行，到处看看来拓宽自己的视野，也可以通过多读书来丰富自己的内心世界。&lt;/p&gt;
+&lt;p&gt;我以为，人生短暂，不应浪费自己的时间在不感兴趣的事情上，时间宝贵，谁都不应该视别人的时间如粪土，大肆去浪费别人的时间。&lt;/p&gt;
+&lt;p&gt;我以为，生活的本质应该是生活本身，我们努力干活，努力拼搏，为的不就是生活中每一点一滴都过的很幸福嘛？荣誉也好、成就也罢终究是过眼云烟，敌不过内心持久的充实，充实并不是谁给你的，而是你自己对自己的一个肯定。&lt;/p&gt;
+&lt;p&gt;我以为，幸福就是不打扰到别人的快乐，可能是陪爱人一起看看大海，可能是一起拍拍照，可能是一起遛遛狗，也可能是一起发发呆。幸福也是将一个又一个的心愿完成，也是拥有一辆华丽的车子，尽管可能只是一辆淘宝购物车。&lt;/p&gt;
+&lt;p&gt;我以为，每天读一篇paper，写一篇博客，来丰富自己的内心和知识体系也是一件让我快乐和幸福的事情。每天可以有很多好玩的想法，并且可以通过自己的双手来实现这个想法也是一件让我快乐和幸福的事情。&lt;/p&gt;
+&lt;p&gt;我以为，编程让我感觉到自己像一个造物主，在程序世界里，每一行代码，每一个变量，每一个函数都是一个活生生的人，协同地一起工作着。&lt;/p&gt;
+&lt;p&gt;我以为，简单和纯粹才是这个世界上最真实的元素，纯真才是对人最大的夸奖，而不是什么帅气，漂亮，有才。&lt;/p&gt;
+&lt;p&gt;我以为，陪伴才是最长情的告白，感谢我家狗子hare童鞋每一个日日夜夜的陪伴，感谢我的爱人无条件地支持我做我喜欢做的事情，并且真的敢于放弃一些已有的、很好的待遇来跟着我去完成一个梦想。谢谢！&lt;/p&gt;
+&lt;img src=&quot;/2016/05/29/我以为/1.jpg&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;周末了，给自己放一个假，今天不分享paper了，分享一些别的东西。&lt;/p&gt;
+&lt;p&gt;一直认为人能够坚持并且努力做好一件事情的最大动力是热爱，是那种没有半点虚伪、没有半点功利的热爱。因为热爱，所以纯粹。于是，在经过几个月内心的煎熬和挣扎，我决定上路了，从此不再为那些不感兴趣、耗
+    
+    </summary>
+    
+    
+      <category term="随笔" scheme="http://rsarxiv.github.io/tags/%E9%9A%8F%E7%AC%94/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Skip-Thought Vectors #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/05/28/Skip-Thought-Vectors-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/05/28/Skip-Thought-Vectors-PaperWeekly/</id>
+    <published>2016-05-28T15:51:24.000Z</published>
+    <updated>2016-06-03T15:21:26.000Z</updated>
+    
+    <content type="html">&lt;p&gt;已经分享过多种无监督的word level表示模型，和多种有监督的sentence level表示模型，以及与word2vec模型类似的paragraph vector模型。无监督模型比有监督模型带给大家更多的惊喜，本文将会分享一篇sentence level的无监督表示模型，模型中用到了当下流行的seq2seq框架。paper的题目是&lt;a href=&quot;http://cn.arxiv.org/pdf/1506.06726v1.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Skip-Thought Vectors&lt;/a&gt;，作者是来自多伦多大学的&lt;a href=&quot;http://www.cs.toronto.edu/~rkiros/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Ryan Kiros&lt;/a&gt;博士。&lt;/p&gt;
+&lt;p&gt;word level表示已经有太多无监督模型，然而sentence level表示大多仍停留在监督模型的范畴内，比如之前分享过的RNN、CNN、RCNN等模型来表示一个句子，主要是针对具体的分类任务来构造句子向量，仅适用于本任务，不具有一般性。之前，Tomas Mikolov（word2vec的作者）提出了一种类似于Word2vec的paragraph vector，也是一种无监督模型，但并不能很好地扩展来用。&lt;/p&gt;
+&lt;p&gt;本文旨在提出一个通用的无监督句子表示模型，借鉴了word2vec中skip-gram模型，通过一句话来预测这句话的上一句和下一句。本文的模型被称为skip-thoughts，生成的向量称为skip-thought vector。模型采用了当下流行的端到端框架，通过搜集了大量的小说作为训练数据集，将得到的模型中encoder部分作为feature extractor，可以给任意句子生成vector。&lt;/p&gt;
+&lt;p&gt;当然，这里存在一个很大的问题是，如果测试数据中有未登录词，如何表示这个未登录词？针对这个问题，本文提出了一种词汇表扩展的方法来解决这个问题。&lt;/p&gt;
+&lt;p&gt;首先，介绍本文的模型，参考下图来理解：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/28/Skip-Thought-Vectors-PaperWeekly/fig1.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;模型分为两个部分，一个是encoder，一个是两个decoder，分别decode出当前句子的上一句和下一句。&lt;/p&gt;
+&lt;p&gt;encoder-decoder框架已经介绍过太多次了，这里不再赘述。本文采用了GRU-RNN作为encoder和decoder，encoder部分的最后一个词的hidden state作为decoder的输入来生成词。这里用的是最简单的网络结构，并没有考虑复杂的多层网络、双向网络等提升效果。decoder部分也只是一个考虑了encoder last hidden state的语言模型，并无其他特殊之处，只是有两个decoder，是一个one maps two的情况，但计算方法一样。模型中的目标函数也是两个部分，一个来自于预测下一句，一个来自于预测上一句。如下式：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/28/Skip-Thought-Vectors-PaperWeekly/fig2.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;其次，介绍下本文的另一大亮点，词汇表扩展。&lt;/p&gt;
+&lt;p&gt;借鉴于Tomas Mikolov的一篇文章&lt;a href=&quot;http://arxiv.org/pdf/1309.4168.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Exploiting Similarities among Languages for Machine Translation&lt;/a&gt;中解决机器翻译missing words问题的思路，对本文训练集产生的词汇表V(RNN)进行了扩展，具体的思路可参考Mikolov的文章，达到的效果是建立了大数据集下V(Word2Vec)和本文V(RNN)之间的映射，V(Word2Vec)的规模远远大于V(RNN)，本文中V(RNN)包括了20000个词，V(Word2Vec)包括了930000多个词，成功地解决了这一问题，使得本文提出的无监督模型有大的应用价值。文中给出了一个例子，如下图：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/28/Skip-Thought-Vectors-PaperWeekly/fig3.png&quot; width=&quot;400&quot; height=&quot;400&quot;&gt;
+&lt;p&gt;当然，词汇表扩展有很多方法，比如不同词，而用字符来作为基本元素，这种思路在语言模型中也常常被用到。&lt;/p&gt;
+&lt;p&gt;最后，作者在Semantic relateness、Paraphrase detection、Image-sentence ranking和classification任务中进行了测试和对比，验证了本文模型的效果。最后还给出了在多个数据集上对句子聚类的可视化结果，以及用decoder部分生成一段话。&lt;/p&gt;
+&lt;p&gt;关于未来的改进，作者有几点想法：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;用更深的encoder和decoder网络。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;用更大的窗口，而不仅仅预测上一句和下一句。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;试着将sentence替换成paragraph。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;换一些别的encoder来做，比如用CNN。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;每个想法都可能会是未来另一篇牛paper的思路。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;看过了很多的decoder，有char-level，word-level和sentence-level，我有一个小小的想法是，到底哪种level生成的paragraph更出色呢？速度方面，不必比较了，sentence-level一定要快一些，但是质量方面呢？&lt;/code&gt;文中最后给出了一个本文模型生成的demo，如下：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/28/Skip-Thought-Vectors-PaperWeekly/fig4.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;本文作者还开源了该模型的实现&lt;a href=&quot;https://github.com/ryankiros/skip-thoughts&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;代码&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;已经分享过多种无监督的word level表示模型，和多种有监督的sentence level表示模型，以及与word2vec模型类似的paragraph vector模型。无监督模型比有监督模型带给大家更多的惊喜，本文将会分享一篇sentence level的无监督表示模
+    
+    </summary>
+    
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Recurrent Convolutional Neural Networks for Text Classification #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/05/27/Recurrent-Convolutional-Neural-Networks-for-Text-Classification-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/05/27/Recurrent-Convolutional-Neural-Networks-for-Text-Classification-PaperWeekly/</id>
+    <published>2016-05-27T15:24:12.000Z</published>
+    <updated>2016-06-03T15:21:21.000Z</updated>
+    
+    <content type="html">&lt;p&gt;介绍了CNN表示文本的模型之后，本篇将会分享一篇用CNN结合RNN的模型来表示文本。paper题目是&lt;a href=&quot;http://www.aaai.org/ocs/index.php/AAAI/AAAI15/paper/download/9745/9552&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Recurrent Convolutional Neural Networks for Text Classification&lt;/a&gt;，作者是来自中科院大学的来斯惟博士。&lt;/p&gt;
+&lt;p&gt;本文要解决的问题是文本分类，文本分类最关键的问题是特征表示，传统的方法经常会忽略上下文信息和词序，无法捕捉到词义。近几年随着深度学习的火热，研究者们通过借助神经网络模型来解决传统方法存在的问题。比如：Socher提出的Recursive Neural Network（递归神经网络）模型，通过一种树结构来捕捉句子语义，取得了不错的效果，但时间复杂度是O(n2)，并且无法用一棵树来表示两个句子之间的关系。再比如：Recurrent Neural Network（循环神经网络）模型，时间复杂度是O(n)，每个单词的表示都包含了之前所有单词的信息，有很强的捕捉上下文的能力，但该模型有偏，后面的单词比前面的单词更重要，但这与常识并不相符，因为句中关键的词不一定在最后面。为了解决RNN的有偏性问题，有的研究者提出了用CNN（卷积神经网络）来表示文本，并且时间复杂度也是O(n)，但是CNN存在一个缺陷，卷积窗口的大小是固定的，并且这个窗口大小如何设置是一个问题，如果设置小了，则会损失有效信息，如果设置大了，会增加很多的参数。&lt;/p&gt;
+&lt;p&gt;于是，针对上述模型存在的问题，本文提出了RCNN（循环卷积神经网络）模型，模型架构图如下：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/27/Recurrent-Convolutional-Neural-Networks-for-Text-Classification-PaperWeekly/fig1.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;首先，构造CNN的卷积层，卷积层的本质是一个BiRNN模型，通过正向和反向循环来构造一个单词的下文和上文，如下式：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/27/Recurrent-Convolutional-Neural-Networks-for-Text-Classification-PaperWeekly/fig2.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;得到单词的上下文表示之后，用拼接的方式来表示这个单词，如下式：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/27/Recurrent-Convolutional-Neural-Networks-for-Text-Classification-PaperWeekly/fig3.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;将该词向量放入一个单层神经网络中，得到所谓的潜语义向量（latent semantic vector），这里卷积层的计算结束了，时间复杂度仍是O(n)。接下来进行池化层（max-pooling），即将刚刚得到的所有单词的潜语义向量中每个维度上最大的值选出组成一个新的向量，这里采用max-pooling可以将向量中最大的特征提取出来，从而获取到整个文本的信息。池化过程时间复杂度也是O(n)，所以整个模型的时间复杂度是O(n)。得到文本特征向量之后，进行分类。&lt;/p&gt;
+&lt;p&gt;为了验证模型的有效性，在四组包括中文、英文的分类任务中进行了对比实验，取得了满意的结果。&lt;/p&gt;
+&lt;p&gt;本文灵活地结合RNN和CNN构造了新的模型，利用了两种模型的优点，提升了文本分类的性能。这也提供了一种研究思路，因为每一种model都有其鲜明的优点和无法回避的缺点，如何利用别的model的优点来弥补自身model的缺点，是改进model的一种重要思路。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;介绍了CNN表示文本的模型之后，本篇将会分享一篇用CNN结合RNN的模型来表示文本。paper题目是&lt;a href=&quot;http://www.aaai.org/ocs/index.php/AAAI/AAAI15/paper/download/9745/9552&quot; target
+    
+    </summary>
+    
+    
+      <category term="CNN" scheme="http://rsarxiv.github.io/tags/CNN/"/>
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="RNN" scheme="http://rsarxiv.github.io/tags/RNN/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>How to Generate a Good Word Embedding #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/05/26/How-to-Generate-a-Good-Word-Embedding-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/05/26/How-to-Generate-a-Good-Word-Embedding-PaperWeekly/</id>
+    <published>2016-05-26T14:17:24.000Z</published>
+    <updated>2016-06-03T15:21:17.000Z</updated>
+    
+    <content type="html">&lt;p&gt;之前介绍过几种生成word embedding的方法，那么针对具体的任务该如何选择训练数据？如何选择采用哪个模型？如何选择模型参数？本篇将分享一篇paper来回答上述问题，paper的题目是&lt;a href=&quot;http://cn.arxiv.org/pdf/1507.05523.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;How to Generate a Good Word Embedding&lt;/a&gt;，作者是来自中科院大学的来斯惟博士。&lt;/p&gt;
+&lt;p&gt;当前，word embedding的模型有很多，性能几乎都是各说纷纭，每个模型在自己选定的数据集和任务上都取得了state-of-the-art结果，导致学术研究和工程应用上难以做出选择。不仅仅在word embedding这个子方向上存在这样的问题，很多方向都有类似的问题，如何公平客观地评价不同的模型是一个很困难的任务。本文作者试着挑战了一下这个难题，并且给出了一些有意义的结果。&lt;/p&gt;
+&lt;p&gt;本文所做研究都是一个同一个假设，即：出现在相似上下文的单词具有相似的意思。&lt;/p&gt;
+&lt;p&gt;下面来看下不同模型的比较，不同word embedding模型之间主要的区别在于两点：&lt;/p&gt;
+&lt;p&gt;1、目标词和上下文的关系&lt;/p&gt;
+&lt;p&gt;2、上下文的表示方法&lt;/p&gt;
+&lt;p&gt;本文提供探讨了6种模型，并从这两个方面对模型进行了对比，如下图：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/26/How-to-Generate-a-Good-Word-Embedding-PaperWeekly/fig1.png&quot; width=&quot;500&quot; height=&quot;500&quot;&gt;
+&lt;p&gt;c表示上下文，w表示目标词。首先看w和c的关系，前五种模型均是用c来预测w，只有C&amp;amp;W模型是给w和c的组合来打分。再看c的表示方法，Order模型是本文为了对比增加的一个虚拟模型，考虑了词序信息，将c中每个单词拼接成一个大向量作为输入，而word2vec的两个模型skip-gram和cbow都是将上下文处理为一个相同维度的向量作为输入，其中skip-gram选择上下文中的一个词作为输入，cbow将上下文的几个词向量作了平均，LBL、NNLM和C&amp;amp;W模型都是在Order模型的基础上加了一层隐藏层，将上下文向量做了一个语义组合。具体见下表：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/26/How-to-Generate-a-Good-Word-Embedding-PaperWeekly/fig2.png&quot; width=&quot;500&quot; height=&quot;500&quot;&gt;
+&lt;p&gt;据研究估计，文本含义信息的20%来自于词序，剩下的来自于词的选择。所以忽略词序信息的模型，将会损失约20%的信息。&lt;/p&gt;
+&lt;p&gt;本文做了包括三种类型的八组对比实验，分别是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;研究词向量的语义特性。该类实验是为了对比词向量的语义特性，包括：WordSim353，TOEFL，analogy task：semantic和syntactic。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;将词向量作为特征。该类实验是为了对比词向量作为处理其他任务的特征时，对该任务性能的提升。包括：文本分类和命名实体识别。前者将词向量加权平均得到文本向量来分类，权值是词频，数据集用的是IMDB；后者用CoNLL03数据集做NER任务。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;用词向量来初始化神经网络模型。该类实验是为了研究词向量作为神经网络的初始值，对NN模型的提升。包括：CNN文本分类和词性标注。前者用了我们之前提到过的Kim的CNN模型，将句子表示成矩阵作为CNN的输入得到句子的表示，进行情感分类，数据集是Stanford Sentiment Treebank；后者用Wall Street Journal数据集进行了POS tagging任务。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;经过大量的对比实验，作者回答了以下几个问题：&lt;/p&gt;
+&lt;p&gt;Q：哪个模型最好？如何选择c和w的关系以及c的表示方法？&lt;/p&gt;
+&lt;p&gt;A：对于一个小型数据集来说，类似skip-gram这样越简单的模型效果越好，对于一个大型数据集来说，稍微复杂一点的模型，比如cbow和order就可以取得非常好的效果。真实数据中，skip-gram、cbow和order这样的模型足够了。在语义任务中，通过c来预测w的模型要更优于C&amp;amp;W这种将c和w都放在输入层的模型。&lt;/p&gt;
+&lt;p&gt;Q：数据集的规模和所属领域对词向量的效果有哪些影响？&lt;/p&gt;
+&lt;p&gt;A：数据集的领域远比规模重要，给定一个任务之后，选择任务相关的领域数据将会提升性能，相反，如果数据并不相关，将会导致更差的性能。当然，如果数据都属于同一领域，规模越大性能越好。&lt;/p&gt;
+&lt;p&gt;Q：在训练模型时迭代多少次可以有效地避免过拟合？&lt;/p&gt;
+&lt;p&gt;A：通常的做法是在测试数据集上观察误差，当误差开始上升时即可停止训练，但经过本文的研究，这种方法并不能得到最好的task结果，好的做法是用task data作为early stopping的数据。&lt;/p&gt;
+&lt;p&gt;Q：词向量的维度与效果之间的关系？&lt;/p&gt;
+&lt;p&gt;A：越大的维度就会有越好的效果，但在一般的任务中50就已经足够了。&lt;/p&gt;
+&lt;p&gt;本文作者做了大量的工作，针对当前词向量模型的方方面面问题进行了研究，并且给出了许多有意义的结果，对今后研究和使用词向量的童鞋们搭建了一个非常坚实的平台。并且在github上开源了&lt;a href=&quot;https://github.com/licstar/compare&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;实验结果&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;之前介绍过几种生成word embedding的方法，那么针对具体的任务该如何选择训练数据？如何选择采用哪个模型？如何选择模型参数？本篇将分享一篇paper来回答上述问题，paper的题目是&lt;a href=&quot;http://cn.arxiv.org/pdf/1507.0552
+    
+    </summary>
+    
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+      <category term="word embeddings" scheme="http://rsarxiv.github.io/tags/word-embeddings/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Convolutional Neural Networks for Sentence Classification #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/05/25/Convolutional-Neural-Networks-for-Sentence-Classification-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/05/25/Convolutional-Neural-Networks-for-Sentence-Classification-PaperWeekly/</id>
+    <published>2016-05-25T19:56:45.000Z</published>
+    <updated>2016-06-03T15:21:13.000Z</updated>
+    
+    <content type="html">&lt;p&gt;本篇将分享一个有监督学习句子表示的方法，文章是&lt;a href=&quot;http://cn.arxiv.org/pdf/1408.5882.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Convolutional Neural Networks for Sentence Classification&lt;/a&gt;，作者是Harvard NLP组的Yoon Kim，并且开源了代码 &lt;a href=&quot;https://github.com/harvardnlp/sent-conv-torch&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;sent-conv-torch&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;卷积神经网络（CNN）在计算机视觉中应用广泛，其捕捉局部feature的能力非常强，为分析和利用图像数据的研究者提供了极大额帮助。本文作者将CNN引用到了NLP的文本分类任务中。&lt;/p&gt;
+&lt;p&gt;本文模型架构图：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/25/Convolutional-Neural-Networks-for-Sentence-Classification-PaperWeekly/fig1.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;熟悉CNN结构的童鞋们看这个图就会非常眼熟，单通道图像可以表示为一个矩阵，输入到CNN中，经过多组filter层和pooling层，得到图像的局部特征，然后进行相关任务。本文用拼接词向量的方法，将一个句子表示成为一个矩阵，这里矩阵的每一行表示一个word，后面的步骤仅采用一组filter、pooling层来得到句子的特征向量，然后进行分类。&lt;/p&gt;
+&lt;p&gt;这里，模型根据词向量的不同分为四种：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CNN-rand，所有的词向量都随机初始化，并且作为模型参数进行训练。&lt;/li&gt;
+&lt;li&gt;CNN-static，即用word2vec预训练好的向量（Google News），在训练过程中不更新词向量，句中若有单词不在预训练好的词典中，则用随机数来代替。&lt;/li&gt;
+&lt;li&gt;CNN-non-static，根据不同的分类任务，进行相应的词向量预训练。&lt;/li&gt;
+&lt;li&gt;CNN-multichannel，两套词向量构造出的句子矩阵作为两个通道，在误差反向传播时，只更新一组词向量，保持另外一组不变。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在七组数据集上进行了对比实验，证明了单层的CNN在文本分类任务中的有效性，同时也说明了用无监督学习来的词向量对于很多nlp任务都非常有意义。&lt;/p&gt;
+&lt;p&gt;这里需要注意的一点是，static模型中word2vec预训练出的词向量会把good和bad当做相似的词，在sentiment classification任务中将会导致错误的结果，而non-static模型因为用了当前task dataset作为训练数据，不会存在这样的问题。具体可参看下图：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/25/Convolutional-Neural-Networks-for-Sentence-Classification-PaperWeekly/fig2.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;CNN最初应用在图像领域，将文本进行一些处理之后，也可以应用在nlp中，同样的思路，attention mechanism最初也是应用在图像识别领域中，现在seq2seq+attention的模型横扫了很多nlp task。其实很多问题在某个维度上看，是相似的问题，是可以用类似的方法进行解决的。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本篇将分享一个有监督学习句子表示的方法，文章是&lt;a href=&quot;http://cn.arxiv.org/pdf/1408.5882.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Convolutional Neural Networks for S
+    
+    </summary>
+    
+    
+      <category term="CNN" scheme="http://rsarxiv.github.io/tags/CNN/"/>
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Distributed Representations of Sentences and Documents #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/05/24/Distributed-Representations-of-Sentences-and-Documents-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/05/24/Distributed-Representations-of-Sentences-and-Documents-PaperWeekly/</id>
+    <published>2016-05-24T19:34:00.000Z</published>
+    <updated>2016-06-03T15:21:08.000Z</updated>
+    
+    <content type="html">&lt;p&gt;继分享了一系列词向量相关的paper之后，今天分享一篇句子向量的文章，&lt;a href=&quot;http://cn.arxiv.org/pdf/1405.4053.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Distributed Representations of Sentences and Documents&lt;/a&gt;，作者是来自Google的Quoc Le和Tomas Mikolov，后者也是Word2Vec的作者。&lt;/p&gt;
+&lt;p&gt;用低维向量表示了word之后，接下来要挑战地就是表示句子和段落了。传统的表示句子的方式是用词袋模型，每个句子都可以写成一个特别大维度的向量，绝大多数是0，不仅没有考虑词序的影响，而且还无法表达语义信息。本文沿用了Word2Vec的思想，提出了一种无监督模型，将变长的句子或段落表示成固定长度的向量。不仅在一定上下文范围内考虑了词序，而且非常好地表征了语义信息。&lt;/p&gt;
+&lt;p&gt;首先简单回顾下word2vec的cbow模型架构图：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/24/Distributed-Representations-of-Sentences-and-Documents-PaperWeekly/fig1.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;给定上下文the cat sat三个词来预测单词on。&lt;/p&gt;
+&lt;p&gt;与cbow模型类似，本文提出了PV-DM（Distributed Memory Model of Paragraph Vectors），如下图：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/24/Distributed-Representations-of-Sentences-and-Documents-PaperWeekly/fig2.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;不同的地方在于，输入中多了一个paragraph vector，可以看做是一个word vector，作用是用来记忆当前上下文所缺失的信息，或者说表征了该段落的主题。这里，所有的词向量在所有段落中都是共用的，而paragraph vector只在当前paragraph中做训练时才相同。后面的过程与word2vec无异。&lt;/p&gt;
+&lt;p&gt;topic也好，memory也罢，感觉更像是一种刻意的说辞，本质上就是一个word，只是这个word唯一代表了这个paragraph，丰富了context vector。&lt;/p&gt;
+&lt;p&gt;另外一种模型，叫做PV-DBOW（Distributed Bag of Words version of Paragraph Vector），如下图：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/24/Distributed-Representations-of-Sentences-and-Documents-PaperWeekly/fig3.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;看起来和word2vec的skip-gram模型很像。&lt;/p&gt;
+&lt;p&gt;用PV-DM训练出的向量有不错的效果，但在实验中采用了两种模型分别计算出的向量组合作为最终的paragraph vector，效果会更佳。在一些情感分类的问题上进行了测试，得到了不错的效果。&lt;/p&gt;
+&lt;p&gt;本文的意义在于提出了一个无监督的paragraph向量表示模型，无监督的意义非常重大。有了paragraph级别的高效表示模型之后，解决类似于句子分类，检索，问答系统，文本摘要等各种问题都会带来极大地帮助。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;继分享了一系列词向量相关的paper之后，今天分享一篇句子向量的文章，&lt;a href=&quot;http://cn.arxiv.org/pdf/1405.4053.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Distributed Representat
+    
+    </summary>
+    
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Character-Aware Neural Language Models #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/</id>
+    <published>2016-05-23T14:10:32.000Z</published>
+    <updated>2016-06-03T15:21:04.000Z</updated>
+    
+    <content type="html">&lt;p&gt;本篇分享的文章是&lt;a href=&quot;http://cn.arxiv.org/pdf/1508.06615.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Character-Aware Neural Language Models&lt;/a&gt;，作者是Yoon Kim、Alexander M. Rush。两位是HarvardNLP组的学生和老师，前者贡献了一些有意义的torch代码，比如&lt;a href=&quot;https://github.com/harvardnlp/seq2seq-attn&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;seq2seq+attn&lt;/a&gt;，后者第一次将seq2seq的模型应用到了文本摘要。&lt;/p&gt;
+&lt;p&gt;卷积神经网络之前常常用在计算机视觉领域，用来在图像中寻找features，前几年被研究者应用到了nlp任务中，在文本分类等任务中取得了不错的效果。传统的word embedding对低频词并没有太好的效果，而本文将char embedding作为CNN的输入，用CNN的输出经过一层highway层处理表示word embedding，然后作为RNNLM的输入，避免了这个问题。而且之前的神经网络语言模型中绝大多数需要优化的参数是word embedding，而本文的模型则会将优化参数减少非常多。&lt;/p&gt;
+&lt;p&gt;本文模型的架构图如下：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/arch.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;可以分为三层，一层是charCNN，通过构建一个char embedding矩阵，将word表示成matrix，和图像类似，输入到CNN模型中提取经过filter层和max pooling层得到一个输出表示，然后将该输出放到Highway Network中，得到一个处理后的效果更好的word embedding作为输出，在第三层中是一个典型的RNN模型，后面的处理与传统方法一样了。&lt;/p&gt;
+&lt;p&gt;这里需要学习的参数中char embedding规模非常小，相对比之前的模型有非常明显的优势。这里需要说明的一点是HighWay Network，在Rupesh Kumar Srivastava的paper &lt;a href=&quot;http://cn.arxiv.org/pdf/1507.06228.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Training Very Deep Networks&lt;/a&gt;被提出，受lstm解决rnn梯度衰减问题的思路启发，用来解决训练very deep networks，因为模型越深效果越好，但越难训练。本文的HighWay层如下：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/fig1.png&quot; width=&quot;400&quot; height=&quot;400&quot;&gt;
+&lt;p&gt;其中&lt;/p&gt;
+&lt;img src=&quot;/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/fig2.png&quot; width=&quot;200&quot; height=&quot;200&quot;&gt;
+&lt;p&gt;t被称为transform gate，1-t被称为carry gate。&lt;/p&gt;
+&lt;p&gt;最终的实验证明，使用HighWay层效果比使用普通的MLP或者不使用该层效果更好。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/result.png&quot; width=&quot;500&quot; height=&quot;500&quot;&gt;
+&lt;p&gt;本文通过将传统的word embedding降级到char level，避免了大规模的embedding计算和低频词的问题，通过Highway network技术构建更深的网络，得到了不错的结果。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本篇分享的文章是&lt;a href=&quot;http://cn.arxiv.org/pdf/1508.06615.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Character-Aware Neural Language Models&lt;/a&gt;，作者是Yoo
+    
+    </summary>
+    
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="language model" scheme="http://rsarxiv.github.io/tags/language-model/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>GloVe: Global Vectors for Word Representation #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/05/22/GloVe-Global-Vectors-for-Word-Representation-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/05/22/GloVe-Global-Vectors-for-Word-Representation-PaperWeekly/</id>
+    <published>2016-05-22T16:23:52.000Z</published>
+    <updated>2016-06-03T15:20:59.000Z</updated>
+    
+    <content type="html">&lt;p&gt;Word2Vec虽然取得了很好的效果，但模型上仍然存在明显的缺陷，比如没有考虑词序，再比如没有考虑全局的统计信息。本篇分享的是&lt;a href=&quot;http://nlp.stanford.edu/pubs/glove.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;GloVe: Global Vectors for Word Representation&lt;/a&gt;，作者是stanford的Jeffrey Pennington, Richard Socher(metamind CEO)和Christopher Manning。同时作者还开源了相应的工具GloVe和一些训练好的模型。&lt;/p&gt;
+&lt;p&gt;本文的思路是将全局词-词共现矩阵进行了分解，训练得到词向量。整体上的思路和推荐系统当年横扫Netflix百万美元比赛的LFM模型类似，也和信息检索中LSI的思路类似。不同的地方是，本文采用的词-词共现矩阵比起词-文档矩阵更加稠密，模型中对低频词和高频词的影响做了一定地弱化处理。&lt;/p&gt;
+&lt;p&gt;首先，构建词-词共现矩阵，共现是建立在一个固定窗口范围内，给定范围之后，可以得到一个V*V的矩阵，这里V是词汇表大小。（虽然矩阵的稠密程度比词-文档矩阵好一些，但大多数也都是0）&lt;/p&gt;
+&lt;p&gt;然后，本文的模型如下：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/22/GloVe-Global-Vectors-for-Word-Representation-PaperWeekly/fig1.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;通过使该目标函数最小来得到最终的词向量，在计算误差时只考虑共现矩阵中非0的项。因为不同频次的词对目标的贡献不同，所以设定了一个权重函数f(x)，具有以下特点：&lt;/p&gt;
+&lt;p&gt;1、f(0) = 0&lt;/p&gt;
+&lt;p&gt;2、f(x)是增函数，这样低频词不会被over weight。&lt;/p&gt;
+&lt;p&gt;3、当x很大时，f(x)相对小一些，这样高频词也不会被over weight。&lt;/p&gt;
+&lt;p&gt;根据以上特性，选择下面的函数来作为f(x)：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/22/GloVe-Global-Vectors-for-Word-Representation-PaperWeekly/fig2.png&quot; width=&quot;400&quot; height=&quot;400&quot;&gt;
+&lt;img src=&quot;/2016/05/22/GloVe-Global-Vectors-for-Word-Representation-PaperWeekly/fig3.png&quot; width=&quot;500&quot; height=&quot;500&quot;&gt;
+&lt;p&gt;本文的模型在Word Analogy Task（Tomas Mikolov提出的测试集）中获得了75%的正确率，击败了Word2Vec。&lt;/p&gt;
+&lt;p&gt;虽然paper中GloVe有着指标上的领先，但在实际使用中Word2Vec的使用率相对来说更多一些，可能的原因是Word2Vec可以更快地提供一个相对来说不错的word embedding层的初始值。从中得到的启发是，指标上的胜利有些时候只是paper上的胜利，不一定能代表在工程中也是赢家，而只有更加好的model被提出，才会真正地既赢得指标上的胜利，也赢得工程上的胜利。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Word2Vec虽然取得了很好的效果，但模型上仍然存在明显的缺陷，比如没有考虑词序，再比如没有考虑全局的统计信息。本篇分享的是&lt;a href=&quot;http://nlp.stanford.edu/pubs/glove.pdf&quot; target=&quot;_blank&quot; rel=&quot;exte
+    
+    </summary>
+    
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+      <category term="word embedding" scheme="http://rsarxiv.github.io/tags/word-embedding/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Efficient Estimation of Word Representations in Vector Space #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/</id>
+    <published>2016-05-21T21:43:54.000Z</published>
+    <updated>2016-06-03T15:20:55.000Z</updated>
+    
+    <content type="html">&lt;p&gt;词向量是语言模型的一个副产品，但这个副产品在2013年随着一个叫做word2vec的工具包而火了起来，大家在各种场合中都在用，并且取得了不错的效果。&lt;/p&gt;
+&lt;p&gt;本篇分享的文章是&lt;a href=&quot;http://cn.arxiv.org/pdf/1301.3781v3.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Efficient Estimation of Word Representations in Vector Space&lt;/a&gt;。作者是来自Google的Tomas Mikolov，也是Word2Vec和RNNLM开源软件的作者。本文的最大贡献有：&lt;/p&gt;
+&lt;p&gt;1、提出了两种新的“神经网络语言模型”，这里之所以打引号，是因为其实两个模型都没有隐藏层，只是看起来像是神经网络而已。两种模型具有很高的计算效率和准确率，可谓是真正的“又好又快”。&lt;/p&gt;
+&lt;p&gt;2、设计了一种验证词向量效果的测试数据，从semantic和syntactic两个维度上进行测试。&lt;/p&gt;
+&lt;p&gt;首先介绍下传统模型的复杂度。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;NNLM的模型复杂度：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;img src=&quot;/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f1.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;这里，N是输入的单词数量，D是词向量维度，H是隐藏层维度，V是词汇表维度。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;RNNLM的模型复杂度：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;img src=&quot;/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f3.png&quot; width=&quot;200&quot; height=&quot;200&quot;&gt;
+&lt;p&gt;两个模型的输出层都可以用&lt;code&gt;hierarchical softmax&lt;/code&gt;来替换，V的复杂度可以降为log2(V)&lt;/p&gt;
+&lt;p&gt;NNLM模型的计算瓶颈在于N &lt;em&gt; D &lt;/em&gt; H，而RNNLM的计算瓶颈在与H * H。&lt;/p&gt;
+&lt;p&gt;本文提出的两种模型架构图如下：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/arch.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;从架构图中可以看出本文的模型并没有隐藏层，直接由输入层做一次映射，就进行分类。&lt;/p&gt;
+&lt;p&gt;左图是CBOW模型,输入是指定单词的context单词（前后各取几个单词），预测的是该单词。模型复杂度如下：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f5.png&quot; width=&quot;200&quot; height=&quot;200&quot;&gt;
+&lt;p&gt;右图是Skip-gram（SG）模型，输入时某个单词，预测的是它的context。模型复杂度如下：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f5.png&quot; width=&quot;200&quot; height=&quot;200&quot;&gt;
+&lt;p&gt;这里的C表示单词距离上限，用来限制预测context的窗口大小。&lt;/p&gt;
+&lt;p&gt;本文的模型和NNLM和RNNLM有着不同的使命，前者更加专注于解决词向量的问题，在保证准确率的情况下，尽量地提高计算效率；而后者更加专注于解决语言模型的问题，词向量只是其副产品，因此并没有过多地在这部分进行优化。最后的实验结果表明，sg和cbow模型在semantic和syntactic两个维度上进行相似度测试时表现远好于nnlm和rnnlm。并且，sg在semantic上表现更好，cbow更擅长做syntactic。&lt;/p&gt;
+&lt;p&gt;将word映射成某个空间内的向量之后，我们可以轻松地通过cos similarity来计算word之间的相似度，并且可以做一些简单的加减运算。&lt;/p&gt;
+&lt;p&gt;Paris - France + Italy = Rome&lt;/p&gt;
+&lt;p&gt;Small - Smaller + Large = Larger&lt;/p&gt;
+&lt;p&gt;可以将word映射到vector space中，那么是否可以将phrase，sentence，paragraph，document都映射到vector space中呢？进一步是否可以将topic也映射到vector space呢？是否任何东西都可以映射到vector space呢？&lt;/p&gt;
+&lt;p&gt;丰富的想象力给了人类更大的动力去探索未知的世界，将word2vec的想法拓展到各个level的问题上。在后续的很多nlp研究中，词向量都起到了关键的作用。不仅如此，word2vec在其他领域中也有了广泛的应用，比如：app推荐，将每个user下载过的app作为word，就可以得到给user推荐类似的app（相似的word）；我在做rsarxiv时，构建了一个简单的paper graph，将authors，subjects，keywords都映射到了同一个空间中，给定一个author，很容易找到与之相关的authors，subjects，keywords。比如喜欢了这个作者，&lt;/p&gt;
+&lt;img src=&quot;/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f7.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;之后就会得到推荐：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/f8.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;Word2Vec一个很重要的意义在于，是无监督方法，不需要花额外的功夫去构建数据集来teach模型，只需要给入一个非常大的文本数据集，就可以得到非常好的效果。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;词向量是语言模型的一个副产品，但这个副产品在2013年随着一个叫做word2vec的工具包而火了起来，大家在各种场合中都在用，并且取得了不错的效果。&lt;/p&gt;
+&lt;p&gt;本篇分享的文章是&lt;a href=&quot;http://cn.arxiv.org/pdf/1301.3781v3.pd
+    
+    </summary>
+    
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+      <category term="word2vec" scheme="http://rsarxiv.github.io/tags/word2vec/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>A Neural Probabilistic Language Model #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/05/20/A-Neural-Probabilistic-Language-Model-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/05/20/A-Neural-Probabilistic-Language-Model-PaperWeekly/</id>
+    <published>2016-05-21T04:37:06.000Z</published>
+    <updated>2016-06-03T15:20:50.000Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt; 站得高，望得远 &lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;今天分享一篇年代久远但却意义重大的paper，&lt;a href=&quot;http://www.iro.umontreal.ca/~vincentp/Publications/lm_jmlr.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;A Neural Probabilistic Language Model&lt;/a&gt;。作者是来自蒙特利尔大学的Yoshua Bengio教授，deep learning技术奠基人之一。&lt;/p&gt;
+&lt;p&gt;本文于2003年第一次用神经网络来解决语言模型的问题，虽然在当时并没有得到太多的重视，却为后来深度学习在解决语言模型问题甚至很多别的nlp问题时奠定了坚实的基础，后人站在Yoshua Bengio的肩膀上，做出了更多的成就。包括Word2Vec的作者Tomas Mikolov在NNLM的基础上提出了RNNLM和后来的Word2Vec。文中也较早地提出将word表示一个低秩的向量，而不是one-hot。word embedding作为一个language model的副产品，在后面的研究中起到了关键作用，为研究者提供了更加宽广的思路。&lt;/p&gt;
+&lt;p&gt;本文最大的贡献在于用多层感知器（&lt;code&gt;MLP&lt;/code&gt;）构造了语言模型，如下图：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/20/A-Neural-Probabilistic-Language-Model-PaperWeekly/arch.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;模型一共三层，第一层是映射层，将n个单词映射为对应word embeddings的拼接，其实这一层就是MLP的输入层；第二层是隐藏层，激活函数用tanh；第三层是输出层，因为是语言模型，需要根据前n个单词预测下一个单词，所以是一个多分类器，用softmax。整个模型最大的计算量集中在最后一层上，因为一般来说词汇表都很大，需要计算每个单词的条件概率，是整个模型的计算瓶颈。&lt;/p&gt;
+&lt;p&gt;这里，需要注意的是需要提前初始化一个word embedding矩阵，每一行表示一个单词的向量。词向量也是训练参数，在每次训练中进行更新。这里可以看出词向量是语言模型的一个附属品，因为语言模型本身的工作是为了估计给定的一句话有多像人类的话，但从后来的研究发现，语言模型成了一个非常好的工具。&lt;/p&gt;
+&lt;p&gt;softmax是一个非常低效的处理方式，需要先计算每个单词的概率，并且还要计算指数，指数在计算机中都是用级数来近似的，计算复杂度很高，最后再做归一化处理。此后很多研究都针对这个问题进行了优化，比如层级softmax，比如softmax tree。&lt;/p&gt;
+&lt;p&gt;当然NNLM的效果在现在看来并不算什么，但对于后面的相关研究具有非常重要的意义。文中的Future Work提到了用RNN来代替MLP作为模型可能会取得更好的效果，在后面Tomas Mikolov的博士论文中得到了验证，也就是后来的RNNLM。&lt;/p&gt;
+&lt;p&gt;所以说我们赶上了一个好的时代，可以站在巨人的肩膀上，看到更远的未来。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt; 站得高，望得远 &lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;今天分享一篇年代久远但却意义重大的paper，&lt;a href=&quot;http://www.iro.umontreal.ca/~vincentp/Public
+    
+    </summary>
+    
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="deeplearning" scheme="http://rsarxiv.github.io/tags/deeplearning/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>自动文摘（十三）</title>
+    <link href="http://rsarxiv.github.io/2016/05/18/%E8%87%AA%E5%8A%A8%E6%96%87%E6%91%98%EF%BC%88%E5%8D%81%E4%B8%89%EF%BC%89/"/>
+    <id>http://rsarxiv.github.io/2016/05/18/自动文摘（十三）/</id>
+    <published>2016-05-19T00:56:53.000Z</published>
+    <updated>2016-05-19T04:25:16.000Z</updated>
+    
+    <content type="html">&lt;h1 id=&quot;引&quot;&gt;&lt;a href=&quot;#引&quot; class=&quot;headerlink&quot; title=&quot;引&quot;&gt;&lt;/a&gt;引&lt;/h1&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt; 天下武功，唯快不破 &lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;今天分享的paper是&lt;b&gt;Incorporating Copying Mechanism in Sequence-to-Sequence Learning&lt;/b&gt;，作者来自香港大学和华为诺亚方舟实验室。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;本文的模型通过借鉴人类在处理难理解的文字时采用的死记硬背的方法，提出了COPYNET。将拷贝模式融入到了Seq2Seq模型中，将传统的生成模式和拷贝模式混合起来构建了新的模型，非常好地解决了OOV问题。解决问题的思路与之前的一篇有关Pointer的文章十分类似。decoder部分不断地变复杂，考虑的因素越来越多，模型的效果也越来越好。如果结合上一篇Minimum Risk Training的训练方法，相信在评价指标上会更进一步。&lt;/code&gt;&lt;/p&gt;
+&lt;h1 id=&quot;综述&quot;&gt;&lt;a href=&quot;#综述&quot; class=&quot;headerlink&quot; title=&quot;综述&quot;&gt;&lt;/a&gt;综述&lt;/h1&gt;&lt;p&gt;Seq2Seq技术占据了nlp多个研究任务的评测榜首，包括最早提出该技术的机器翻译，句法分析，文本摘要，对话系统。Seq2Seq本质上是一个encoder-decoder的模型，encoder部分将输入的序列变换成某一种表示，然后decoder将这种表示变换成输出序列。在Seq2Seq的基础上，首次增加注意力机制来做机器翻译的自动对齐。注意力机制在很大程度上提升了Seq2Seq的性能。&lt;/p&gt;
+&lt;p&gt;本文研究了人类语言交流的另一个机制，“拷贝机制”（&lt;code&gt;copy mechanism&lt;/code&gt;），定位到输入序列中的某个片段，然后将该片段拷贝到输出序列中。比如：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/18/自动文摘（十三）/fig1.png&quot; width=&quot;400&quot; height=&quot;400&quot;&gt;
+&lt;p&gt;但是注意力机制严重依赖于语义的表示，在系统需要获取到命名实体或者日期时难以准确地表示。相对之下，拷贝机制更加接近于人类处理语言问题的方式。本文提出了COPYNET系统，不仅具备传统Seq2Seq生成词的能力，而且可以从输入序列中拷贝合适的片段到输出序列中。在合成数据和真实数据中均取得了不错的结果。&lt;/p&gt;
+&lt;h1 id=&quot;Seq2Seq&quot;&gt;&lt;a href=&quot;#Seq2Seq&quot; class=&quot;headerlink&quot; title=&quot;Seq2Seq&quot;&gt;&lt;/a&gt;Seq2Seq&lt;/h1&gt;&lt;p&gt;文章的这部分简单介绍了一下Seq2Seq+Attention Mechanism技术，前面的博客分享了很多这部分的内容，这里就不再赘述了。&lt;/p&gt;
+&lt;h1 id=&quot;COPYNET&quot;&gt;&lt;a href=&quot;#COPYNET&quot; class=&quot;headerlink&quot; title=&quot;COPYNET&quot;&gt;&lt;/a&gt;COPYNET&lt;/h1&gt;&lt;p&gt;从神经学角度来讲，拷贝机制和人类的死记硬背类似，较少地理解到了意思但保留了字面的完整。从模型的角度来讲，拷贝机制相比于soft注意力模型更加死板，所以更难整合到神经网络模型中。&lt;/p&gt;
+&lt;h2 id=&quot;模型综述&quot;&gt;&lt;a href=&quot;#模型综述&quot; class=&quot;headerlink&quot; title=&quot;模型综述&quot;&gt;&lt;/a&gt;模型综述&lt;/h2&gt;&lt;p&gt;COPYNET依然是一个encoder-decoder模型，如图1所示：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/18/自动文摘（十三）/fig2.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;encoder采用了一个双向RNN模型，输出一个隐藏层表示的矩阵M作为decoder的输入。decoder部分与传统的Seq2Seq不同之处在于以下三部分：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;预测&lt;/b&gt;：在生成词时存在两种模式，一种是生成模式，一种是拷贝模式，生成模型是一个结合两种模式的概率模型。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;状态更新&lt;/b&gt;：用t-1时刻的预测出的词来更新t时刻的状态，COPYNET不仅仅词向量，而且使用M矩阵中特定位置的hidden state。&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;读取M&lt;/b&gt;：COPYNET也会选择性地读取M矩阵，来获取混合了内容和位置的信息。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;拷贝模式和生成模式&quot;&gt;&lt;a href=&quot;#拷贝模式和生成模式&quot; class=&quot;headerlink&quot; title=&quot;拷贝模式和生成模式&quot;&gt;&lt;/a&gt;拷贝模式和生成模式&lt;/h2&gt;&lt;p&gt;首先，构造了两个词汇表，一个是高频词词汇表，另一个是只在输入序列中出现过一次的词，这部分的词用来支持COPYNET，用UNK表示超纲词（OOV），最终输入序列的词汇表是三者的并集。&lt;/p&gt;
+&lt;p&gt;给定了decoder当前状态和M矩阵，生成目标单词的概率模型如下：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/18/自动文摘（十三）/fig3.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;模型中g表示生成模式，c表示拷贝模式。两种模式的概率由下式给定：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/18/自动文摘（十三）/fig4.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;共四种可能情况，下图会更形象一些：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/18/自动文摘（十三）/fig5.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;其中生成模式的打分公式是：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/18/自动文摘（十三）/fig6.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;拷贝模式的打分公式是：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/18/自动文摘（十三）/fig7.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;h2 id=&quot;状态更新&quot;&gt;&lt;a href=&quot;#状态更新&quot; class=&quot;headerlink&quot; title=&quot;状态更新&quot;&gt;&lt;/a&gt;状态更新&lt;/h2&gt;&lt;p&gt;decoder状态更新的公式是&lt;/p&gt;
+&lt;img src=&quot;/2016/05/18/自动文摘（十三）/fig8.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;不同的是这里的t-1时刻的y由下式表示：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/18/自动文摘（十三）/fig9.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;后面的部分是M矩阵中与t时刻y相关的状态权重之和，如下：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/18/自动文摘（十三）/fig10.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;h2 id=&quot;M矩阵&quot;&gt;&lt;a href=&quot;#M矩阵&quot; class=&quot;headerlink&quot; title=&quot;M矩阵&quot;&gt;&lt;/a&gt;M矩阵&lt;/h2&gt;&lt;p&gt;M矩阵中既包含了内容（语义）信息，又包含了位置信息。COPYNET在attentive read时由内容（语义）信息和语言模型来驱动，即生成模式；在拷贝模式时，由位置信息来控制。&lt;/p&gt;
+&lt;p&gt;位置信息的更新方式如下图所示：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/18/自动文摘（十三）/fig11.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;h1 id=&quot;实验&quot;&gt;&lt;a href=&quot;#实验&quot; class=&quot;headerlink&quot; title=&quot;实验&quot;&gt;&lt;/a&gt;实验&lt;/h1&gt;&lt;p&gt;一共分为三个实验：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;简单规则构造的合成数据。&lt;/li&gt;
+&lt;li&gt;文本摘要相关的真实数据。&lt;/li&gt;
+&lt;li&gt;简单对话系统的数据。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这里只看文本摘要实验。&lt;/p&gt;
+&lt;h2 id=&quot;文本摘要&quot;&gt;&lt;a href=&quot;#文本摘要&quot; class=&quot;headerlink&quot; title=&quot;文本摘要&quot;&gt;&lt;/a&gt;文本摘要&lt;/h2&gt;&lt;p&gt;数据采用LCSTS中文短文本摘要数据集，分为两个level来测试：word-level和char-level，并且以LCSTS的baseline作为对比，结果如下：&lt;/p&gt;
+&lt;img src=&quot;/2016/05/18/自动文摘（十三）/fig11.png&quot; width=&quot;400&quot; height=&quot;400&quot;&gt;
+&lt;p&gt;本文的模型远远优于baseline，而且word-level的结果比char-level更好，这与当时LCSTS paper中的结论不同，一个可能的原因是，数据集中包含了大量的命名实体名词（entity name），LCSTS paper中的方法并不能很好地处理大量的UNK单词，因此baseline中的char-level效果比word-level更好，而本文的模型的优势在于处理OOV问题，所以word-level结果更好一些。&lt;/p&gt;
+&lt;h1 id=&quot;Link&quot;&gt;&lt;a href=&quot;#Link&quot; class=&quot;headerlink&quot; title=&quot;Link&quot;&gt;&lt;/a&gt;Link&lt;/h1&gt;&lt;p&gt;[1] &lt;a href=&quot;http://cn.arxiv.org/pdf/1603.06393v2.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Incorporating Copying Mechanism in Sequence-to-Sequence Learning Training&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&quot;工具推荐&quot;&gt;&lt;a href=&quot;#工具推荐&quot; class=&quot;headerlink&quot; title=&quot;工具推荐&quot;&gt;&lt;/a&gt;工具推荐&lt;/h1&gt;&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;PaperWeekly&lt;/code&gt;，每周会分享1-2篇人工智能领域的热门paper，内容包括摘译和评价，欢迎大家扫码关注。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;650&quot; height=&quot;650&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;引&quot;&gt;&lt;a href=&quot;#引&quot; class=&quot;headerlink&quot; title=&quot;引&quot;&gt;&lt;/a&gt;引&lt;/h1&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt; 天下武功，唯快不破 &lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;今天分享的paper是
+    
+    </summary>
+    
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+      <category term="paper" scheme="http://rsarxiv.github.io/tags/paper/"/>
+    
+      <category term="seq2seq" scheme="http://rsarxiv.github.io/tags/seq2seq/"/>
+    
+      <category term="自动文摘" scheme="http://rsarxiv.github.io/tags/%E8%87%AA%E5%8A%A8%E6%96%87%E6%91%98/"/>
+    
+  </entry>
+  
+</feed>
