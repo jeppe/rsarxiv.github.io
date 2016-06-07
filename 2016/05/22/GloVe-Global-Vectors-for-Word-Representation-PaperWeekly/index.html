@@ -6,7 +6,8 @@
   <title>GloVe: Global Vectors for Word Representation #PaperWeekly# | RSarXiv</title>
   
   
-  <meta name="description" content="Word2Vec虽然取得了很好的效果，但模型上仍然存在明显的缺陷，比如没有考虑词序，再比如没有考虑全局的统计信息。本篇分享的是GloVe: Global Vectors for Word Representation，作者是stanford的Jeffrey Pennington, Richard S">
+  <meta name="description" content="(欢迎大家订阅本博客，订阅地址是RSS)
+Word2Vec虽然取得了很好的效果，但模型上仍然存在明显的缺陷，比如没有考虑词序，再比如没有考虑全局的统计信息。本篇分享的是GloVe: Global Vectors for Word Representation，作者是stanford的Jeffrey ">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -74,7 +75,8 @@
     </header>
     <div class="entry">
       
-        <p>Word2Vec虽然取得了很好的效果，但模型上仍然存在明显的缺陷，比如没有考虑词序，再比如没有考虑全局的统计信息。本篇分享的是<a href="http://nlp.stanford.edu/pubs/glove.pdf" target="_blank" rel="external">GloVe: Global Vectors for Word Representation</a>，作者是stanford的Jeffrey Pennington, Richard Socher(metamind CEO)和Christopher Manning。同时作者还开源了相应的工具GloVe和一些训练好的模型。</p>
+        <p>(欢迎大家订阅本博客，订阅地址是<a href="http://rsarxiv.github.io/atom.xml">RSS</a>)</p>
+<p>Word2Vec虽然取得了很好的效果，但模型上仍然存在明显的缺陷，比如没有考虑词序，再比如没有考虑全局的统计信息。本篇分享的是<a href="http://nlp.stanford.edu/pubs/glove.pdf" target="_blank" rel="external">GloVe: Global Vectors for Word Representation</a>，作者是stanford的Jeffrey Pennington, Richard Socher(metamind CEO)和Christopher Manning。同时作者还开源了相应的工具GloVe和一些训练好的模型。</p>
 <p>本文的思路是将全局词-词共现矩阵进行了分解，训练得到词向量。整体上的思路和推荐系统当年横扫Netflix百万美元比赛的LFM模型类似，也和信息检索中LSI的思路类似。不同的地方是，本文采用的词-词共现矩阵比起词-文档矩阵更加稠密，模型中对低频词和高频词的影响做了一定地弱化处理。</p>
 <p>首先，构建词-词共现矩阵，共现是建立在一个固定窗口范围内，给定范围之后，可以得到一个V*V的矩阵，这里V是词汇表大小。（虽然矩阵的稠密程度比词-文档矩阵好一些，但大多数也都是0）</p>
 <p>然后，本文的模型如下：</p>
@@ -169,7 +171,7 @@
   
     <li><a href="/tags/CNN/">CNN</a><small>2</small></li>
   
-    <li><a href="/tags/PaperWeekly/">PaperWeekly</a><small>18</small></li>
+    <li><a href="/tags/PaperWeekly/">PaperWeekly</a><small>19</small></li>
   
     <li><a href="/tags/RNN/">RNN</a><small>1</small></li>
   
@@ -189,11 +191,11 @@
   
     <li><a href="/tags/language-model/">language model</a><small>1</small></li>
   
-    <li><a href="/tags/nlp/">nlp</a><small>34</small></li>
+    <li><a href="/tags/nlp/">nlp</a><small>35</small></li>
   
     <li><a href="/tags/paper/">paper</a><small>7</small></li>
   
-    <li><a href="/tags/seq2seq/">seq2seq</a><small>11</small></li>
+    <li><a href="/tags/seq2seq/">seq2seq</a><small>12</small></li>
   
     <li><a href="/tags/word-embedding/">word embedding</a><small>1</small></li>
   

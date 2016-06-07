@@ -6,7 +6,8 @@
   <title>A Hierarchical Neural Autoencoder for Paragraphs and Documents #PaperWeekly# | RSarXiv</title>
   
   
-  <meta name="description" content="本篇将会分享一篇用自动编码器(AutoEncoder)来做文档表示的文章，本文的结果会给自然语言生成、自动文摘等任务提供更多的帮助。本文作者是来自斯坦福大学的博士生Jiwei Li，简单看了下其简历，本科居然是北大生物系的，是一个跨界选手。本文的题目是A Hierarchical Neural Au">
+  <meta name="description" content="(欢迎大家订阅本博客，订阅地址是RSS)
+本篇将会分享一篇用自动编码器(AutoEncoder)来做文档表示的文章，本文的结果会给自然语言生成、自动文摘等任务提供更多的帮助。本文作者是来自斯坦福大学的博士生Jiwei Li，简单看了下其简历，本科居然是北大生物系的，是一个跨界选手。本文的题目是A H">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -74,7 +75,8 @@
     </header>
     <div class="entry">
       
-        <p>本篇将会分享一篇用自动编码器(AutoEncoder)来做文档表示的文章，本文的结果会给自然语言生成、自动文摘等任务提供更多的帮助。本文作者是来自斯坦福大学的博士生<a href="http://web.stanford.edu/~jiweil/" target="_blank" rel="external">Jiwei Li</a>，简单看了下其简历，本科居然是北大生物系的，是一个跨界选手。本文的题目是<a href="http://arxiv.org/pdf/1506.01057.pdf" target="_blank" rel="external">A Hierarchical Neural Autoencoder for Paragraphs and Documents</a>，于2015年6月放在arxiv上。</p>
+        <p>(欢迎大家订阅本博客，订阅地址是<a href="http://rsarxiv.github.io/atom.xml">RSS</a>)</p>
+<p>本篇将会分享一篇用自动编码器(AutoEncoder)来做文档表示的文章，本文的结果会给自然语言生成、自动文摘等任务提供更多的帮助。本文作者是来自斯坦福大学的博士生<a href="http://web.stanford.edu/~jiweil/" target="_blank" rel="external">Jiwei Li</a>，简单看了下其简历，本科居然是北大生物系的，是一个跨界选手。本文的题目是<a href="http://arxiv.org/pdf/1506.01057.pdf" target="_blank" rel="external">A Hierarchical Neural Autoencoder for Paragraphs and Documents</a>，于2015年6月放在arxiv上。</p>
 <p>自动编码器之前接触的并不多，所以读了下Yoshua Bengio的deep learning一书补了一下知识。其实挺简单的，就是通过构造一个网络来学习x-&gt;x，最简单的原型就是h=f(x)，x=g(h)。如果输入和输出的x都是完全一样的话，那么就没什么意义了。一般来说，后一个x会与前一个x有一些“误差”或者说“噪声”。而且自动编码器关注的是中间层h，即对输入的表示。如果h的维度小于x的维度，学习这个表示其实就是一个降维的过程。自动编码器有很多种类型，这里就不一一赘述了。</p>
 <p>本文的贡献在于用分层LSTM模型来做自动编码器。模型分为三个，为递进关系。</p>
 <p>1、标准的LSTM，没有分层。模型结构看起来和最简单的seq2seq没有区别，只是说这里输入和输出一样。看下图：</p>
@@ -169,7 +171,7 @@
   
     <li><a href="/tags/CNN/">CNN</a><small>2</small></li>
   
-    <li><a href="/tags/PaperWeekly/">PaperWeekly</a><small>18</small></li>
+    <li><a href="/tags/PaperWeekly/">PaperWeekly</a><small>19</small></li>
   
     <li><a href="/tags/RNN/">RNN</a><small>1</small></li>
   
@@ -189,11 +191,11 @@
   
     <li><a href="/tags/language-model/">language model</a><small>1</small></li>
   
-    <li><a href="/tags/nlp/">nlp</a><small>34</small></li>
+    <li><a href="/tags/nlp/">nlp</a><small>35</small></li>
   
     <li><a href="/tags/paper/">paper</a><small>7</small></li>
   
-    <li><a href="/tags/seq2seq/">seq2seq</a><small>11</small></li>
+    <li><a href="/tags/seq2seq/">seq2seq</a><small>12</small></li>
   
     <li><a href="/tags/word-embedding/">word embedding</a><small>1</small></li>
   

@@ -6,8 +6,8 @@
   <title>Recurrent Convolutional Neural Networks for Text Classification #PaperWeekly# | RSarXiv</title>
   
   
-  <meta name="description" content="介绍了CNN表示文本的模型之后，本篇将会分享一篇用CNN结合RNN的模型来表示文本。paper题目是Recurrent Convolutional Neural Networks for Text Classification，作者是来自中科院大学的来斯惟博士。
-本文要解决的问题是文本分类，文本分类">
+  <meta name="description" content="(欢迎大家订阅本博客，订阅地址是RSS)
+介绍了CNN表示文本的模型之后，本篇将会分享一篇用CNN结合RNN的模型来表示文本。paper题目是Recurrent Convolutional Neural Networks for Text Classification，作者是来自中科院大学的来斯惟博">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -75,7 +75,8 @@
     </header>
     <div class="entry">
       
-        <p>介绍了CNN表示文本的模型之后，本篇将会分享一篇用CNN结合RNN的模型来表示文本。paper题目是<a href="http://www.aaai.org/ocs/index.php/AAAI/AAAI15/paper/download/9745/9552" target="_blank" rel="external">Recurrent Convolutional Neural Networks for Text Classification</a>，作者是来自中科院大学的来斯惟博士。</p>
+        <p>(欢迎大家订阅本博客，订阅地址是<a href="http://rsarxiv.github.io/atom.xml">RSS</a>)</p>
+<p>介绍了CNN表示文本的模型之后，本篇将会分享一篇用CNN结合RNN的模型来表示文本。paper题目是<a href="http://www.aaai.org/ocs/index.php/AAAI/AAAI15/paper/download/9745/9552" target="_blank" rel="external">Recurrent Convolutional Neural Networks for Text Classification</a>，作者是来自中科院大学的来斯惟博士。</p>
 <p>本文要解决的问题是文本分类，文本分类最关键的问题是特征表示，传统的方法经常会忽略上下文信息和词序，无法捕捉到词义。近几年随着深度学习的火热，研究者们通过借助神经网络模型来解决传统方法存在的问题。比如：Socher提出的Recursive Neural Network（递归神经网络）模型，通过一种树结构来捕捉句子语义，取得了不错的效果，但时间复杂度是O(n2)，并且无法用一棵树来表示两个句子之间的关系。再比如：Recurrent Neural Network（循环神经网络）模型，时间复杂度是O(n)，每个单词的表示都包含了之前所有单词的信息，有很强的捕捉上下文的能力，但该模型有偏，后面的单词比前面的单词更重要，但这与常识并不相符，因为句中关键的词不一定在最后面。为了解决RNN的有偏性问题，有的研究者提出了用CNN（卷积神经网络）来表示文本，并且时间复杂度也是O(n)，但是CNN存在一个缺陷，卷积窗口的大小是固定的，并且这个窗口大小如何设置是一个问题，如果设置小了，则会损失有效信息，如果设置大了，会增加很多的参数。</p>
 <p>于是，针对上述模型存在的问题，本文提出了RCNN（循环卷积神经网络）模型，模型架构图如下：</p>
 <img src="/2016/05/27/Recurrent-Convolutional-Neural-Networks-for-Text-Classification-PaperWeekly/fig1.png" width="600" height="600">
@@ -167,7 +168,7 @@
   
     <li><a href="/tags/CNN/">CNN</a><small>2</small></li>
   
-    <li><a href="/tags/PaperWeekly/">PaperWeekly</a><small>18</small></li>
+    <li><a href="/tags/PaperWeekly/">PaperWeekly</a><small>19</small></li>
   
     <li><a href="/tags/RNN/">RNN</a><small>1</small></li>
   
@@ -187,11 +188,11 @@
   
     <li><a href="/tags/language-model/">language model</a><small>1</small></li>
   
-    <li><a href="/tags/nlp/">nlp</a><small>34</small></li>
+    <li><a href="/tags/nlp/">nlp</a><small>35</small></li>
   
     <li><a href="/tags/paper/">paper</a><small>7</small></li>
   
-    <li><a href="/tags/seq2seq/">seq2seq</a><small>11</small></li>
+    <li><a href="/tags/seq2seq/">seq2seq</a><small>12</small></li>
   
     <li><a href="/tags/word-embedding/">word embedding</a><small>1</small></li>
   
