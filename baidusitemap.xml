@@ -4,6 +4,27 @@
 
     
   <url>
+    <loc>http://rsarxiv.github.io/2016/06/07/Semi-supervised-Sequence-Learning-PaperWeekly/</loc>
+    <lastmod>2016-06-07T15:27:42.000Z</lastmod>
+    <data>
+        <display>
+        <title>Semi-supervised Sequence Learning #PaperWeekly#</title>
+        <pubTime>2016-06-07T14:11:34.000Z</pubTime>
+        
+        <tag>PaperWeekly</tag>
+         
+        <tag>nlp</tag>
+         
+        <tag>seq2seq</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://rsarxiv.github.io/2016/06/05/Multiresolution-Recurrent-Neural-Networks-An-Application-to-Dialogue-Response-Generation-PaperWeekly/</loc>
     <lastmod>2016-06-07T15:23:20.000Z</lastmod>
     <data>
@@ -371,27 +392,6 @@
         <tag>PaperWeekly</tag>
          
         <tag>nlp</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://rsarxiv.github.io/2016/06/07/Semi-supervised-Sequence-Learning-PaperWeekly/</loc>
-    <lastmod>2016-06-07T15:21:07.000Z</lastmod>
-    <data>
-        <display>
-        <title>Semi-supervised Sequence Learning #PaperWeekly#</title>
-        <pubTime>2016-06-07T14:11:34.000Z</pubTime>
-        
-        <tag>PaperWeekly</tag>
-         
-        <tag>nlp</tag>
-         
-        <tag>seq2seq</tag>
          
          
            

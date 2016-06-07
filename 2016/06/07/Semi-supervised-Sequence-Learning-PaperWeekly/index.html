@@ -83,6 +83,7 @@
 <p>这幅图大家看着都眼熟，和<a href="http://rsarxiv.github.io/2016/05/31/Sequence-to-Sequence-Learning-with-Neural-Networks-PaperWeekly/">Sequence to Sequence Learning with Neural Networks</a>中的seq2seq架构图很相似，只不过target和input一样，即用input来预测input自己。将自编码器学习到的表示作为LSTM的初始值，进行有监督训练。一般来说用LSTM中的最后一个hidden state作为输出，但本文也尝试用了每个hidden state权重递增的线性组合作为输出。这两种思路都是将无监督和有监督分开训练，本文也提供了一种联合训练的思路作为对比，称为joint learning。</p>
 <p>第二种模型称为Language Model LSTM(LM-LSTM)，将上图中的encoder部分去掉就是LM模型。语言模型介绍过很多了，比如<a href="http://rsarxiv.github.io/2016/05/20/A-Neural-Probabilistic-Language-Model-PaperWeekly/">A Neural Probabilistic Language Model</a>和<a href="http://rsarxiv.github.io/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/">Character-Aware Neural Language Models</a>，详细的可以看之前的分享，这里不再赘述了。</p>
 <p>模型部分就是这些，后面作者在情感分析、文本分类、目标分类等多组任务中进行了对比实验，均取得了不错的结果。</p>
+<p>本文的创新点在于结合了无监督和有监督学习两种思路的优点来解决一个传统问题，虽然说无监督是一种趋势所在，但有监督针对具体的问题会有更好的效果。这种融合各类模型优点的模型会更受欢迎，也是一种不错的思路。</p>
 <p>这里进行几点说明：</p>
 <p>1、为什么不对实验结果进行详细的介绍？</p>
 <p>因为我个人更加关注的是解决问题的思路，也就是模型部分；另一方面，paper中的实验结果只能在某些程度上说明问题，对比结果中的数据可能是作者精心挑选的最好数据，并不一定可以复现，所以我不会太纠结于到底哪个模型比哪个模型高几个百分点。而文中的模型思路会带给我更多的启发，所以更加有意义一些。</p>
