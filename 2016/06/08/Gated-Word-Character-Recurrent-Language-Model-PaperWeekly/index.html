@@ -3,16 +3,16 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation #PaperWeekly# | RSarXiv</title>
+  <title>Gated Word-Character Recurrent Language Model #PaperWeekly# | RSarXiv</title>
   
   
-  <meta name="description" content="(欢迎大家订阅本博客，订阅地址是RSS)
-本篇将分享的文章相比于昨天那篇Sequence to Sequence Learning with Neural Networks更早地使用了seq2seq的框架来解决机器翻译的问题，可能上一篇来自于Google，工程性更强一些，学术性有一些不足。本文来自于">
+  <meta name="description" content="本篇将会分享一篇最新的paper，2016年6月6日submit到arxiv上，paper的题目是Gated Word-Character Recurrent Language Model，作者是来自纽约大学的硕士生Yasumasa Miyamoto。
+语言模型或者说一切自然语言生成的问题都面临着一">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation #PaperWeekly#"/>
+  <meta property="og:title" content="Gated Word-Character Recurrent Language Model #PaperWeekly#"/>
   <meta property="og:site_name" content="RSarXiv"/>
 
   
@@ -65,38 +65,29 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-06-01T15:15:17.000Z"><a href="/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder–Decoder-for-Statistical-Machine-Translation-PaperWeekly/">2016-06-01</a></time>
+        <time datetime="2016-06-08T16:00:50.000Z"><a href="/2016/06/08/Gated-Word-Character-Recurrent-Language-Model-PaperWeekly/">2016-06-08</a></time>
       
       
   
-    <h1 class="title">Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation #PaperWeekly#</h1>
+    <h1 class="title">Gated Word-Character Recurrent Language Model #PaperWeekly#</h1>
   
 
     </header>
     <div class="entry">
       
-        <p>(欢迎大家订阅本博客，订阅地址是<a href="http://rsarxiv.github.io/atom.xml">RSS</a>)</p>
-<p>本篇将分享的文章相比于昨天那篇<a href="http://rsarxiv.github.io/2016/05/31/Sequence-to-Sequence-Learning-with-Neural-Networks-PaperWeekly/">Sequence to Sequence Learning with Neural Networks</a>更早地使用了seq2seq的框架来解决机器翻译的问题，可能上一篇来自于Google，工程性更强一些，学术性有一些不足。本文来自于学术机构，学术范更浓一些。本文的题目是<a href="http://arxiv.org/pdf/1406.1078.pdf" target="_blank" rel="external">Learning Phrase Representations using RNN Encoder–Decoder for Statistical<br>  Machine Translation</a>，作者是来自蒙特利尔大学的<a href="http://www.kyunghyuncho.me/" target="_blank" rel="external">Kyunghyun Cho</a>博士（现在在纽约大学任教），2014年6月登在arxiv上。</p>
-<p>本文最大的两个贡献是：</p>
-<p>1、提出了一种类似于LSTM的GRU结构作为RNN的hidden unit，并且具有比LSTM更少的参数，更不容易过拟合。</p>
-<p>2、较早地（据说2013年就有人提出用seq2seq思路来解决问题）将seq2seq应用在了机器翻译领域，并且取得了不错的效果。</p>
-<p>自然语言生成（NLG）领域中有很多任务，比如机器翻译，<a href="http://rsarxiv.github.io/tags/%E8%87%AA%E5%8A%A8%E6%96%87%E6%91%98/">自动文摘</a>，自动问答，对话生成等，都是根据一个上下文来生成一个文本序列，这里分类两个过程，encoder部分将输入序列表示成一个context，decoder部分在context的条件下生成一个输出序列，联合训练两个部分得到最优的模型。这里的context就像是一个memory，试着保存了encoder部分的所有信息（但往往用较低的维度表示整个输入序列一定会造成信息损失）。本文的思路就是如此，具体可参看下图：</p>
-<img src="/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder–Decoder-for-Statistical-Machine-Translation-PaperWeekly/fig1.png" width="600" height="600">
-<p>本文模型将encoder部分的最后一个hidden state作为context输入给decoder，decoder中的每一个时间t的hidden state s(t)都与context,s(t-1),y(t-1)有关系，而每一个时间t的输出y(t)都与context,s(t),y(t-1)有关。当然，这种模型是非常灵活的，你的context可以有很多种选择，比如可以选encoder中所有hidden state组成的矩阵来作为context，可以用BiRNN计算出两个last hidden state进行拼接作为context；而s(t)和y(t)根据RNN结构不同，也可以将context作为s(0)依次向后传递，而不是每次都依赖于context。</p>
-<p>说完了模型部分，来说说本文最大的贡献是提出了GRU，一种更轻量级的hidden unit，效果还不输LSTM，函数结构如下图：</p>
-<img src="/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder–Decoder-for-Statistical-Machine-Translation-PaperWeekly/fig2.png" width="400" height="400">
-<p>GRU有两个门函数，reset gate和update gate，公式如下：</p>
-<p>reset gate：</p>
-<img src="/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder–Decoder-for-Statistical-Machine-Translation-PaperWeekly/fig3.png" width="300" height="300">
-<p>update gate：</p>
-<img src="/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder–Decoder-for-Statistical-Machine-Translation-PaperWeekly/fig4.png" width="300" height="300">
-<p>reset gate接近于0的时候，当前hidden state会忽略前面的hidden state，在当前输入处reset。reset gate控制了哪些信息可以通过，而update gate控制着多少信息可以通过，与LSTM中的cell扮演着相似的角色。计算出每一步的reset和update gate，即可计算出当前的hidden state，如下：</p>
-<img src="/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder–Decoder-for-Statistical-Machine-Translation-PaperWeekly/fig5.png" width="300" height="300">
-<p>这里，</p>
-<img src="/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder–Decoder-for-Statistical-Machine-Translation-PaperWeekly/fig6.png" width="300" height="300">
-<p>实验部分，作者利用本文模型得到了满意的结果，不再赘述。</p>
-<p>另外，本文在附录部分给出了一个比较详尽的encoder-decoder公式推导过程，大家可以参看原文。</p>
-<p>从context预测output，是一件很神奇的事情。而context又是千变万化的，当下正流行的模型attention model正是在context上做了文章，得到了更好的结果。相信，对context的变化和应用会带来更多好玩的模型。</p>
+        <p>本篇将会分享一篇最新的paper，2016年6月6日submit到arxiv上，paper的题目是<a href="http://cn.arxiv.org/pdf/1606.01700v1" target="_blank" rel="external">Gated Word-Character Recurrent Language Model</a>，作者是来自纽约大学的硕士生<a href="http://cds.nyu.edu/people/yasumasa-miyamoto/" target="_blank" rel="external">Yasumasa Miyamoto</a>。</p>
+<p>语言模型或者说一切自然语言生成的问题都面临着一个严峻的挑战就是未登录词（OOV），一般的语言模型处理方法都是将前N个高频词当做词表，后面的低频词都用unk来代替，而且所有的低频词都用同一个词向量来表示。本文的最大贡献在于提出了一种混合char-level和word-level的语言模型，通过一种gate机制来选择是用char-level来表示一个词向量，还是直接用word-level来表示一个词向量。char-level模型的优势在于解决低频词的表达，很多之前分享过的模型都是用char来作为基本单元。</p>
+<p>本文的模型并不复杂，思路也非常清晰，如下图：</p>
+<img src="/2016/06/08/Gated-Word-Character-Recurrent-Language-Model-PaperWeekly/fig1.png" width="600" height="600">
+<p>模型分为两个部分：</p>
+<p>1、词向量。模型中的词向量由两部分综合而成。第一部分是传统的词向量，每一个词都用一个低维实向量来表示，第二部分是将每个词认为是一个char-level的序列，用一个双向LSTM来表示这个词。两部分词向量由一个门函数来决定使用哪个，如下式：</p>
+<img src="/2016/06/08/Gated-Word-Character-Recurrent-Language-Model-PaperWeekly/fig2.png" width="300" height="300">
+<p>门函数我们见过太多了，尤其是在LSTM和GRU中，各种各样的门函数来控制信息的流动，本文模型中采用了一种非常简单的机制来决定采用哪种词向量，高频词的话，一定是采用传统的word-level方式，直接从lookup table中读取；低频词的话，用char-level的方式获得一个更好的表示。这里需要注意的一点是，门函数的值，也就是说每个单词用哪种词向量是与上下文无关的，只要是同一个单词，就会采用相同的选择方式。</p>
+<p>2、语言模型。这个部分就非常简单了，就是一个典型的RNNLM，这里的隐藏单元采用LSTM。</p>
+<p>实验部分选了三个baseline，（1）仅仅用word-level，（2）仅仅用char-level，（3）将两种词向量拼接。在三个数据集上进行了测试，本文模型比起baseline具有明显的优势。</p>
+<p>最后简单讨论了门函数值与词出现的频率之间的关系，如下图：</p>
+<img src="/2016/06/08/Gated-Word-Character-Recurrent-Language-Model-PaperWeekly/fig3.png" width="600" height="600">
+<p>本文采用了一中混合模型，然后用gate mechanism从多个模型中进行选择。这种思路有一种似曾相识的感觉，好比是参加kaggle比赛，通常一个分类器并不能得到最好的结果，混合使用多个分类器往往会得到更好的结果。本文的感觉有一点类似，用了char-level的优势来弥补word-level的劣势，从而取得更好的效果。也是一种很好的启发。</p>
 <p><b>工具推荐</b></p>
 <p><code>RSarXiv</code> <b>一个好用的arxiv cs paper推荐系统</b> <a href="http://rsarxiv.science/web" target="_blank" rel="external">网站地址</a> <b>ios App下载：App Store 搜索rsarxiv即可获得 </b></p>
 <p>PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。</p>
@@ -110,7 +101,7 @@
         
   
   <div class="tags">
-    <a href="/tags/PaperWeekly/">PaperWeekly</a>, <a href="/tags/nlp/">nlp</a>, <a href="/tags/seq2seq/">seq2seq</a>
+    <a href="/tags/PaperWeekly/">PaperWeekly</a>, <a href="/tags/RNNLM/">RNNLM</a>, <a href="/tags/nlp/">nlp</a>
   </div>
 
         
@@ -153,7 +144,7 @@
   }(document, 'script', 'facebook-jssdk'));
 </script>
 
-<div class="fb-comments" data-href="http://rsarxiv.github.io/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder–Decoder-for-Statistical-Machine-Translation-PaperWeekly/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
+<div class="fb-comments" data-href="http://rsarxiv.github.io/2016/06/08/Gated-Word-Character-Recurrent-Language-Model-PaperWeekly/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
       
   
 </section>
