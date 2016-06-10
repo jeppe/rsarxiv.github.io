@@ -5,10 +5,52 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://rsarxiv.github.io/"/>
-  <updated>2016-06-10T05:27:33.000Z</updated>
+  <updated>2016-06-10T22:03:19.000Z</updated>
   <id>http://rsarxiv.github.io/</id>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Neural Network-Based Abstract Generation for Opinions and Arguments #PaperWeekly#</title>
+    <link href="http://rsarxiv.github.io/2016/06/10/Neural-Network-Based-Abstract-Generation-for-Opinions-and-Arguments-PaperWeekly/"/>
+    <id>http://rsarxiv.github.io/2016/06/10/Neural-Network-Based-Abstract-Generation-for-Opinions-and-Arguments-PaperWeekly/</id>
+    <published>2016-06-10T19:34:27.000Z</published>
+    <updated>2016-06-10T22:03:19.000Z</updated>
+    
+    <content type="html">&lt;p&gt;本篇将会分享的是一篇工程性比较强的paper，如果您想做一个实实在在的意见摘要系统（比如：淘宝商品评论摘要、电影评论摘要）的话，可以仔细研读下本文的解决方案。本文的题目是&lt;a href=&quot;http://arxiv.org/pdf/1606.02785v1.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Neural Network-Based Abstract Generation for Opinions and Arguments&lt;/a&gt;，于6月9日submit于arxiv上。作者是来自美国东北大学的&lt;a href=&quot;http://www.ccs.neu.edu/home/luwang/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Lu Wang&lt;/a&gt;助教。&lt;/p&gt;
+&lt;p&gt;关于&lt;a href=&quot;http://rsarxiv.github.io/tags/%E8%87%AA%E5%8A%A8%E6%96%87%E6%91%98/&quot;&gt;自动文摘&lt;/a&gt;，之前写过一系列的文章，包含了自动文摘的方方面面以及近期的一些相关paper的详细描述。本文的自动文摘问题是一个多评论摘要问题，用的是abstractive方法，而非简单的extractive方法，就是说从多个评论中总结出观点。&lt;/p&gt;
+&lt;p&gt;本文模型的主题框架仍是seq2seq+attention，最主要的不同之处是输入包括多个文本序列，而是之前介绍的单文本序列。这里，seq2seq+attention的思路不再赘述，主要讲一下不同的地方。&lt;/p&gt;
+&lt;p&gt;为了套用seq2seq，本文将多文本拼接成单文本，中间用特殊的标记SEG隔开。但是如果只是简单的套用seq2seq的话，会存在以下两个问题：&lt;/p&gt;
+&lt;p&gt;1、seq2seq对序列的顺序非常敏感，多个文本排列的顺序对结果的影响比较大。&lt;/p&gt;
+&lt;p&gt;2、多篇评论包括的词会比较多，会导致在计算attention的时候花费更大的时间代价。&lt;/p&gt;
+&lt;p&gt;本文用了子采样(sub-sampling)的方法来解决上面的问题，首先给原始输入中的每个评论定义importance score，然后归一化，最后从原始输入中进行多项分布采样，获得K个候选sample作为seq2seq的输入数据，进行训练。本文针对importance score建立了一个回归模型，使用了一些人工feature作为输入进行回归打分。这些feature如下表所示：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/10/Neural-Network-Based-Abstract-Generation-for-Opinions-and-Arguments-PaperWeekly/fig1.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;p&gt;包括了词的数量，命名实体的数量，tf-idf平均数和最大数等8个feature作为输入。通过学习这个回归模型，来计算给定评论的分数。&lt;/p&gt;
+&lt;p&gt;最后给大家展示一个结果图：&lt;/p&gt;
+&lt;img src=&quot;/2016/06/10/Neural-Network-Based-Abstract-Generation-for-Opinions-and-Arguments-PaperWeekly/fig2.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+&lt;p&gt;本文在模型上创新的点并不突出，最不同以往的地方便是用了人工feature来给每个评论打分，给原始输入中的评论进行排序，然后多项分布采样，子采样的过程是一个降维的过程，保留了原始数据中最重要的部分，去掉了冗余的信息。可以说本文是将人工features添加到abstractive来提升纯粹的seq2seq模型性能，针对了多文档摘要问题的特点，给出了一个实用性较强的思路。如果从模型角度来说，新的东西没有太多，而且可改进的地方有很多，比如打分模型，可以用sentence representation的思路来做，完全可以避免用人工feature这种比较low的思路，做成一个data-driven的打分模型；再比如，不用打分，而是采用CNN从多个评论中提取出最有用的feature作为输入。&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本篇将会分享的是一篇工程性比较强的paper，如果您想做一个实实在在的意见摘要系统（比如：淘宝商品评论摘要、电影评论摘要）的话，可以仔细研读下本文的解决方案。本文的题目是&lt;a href=&quot;http://arxiv.org/pdf/1606.02785v1.pdf&quot; targ
+    
+    </summary>
+    
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
+    
+      <category term="seq2seq" scheme="http://rsarxiv.github.io/tags/seq2seq/"/>
+    
+      <category term="自动文摘" scheme="http://rsarxiv.github.io/tags/%E8%87%AA%E5%8A%A8%E6%96%87%E6%91%98/"/>
+    
+  </entry>
   
   <entry>
     <title>A Joint Model for Word Embedding and Word Morphology #PaperWeekly#</title>
@@ -477,7 +519,7 @@
     <link href="http://rsarxiv.github.io/2016/05/30/%E5%A4%A7%E7%89%9B%E4%B8%BB%E9%A1%B5/"/>
     <id>http://rsarxiv.github.io/2016/05/30/大牛主页/</id>
     <published>2016-05-31T05:11:49.000Z</published>
-    <updated>2016-06-07T15:21:52.000Z</updated>
+    <updated>2016-06-10T22:04:50.000Z</updated>
     
     <content type="html">&lt;p&gt;本篇将汇总PaperWeekly翻译过的作者的主页（持续更新中）：&lt;/p&gt;
 &lt;p&gt;1、Konstantin Lopyrev  &lt;b&gt;&lt;a href=&quot;https://github.com/klopyrev&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Github&lt;/a&gt;&lt;/b&gt;&lt;/p&gt;
@@ -499,6 +541,7 @@
 &lt;p&gt;17、&lt;a href=&quot;https://mila.umontreal.ca/en/person/iulian-vlad-serban/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Iulian Vlad Serban&lt;/a&gt; &lt;b&gt;&lt;a href=&quot;https://github.com/julianser&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Github&lt;/a&gt;&lt;/b&gt;&lt;/p&gt;
 &lt;p&gt;18、&lt;a href=&quot;http://web.stanford.edu/~jiweil/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Jiwei Li&lt;/a&gt; &lt;b&gt;&lt;a href=&quot;https://github.com/jiweil&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Github&lt;/a&gt;&lt;/b&gt;&lt;/p&gt;
 &lt;p&gt;19、&lt;a href=&quot;http://homepages.inf.ed.ac.uk/s0681274/About_Me.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Andrew M. Dai&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;20、&lt;a href=&quot;http://www.ccs.neu.edu/home/luwang/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Lu Wang&lt;/a&gt;&lt;/p&gt;
 </content>
     
     <summary type="html">
@@ -900,50 +943,6 @@
       <category term="language model" scheme="http://rsarxiv.github.io/tags/language-model/"/>
     
       <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>GloVe: Global Vectors for Word Representation #PaperWeekly#</title>
-    <link href="http://rsarxiv.github.io/2016/05/22/GloVe-Global-Vectors-for-Word-Representation-PaperWeekly/"/>
-    <id>http://rsarxiv.github.io/2016/05/22/GloVe-Global-Vectors-for-Word-Representation-PaperWeekly/</id>
-    <published>2016-05-22T16:23:52.000Z</published>
-    <updated>2016-06-07T15:22:47.000Z</updated>
-    
-    <content type="html">&lt;p&gt;(欢迎大家订阅本博客，订阅地址是&lt;a href=&quot;http://rsarxiv.github.io/atom.xml&quot;&gt;RSS&lt;/a&gt;)&lt;/p&gt;
-&lt;p&gt;Word2Vec虽然取得了很好的效果，但模型上仍然存在明显的缺陷，比如没有考虑词序，再比如没有考虑全局的统计信息。本篇分享的是&lt;a href=&quot;http://nlp.stanford.edu/pubs/glove.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;GloVe: Global Vectors for Word Representation&lt;/a&gt;，作者是stanford的Jeffrey Pennington, Richard Socher(metamind CEO)和Christopher Manning。同时作者还开源了相应的工具GloVe和一些训练好的模型。&lt;/p&gt;
-&lt;p&gt;本文的思路是将全局词-词共现矩阵进行了分解，训练得到词向量。整体上的思路和推荐系统当年横扫Netflix百万美元比赛的LFM模型类似，也和信息检索中LSI的思路类似。不同的地方是，本文采用的词-词共现矩阵比起词-文档矩阵更加稠密，模型中对低频词和高频词的影响做了一定地弱化处理。&lt;/p&gt;
-&lt;p&gt;首先，构建词-词共现矩阵，共现是建立在一个固定窗口范围内，给定范围之后，可以得到一个V*V的矩阵，这里V是词汇表大小。（虽然矩阵的稠密程度比词-文档矩阵好一些，但大多数也都是0）&lt;/p&gt;
-&lt;p&gt;然后，本文的模型如下：&lt;/p&gt;
-&lt;img src=&quot;/2016/05/22/GloVe-Global-Vectors-for-Word-Representation-PaperWeekly/fig1.png&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
-&lt;p&gt;通过使该目标函数最小来得到最终的词向量，在计算误差时只考虑共现矩阵中非0的项。因为不同频次的词对目标的贡献不同，所以设定了一个权重函数f(x)，具有以下特点：&lt;/p&gt;
-&lt;p&gt;1、f(0) = 0&lt;/p&gt;
-&lt;p&gt;2、f(x)是增函数，这样低频词不会被over weight。&lt;/p&gt;
-&lt;p&gt;3、当x很大时，f(x)相对小一些，这样高频词也不会被over weight。&lt;/p&gt;
-&lt;p&gt;根据以上特性，选择下面的函数来作为f(x)：&lt;/p&gt;
-&lt;img src=&quot;/2016/05/22/GloVe-Global-Vectors-for-Word-Representation-PaperWeekly/fig2.png&quot; width=&quot;400&quot; height=&quot;400&quot;&gt;
-&lt;img src=&quot;/2016/05/22/GloVe-Global-Vectors-for-Word-Representation-PaperWeekly/fig3.png&quot; width=&quot;500&quot; height=&quot;500&quot;&gt;
-&lt;p&gt;本文的模型在Word Analogy Task（Tomas Mikolov提出的测试集）中获得了75%的正确率，击败了Word2Vec。&lt;/p&gt;
-&lt;p&gt;虽然paper中GloVe有着指标上的领先，但在实际使用中Word2Vec的使用率相对来说更多一些，可能的原因是Word2Vec可以更快地提供一个相对来说不错的word embedding层的初始值。从中得到的启发是，指标上的胜利有些时候只是paper上的胜利，不一定能代表在工程中也是赢家，而只有更加好的model被提出，才会真正地既赢得指标上的胜利，也赢得工程上的胜利。&lt;/p&gt;
-&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
-&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;(欢迎大家订阅本博客，订阅地址是&lt;a href=&quot;http://rsarxiv.github.io/atom.xml&quot;&gt;RSS&lt;/a&gt;)&lt;/p&gt;
-&lt;p&gt;Word2Vec虽然取得了很好的效果，但模型上仍然存在明显的缺陷，比如没有考虑词序，再比如没有考虑全局的统计信息。本篇分享
-    
-    </summary>
-    
-    
-      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
-    
-      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
-    
-      <category term="word embedding" scheme="http://rsarxiv.github.io/tags/word-embedding/"/>
     
   </entry>
   
