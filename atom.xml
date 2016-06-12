@@ -5,10 +5,63 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://rsarxiv.github.io/"/>
-  <updated>2016-06-10T22:03:19.000Z</updated>
+  <updated>2016-06-12T00:08:13.000Z</updated>
   <id>http://rsarxiv.github.io/</id>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>PaperWeekly文章分类导航</title>
+    <link href="http://rsarxiv.github.io/2016/06/11/PaperWeekly%E6%96%87%E7%AB%A0%E5%88%86%E7%B1%BB%E5%AF%BC%E8%88%AA/"/>
+    <id>http://rsarxiv.github.io/2016/06/11/PaperWeekly文章分类导航/</id>
+    <published>2016-06-11T23:48:38.000Z</published>
+    <updated>2016-06-12T00:08:13.000Z</updated>
+    
+    <content type="html">&lt;h1 id=&quot;Neural-Language-Model&quot;&gt;&lt;a href=&quot;#Neural-Language-Model&quot; class=&quot;headerlink&quot; title=&quot;Neural Language Model&quot;&gt;&lt;/a&gt;Neural Language Model&lt;/h1&gt;&lt;p&gt;[1] &lt;a href=&quot;http://rsarxiv.github.io/2016/05/20/A-Neural-Probabilistic-Language-Model-PaperWeekly/&quot;&gt;A Neural Probabilistic Language Model&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[2] &lt;a href=&quot;http://rsarxiv.github.io/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/&quot;&gt;Character-Aware Neural Language Models&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[3] &lt;a href=&quot;http://rsarxiv.github.io/2016/06/08/Gated-Word-Character-Recurrent-Language-Model-PaperWeekly/&quot;&gt;Gated Word-Character Recurrent Language Model&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&quot;Word-Embeddings&quot;&gt;&lt;a href=&quot;#Word-Embeddings&quot; class=&quot;headerlink&quot; title=&quot;Word Embeddings&quot;&gt;&lt;/a&gt;Word Embeddings&lt;/h1&gt;&lt;p&gt;[1] &lt;a href=&quot;http://rsarxiv.github.io/2016/05/21/Efficient-Estimation-of-Word-Representations-in-Vector-Space-PaperWeekly/&quot;&gt;Efficient Estimation of Word Representations in Vector Space&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[2] &lt;a href=&quot;http://rsarxiv.github.io/2016/05/22/GloVe-Global-Vectors-for-Word-Representation-PaperWeekly/&quot;&gt;GloVe: Global Vectors for Word Representation&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[3] &lt;a href=&quot;http://rsarxiv.github.io/2016/05/26/How-to-Generate-a-Good-Word-Embedding-PaperWeekly/&quot;&gt;How to Generate a Good Word Embedding&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[4] &lt;a href=&quot;http://rsarxiv.github.io/2016/06/09/A-Joint-Model-for-Word-Embedding-and-Word-Morphology-PaperWeekly/&quot;&gt;A Joint Model for Word Embedding and Word Morphology&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&quot;Sentence-Embeddings&quot;&gt;&lt;a href=&quot;#Sentence-Embeddings&quot; class=&quot;headerlink&quot; title=&quot;Sentence Embeddings&quot;&gt;&lt;/a&gt;Sentence Embeddings&lt;/h1&gt;&lt;h2 id=&quot;Comparison&quot;&gt;&lt;a href=&quot;#Comparison&quot; class=&quot;headerlink&quot; title=&quot;Comparison&quot;&gt;&lt;/a&gt;Comparison&lt;/h2&gt;&lt;p&gt;[1] &lt;a href=&quot;http://rsarxiv.github.io/2016/05/30/Learning-Distributed-Representations-of-Sentences-from-Unlabelled-Data-PaperWeekly/&quot;&gt;Learning Distributed Representations of Sentences from Unlabelled Data&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Unsupervised-Learning&quot;&gt;&lt;a href=&quot;#Unsupervised-Learning&quot; class=&quot;headerlink&quot; title=&quot;Unsupervised Learning&quot;&gt;&lt;/a&gt;Unsupervised Learning&lt;/h2&gt;&lt;p&gt;[1] &lt;a href=&quot;http://rsarxiv.github.io/2016/05/24/Distributed-Representations-of-Sentences-and-Documents-PaperWeekly/&quot;&gt;Distributed Representations of Sentences and Documents&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[2] &lt;a href=&quot;http://rsarxiv.github.io/2016/05/28/Skip-Thought-Vectors-PaperWeekly/&quot;&gt;Skip-Thought Vectors&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[3] &lt;a href=&quot;http://rsarxiv.github.io/2016/06/06/A-Hierarchical-Neural-Autoencoder-for-Paragraphs-and-Documents-PaperWeekly/&quot;&gt;A Hierarchical Neural Autoencoder for Paragraphs and Documents&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Supervised-Learning&quot;&gt;&lt;a href=&quot;#Supervised-Learning&quot; class=&quot;headerlink&quot; title=&quot;Supervised Learning&quot;&gt;&lt;/a&gt;Supervised Learning&lt;/h2&gt;&lt;p&gt;[1] &lt;a href=&quot;http://rsarxiv.github.io/2016/05/25/Convolutional-Neural-Networks-for-Sentence-Classification-PaperWeekly/&quot;&gt;Convolutional Neural Networks for Sentence Classification&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[2] &lt;a href=&quot;http://rsarxiv.github.io/2016/05/27/Recurrent-Convolutional-Neural-Networks-for-Text-Classification-PaperWeekly/&quot;&gt;Recurrent Convolutional Neural Networks for Text Classification&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Semi-Supervised-Learning&quot;&gt;&lt;a href=&quot;#Semi-Supervised-Learning&quot; class=&quot;headerlink&quot; title=&quot;Semi-Supervised Learning&quot;&gt;&lt;/a&gt;Semi-Supervised Learning&lt;/h2&gt;&lt;p&gt;[1] &lt;a href=&quot;http://rsarxiv.github.io/2016/06/07/Semi-supervised-Sequence-Learning-PaperWeekly/&quot;&gt;Semi-supervised Sequence Learning&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&quot;Seq2Seq&quot;&gt;&lt;a href=&quot;#Seq2Seq&quot; class=&quot;headerlink&quot; title=&quot;Seq2Seq&quot;&gt;&lt;/a&gt;Seq2Seq&lt;/h1&gt;&lt;h2 id=&quot;Machine-Translation&quot;&gt;&lt;a href=&quot;#Machine-Translation&quot; class=&quot;headerlink&quot; title=&quot;Machine Translation&quot;&gt;&lt;/a&gt;Machine Translation&lt;/h2&gt;&lt;p&gt;[1] &lt;a href=&quot;http://rsarxiv.github.io/2016/05/31/Sequence-to-Sequence-Learning-with-Neural-Networks-PaperWeekly/&quot;&gt;Sequence to Sequence Learning with Neural Networks&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[2] &lt;a href=&quot;http://rsarxiv.github.io/2016/06/01/Learning-Phrase-Representations-using-RNN-Encoder%E2%80%93Decoder-for-Statistical-Machine-Translation-PaperWeekly/&quot;&gt;Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[3] &lt;a href=&quot;http://rsarxiv.github.io/2016/06/02/Neural-Machine-Translation-by-Jointly-Learning-to-Align-and-Translate-PaperWeekly/&quot;&gt;Neural Machine Translation by Jointly Learning to Align and Translate&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Abstractive-Summarization&quot;&gt;&lt;a href=&quot;#Abstractive-Summarization&quot; class=&quot;headerlink&quot; title=&quot;Abstractive Summarization&quot;&gt;&lt;/a&gt;Abstractive Summarization&lt;/h2&gt;&lt;p&gt;[1] &lt;a href=&quot;http://rsarxiv.github.io/2016/06/10/Neural-Network-Based-Abstract-Generation-for-Opinions-and-Arguments-PaperWeekly/&quot;&gt;Neural Network-Based Abstract Generation for Opinions and Arguments&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[2] &lt;a href=&quot;http://rsarxiv.github.io/2016/05/18/%E8%87%AA%E5%8A%A8%E6%96%87%E6%91%98%EF%BC%88%E5%8D%81%E4%B8%89%EF%BC%89/&quot;&gt;Incorporating Copying Mechanism in Sequence-to-Sequence Learning&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[3] &lt;a href=&quot;http://rsarxiv.github.io/2016/05/17/%E8%87%AA%E5%8A%A8%E6%96%87%E6%91%98%EF%BC%88%E5%8D%81%E4%BA%8C%EF%BC%89/&quot;&gt;Neural Headline Generation with Minimum Risk Training&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[4] &lt;a href=&quot;http://rsarxiv.github.io/2016/05/11/%E8%87%AA%E5%8A%A8%E6%96%87%E6%91%98%EF%BC%88%E4%B9%9D%EF%BC%89/&quot;&gt;LCSTS: A Large Scale Chinese Short Text Summarization Dataset&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[5] &lt;a href=&quot;http://rsarxiv.github.io/2016/05/10/%E8%87%AA%E5%8A%A8%E6%96%87%E6%91%98%EF%BC%88%E5%85%AB%EF%BC%89/&quot;&gt;AttSum: Joint Learning of Focusing and Summarization with Neural Attention&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[6] &lt;a href=&quot;http://rsarxiv.github.io/2016/05/07/%E8%87%AA%E5%8A%A8%E6%96%87%E6%91%98%EF%BC%88%E4%B8%83%EF%BC%89/&quot;&gt;Abstractive Text Summarization using Sequence-to-sequence RNNs and Beyond&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[7] &lt;a href=&quot;http://rsarxiv.github.io/2016/04/30/%E8%87%AA%E5%8A%A8%E6%96%87%E6%91%98%EF%BC%88%E5%85%AD%EF%BC%89/&quot;&gt;A Neural Attention Model for Abstractive Sentence Summarization&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[8] &lt;a href=&quot;http://rsarxiv.github.io/2016/04/30/%E8%87%AA%E5%8A%A8%E6%96%87%E6%91%98%EF%BC%88%E5%85%AD%EF%BC%89/&quot;&gt;Abstractive Sentence Summarization with Attentive Recurrent Neural Networks&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[9] &lt;a href=&quot;http://rsarxiv.github.io/2016/04/24/%E8%87%AA%E5%8A%A8%E6%96%87%E6%91%98%EF%BC%88%E4%BA%94%EF%BC%89/&quot;&gt;Generating News Headlines with Recurrent Neural Networks&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Text-Entailment&quot;&gt;&lt;a href=&quot;#Text-Entailment&quot; class=&quot;headerlink&quot; title=&quot;Text Entailment&quot;&gt;&lt;/a&gt;Text Entailment&lt;/h2&gt;&lt;p&gt;[1] &lt;a href=&quot;http://rsarxiv.github.io/2016/06/03/REASONING-ABOUT-ENTAILMENT-WITH-NEURAL-ATTENTION-PaperWeekly/&quot;&gt;REASONING ABOUT ENTAILMENT WITH NEURAL ATTENTION&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Dialogue-Generation&quot;&gt;&lt;a href=&quot;#Dialogue-Generation&quot; class=&quot;headerlink&quot; title=&quot;Dialogue Generation&quot;&gt;&lt;/a&gt;Dialogue Generation&lt;/h2&gt;&lt;p&gt;[1] &lt;a href=&quot;http://rsarxiv.github.io/2016/06/05/Multiresolution-Recurrent-Neural-Networks-An-Application-to-Dialogue-Response-Generation-PaperWeekly/&quot;&gt;Multiresolution Recurrent Neural Networks: An Application to Dialogue Response Generation&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[2] &lt;a href=&quot;http://rsarxiv.github.io/2016/06/04/A-Neural-Conversational-Model-PaperWeekly/&quot;&gt;A Neural Conversational Model&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
+&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;Neural-Language-Model&quot;&gt;&lt;a href=&quot;#Neural-Language-Model&quot; class=&quot;headerlink&quot; title=&quot;Neural Language Model&quot;&gt;&lt;/a&gt;Neural Language Model&lt;/
+    
+    </summary>
+    
+    
+      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
+    
+  </entry>
   
   <entry>
     <title>Neural Network-Based Abstract Generation for Opinions and Arguments #PaperWeekly#</title>
@@ -898,49 +951,6 @@
     
     
       <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
-    
-      <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Character-Aware Neural Language Models #PaperWeekly#</title>
-    <link href="http://rsarxiv.github.io/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/"/>
-    <id>http://rsarxiv.github.io/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/</id>
-    <published>2016-05-23T14:10:32.000Z</published>
-    <updated>2016-06-07T15:22:50.000Z</updated>
-    
-    <content type="html">&lt;p&gt;(欢迎大家订阅本博客，订阅地址是&lt;a href=&quot;http://rsarxiv.github.io/atom.xml&quot;&gt;RSS&lt;/a&gt;)&lt;/p&gt;
-&lt;p&gt;本篇分享的文章是&lt;a href=&quot;http://cn.arxiv.org/pdf/1508.06615.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Character-Aware Neural Language Models&lt;/a&gt;，作者是Yoon Kim、Alexander M. Rush。两位是HarvardNLP组的学生和老师，前者贡献了一些有意义的torch代码，比如&lt;a href=&quot;https://github.com/harvardnlp/seq2seq-attn&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;seq2seq+attn&lt;/a&gt;，后者第一次将seq2seq的模型应用到了文本摘要。&lt;/p&gt;
-&lt;p&gt;卷积神经网络之前常常用在计算机视觉领域，用来在图像中寻找features，前几年被研究者应用到了nlp任务中，在文本分类等任务中取得了不错的效果。传统的word embedding对低频词并没有太好的效果，而本文将char embedding作为CNN的输入，用CNN的输出经过一层highway层处理表示word embedding，然后作为RNNLM的输入，避免了这个问题。而且之前的神经网络语言模型中绝大多数需要优化的参数是word embedding，而本文的模型则会将优化参数减少非常多。&lt;/p&gt;
-&lt;p&gt;本文模型的架构图如下：&lt;/p&gt;
-&lt;img src=&quot;/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/arch.png&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
-&lt;p&gt;可以分为三层，一层是charCNN，通过构建一个char embedding矩阵，将word表示成matrix，和图像类似，输入到CNN模型中提取经过filter层和max pooling层得到一个输出表示，然后将该输出放到Highway Network中，得到一个处理后的效果更好的word embedding作为输出，在第三层中是一个典型的RNN模型，后面的处理与传统方法一样了。&lt;/p&gt;
-&lt;p&gt;这里需要学习的参数中char embedding规模非常小，相对比之前的模型有非常明显的优势。这里需要说明的一点是HighWay Network，在Rupesh Kumar Srivastava的paper &lt;a href=&quot;http://cn.arxiv.org/pdf/1507.06228.pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Training Very Deep Networks&lt;/a&gt;被提出，受lstm解决rnn梯度衰减问题的思路启发，用来解决训练very deep networks，因为模型越深效果越好，但越难训练。本文的HighWay层如下：&lt;/p&gt;
-&lt;img src=&quot;/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/fig1.png&quot; width=&quot;400&quot; height=&quot;400&quot;&gt;
-&lt;p&gt;其中&lt;/p&gt;
-&lt;img src=&quot;/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/fig2.png&quot; width=&quot;200&quot; height=&quot;200&quot;&gt;
-&lt;p&gt;t被称为transform gate，1-t被称为carry gate。&lt;/p&gt;
-&lt;p&gt;最终的实验证明，使用HighWay层效果比使用普通的MLP或者不使用该层效果更好。&lt;/p&gt;
-&lt;img src=&quot;/2016/05/23/Character-Aware-Neural-Language-Models-PaperWeekly/result.png&quot; width=&quot;500&quot; height=&quot;500&quot;&gt;
-&lt;p&gt;本文通过将传统的word embedding降级到char level，避免了大规模的embedding计算和低频词的问题，通过Highway network技术构建更深的网络，得到了不错的结果。&lt;/p&gt;
-&lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
-&lt;img src=&quot;/2016/05/13/Paper翻译列表/qrcode.jpg&quot; width=&quot;350&quot; height=&quot;350&quot;&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;(欢迎大家订阅本博客，订阅地址是&lt;a href=&quot;http://rsarxiv.github.io/atom.xml&quot;&gt;RSS&lt;/a&gt;)&lt;/p&gt;
-&lt;p&gt;本篇分享的文章是&lt;a href=&quot;http://cn.arxiv.org/pdf/1508.06615.pdf&quot; targ
-    
-    </summary>
-    
-    
-      <category term="PaperWeekly" scheme="http://rsarxiv.github.io/tags/PaperWeekly/"/>
-    
-      <category term="language model" scheme="http://rsarxiv.github.io/tags/language-model/"/>
     
       <category term="nlp" scheme="http://rsarxiv.github.io/tags/nlp/"/>
     
