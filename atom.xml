@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://rsarxiv.github.io/"/>
-  <updated>2016-06-12T17:31:40.000Z</updated>
+  <updated>2016-06-12T17:35:02.000Z</updated>
   <id>http://rsarxiv.github.io/</id>
   
   <generator uri="http://hexo.io/">Hexo</generator>
@@ -15,7 +15,7 @@
     <link href="http://rsarxiv.github.io/2016/06/12/Gated-Attention-Readers-for-Text-Comprehension-PaperWeekly/"/>
     <id>http://rsarxiv.github.io/2016/06/12/Gated-Attention-Readers-for-Text-Comprehension-PaperWeekly/</id>
     <published>2016-06-12T16:33:10.000Z</published>
-    <updated>2016-06-12T17:31:40.000Z</updated>
+    <updated>2016-06-12T17:35:02.000Z</updated>
     
     <content type="html">&lt;p&gt;完形填空一直是各大英语考试的常见题型，读一篇短文，填20个空。那么如果是机器来做完形填空，该如何来定义问题，提出模型呢？本周开始将会介绍一系列文本理解的模型。本文分享的题目是&lt;a href=&quot;http://cn.arxiv.org/pdf/1606.01549v1&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Gated-Attention Readers for Text Comprehension&lt;/a&gt;，最早于6月5日submit于arxiv上，作者是CMU的Graduate Research Assistant &lt;a href=&quot;https://www.cs.cmu.edu/directory/bdhingra&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Bhuwan Dhingra&lt;/a&gt;。&lt;/p&gt;
 &lt;p&gt;首先，介绍一下对完形填空问题的定义。问题可以表述为一个三元组(d,q,a)，这里d是指原文document，q是指完形填空的问题query（这里需要注意一点的是，与我们英语考试中的完形填空不同，更像是只用一个单词来回答的阅读理解），a是问题的答案。这个答案是来自一个固定大小的词汇表A中的一个词。即：给定一个文档-问题对(d,q)，从A中找到最合适的答案a。&lt;/p&gt;
@@ -39,7 +39,7 @@
 &lt;img src=&quot;/2016/06/12/Gated-Attention-Readers-for-Text-Comprehension-PaperWeekly/fig2.png&quot; width=&quot;400&quot; height=&quot;400&quot;&gt;
 &lt;p&gt;图中高亮的部分是针对问题时的最后一层注意力所关注的地方。&lt;/p&gt;
 &lt;p&gt;注意力模型是一个非常热门的研究领域，很多专家都看好其在今后各大nlp任务中的应用前景，不同版本、不同结构、不同层次的注意力模型丰富了模型，也提升了效果。注意力的本质就是说你关注的输出与你的输入中的哪个元素关系更加紧密，即输出的部分应该更加注意哪个输入细节，在做完形填空、阅读理解的时候，我们也会有这样的感受，就是题目的答案往往就在某一句话或某几句话当中，并不需要回答每个问题都从全文中找一遍答案，而是定位到关键句上。这里的定位就是注意力，剩下的问题就是研究如何更加准确地定义、建模注意力，是用普通的前馈神经网络，还是用GRU，还是用分层模型都需要针对具体问题的特点。&lt;/p&gt;
-&lt;p&gt;后续的几篇文章将会继续关注文本理解，敬请关注。&lt;/p&gt;
+&lt;p&gt;后续的几篇文章将会继续介绍文本理解，敬请关注。&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;工具推荐&lt;/b&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;RSarXiv&lt;/code&gt; &lt;b&gt;一个好用的arxiv cs paper推荐系统&lt;/b&gt; &lt;a href=&quot;http://rsarxiv.science/web&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;网站地址&lt;/a&gt; &lt;b&gt;ios App下载：App Store 搜索rsarxiv即可获得 &lt;/b&gt;&lt;/p&gt;
 &lt;p&gt;PaperWeekly，每周会分享N篇nlp领域好玩的paper，旨在用最少的话说明白paper的贡献。&lt;/p&gt;
